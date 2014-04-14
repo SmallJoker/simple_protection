@@ -21,7 +21,6 @@ simple_protection.can_access = function(pos, player_name)
 	end
 	return false
 end
-
 simple_protection.get_data = function(pos)
 	local str = simple_protection.get_location(pos)
 	return simple_protection.claims[str]
@@ -34,28 +33,30 @@ end
 
 simple_protection.get_location = function(pos1)
 	--round
-	pos1.x = math.floor(pos1.x+0.5)
-	pos1.y = math.floor(pos1.y+0.5)
-	pos1.z = math.floor(pos1.z+0.5)
 	pos = {x=0,y=0,z=0}
-	pos.x = math.floor(pos1.x / simple_protection.claim_size)
+	pos.x = (pos1.x+.5) / simple_protection.claim_size
 	--start in underground, get it as number 0
-	pos.y = math.floor((pos1.y + simple_protection.start_underground) / simple_protection.claim_heigh)
-	pos.z = math.floor(pos1.z / simple_protection.claim_size)
+	pos.y = (pos1.y+.5 + simple_protection.start_underground) / simple_protection.claim_heigh
+	pos.z = (pos1.z+.5) / simple_protection.claim_size
+	pos.x = pos.x - (pos.x % 1)
+	pos.y = pos.y - (pos.y % 1)
+	pos.z = pos.z - (pos.z % 1) --faster than math.floor
 	return pos.x..","..pos.y..","..pos.z
 end
 
 simple_protection.get_center = function(pos1)
 	--round
-	pos1.x = math.floor(pos1.x+0.5)
-	pos1.z = math.floor(pos1.z+0.5)
 	pos = {x=0,y=0,z=0}
 	local _r4 = simple_protection.claim_size
-	pos.x = math.floor(pos1.x / _r4)
-	pos.z = math.floor(pos1.z / _r4)
+	pos.x = pos1.x / _r4
+	pos.y = pos1.y + 1.5
+	pos.z = pos1.z / _r4
+	
+	pos.x = pos.x - (pos.x % 1)
+	pos.y = pos.y - (pos.y % 1)
+	pos.z = pos.z - (pos.z % 1) --faster than math.floor
 	pos.x = pos.x * _r4 + (_r4 / 2)
-	pos.y = math.floor(pos1.y + 1.5)
-	pos.z = pos.z * _r4 + (_r4 / 2)
+	pos.z = pos.z * _r4 + (_r4 / 2) -- add half of chunk
 	return pos
 end
 
