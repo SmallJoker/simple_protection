@@ -10,16 +10,17 @@ end
 simple_protection.old_item_place = minetest.item_place
 minetest.item_place = function(itemstack, placer, pointed_thing)
 	local player_name = placer:get_player_name()
-	local under_node = minetest.get_node(pointed_thing.under)
+	--local under_node = minetest.get_node(pointed_thing.under)
 	
 	-- if rightclick on special nodes
-	if not placer:get_player_control().sneak then
+	--[[if not placer:get_player_control().sneak then
 		if minetest.registered_nodes[under_node.name] and minetest.registered_nodes[under_node.name].on_rightclick then
 			minetest.registered_nodes[under_node.name].on_rightclick(pos, node, placer, itemstack, pointed_thing)
 			return itemstack
 		end
-	end
-	if simple_protection.can_access(pointed_thing.above, player_name) or itemstack:get_name() == "" then
+	end]]
+	
+	if simple_protection.can_access(pointed_thing.above, player_name) or not minetest.registered_nodes[itemstack:get_name()] then
 		return simple_protection.old_item_place(itemstack, placer, pointed_thing)
 	else
 		local data = simple_protection.get_data(pointed_thing.above)

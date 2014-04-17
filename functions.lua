@@ -2,6 +2,10 @@ simple_protection.can_access = function(pos, player_name)
 	if not player_name or player_name == "" then
 		return false
 	end
+	-- allow pipeworks access
+	if player_name == ":pipeworks" then
+		return true
+	end
 	-- get data of area
 	local data = simple_protection.get_data(pos)
 	if not data then

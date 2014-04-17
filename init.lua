@@ -18,10 +18,14 @@ simple_protection.load_config()
 dofile(simple_protection.mod_path.."/protection.lua")
 
 minetest.register_on_protection_violation(function(pos, player_name)
+	local player = minetest.get_player_by_name(player_name)
+	if not player then
+		return
+	end
+	
 	minetest.chat_send_player(player_name, "Do not try to modify this area!")
 	--PUNISH HIM!!!!
 	
-	--local player = minetest.get_player_by_name(player_name)
 	--player:set_hp(player:get_hp() - 1)
 end)
 
@@ -80,12 +84,15 @@ minetest.register_chatcommand("share_area", {
 			return
 		end
 		if data.shared[param] then
-			minetest.chat_send_player(name, "This player already has access to this area.")
+			minetest.chat_send_player(name, param.." already has access to this area.")
 			return
 		end
 		simple_protection.claims[pos].shared[param] = true
 		simple_protection.save()
-			minetest.chat_send_player(name, "This player has now access to this area.")
+		minetest.chat_send_player(name, param.." has now access to this area.")
+		if minetest.get_player_by_name(param) then
+			minetest.chat_send_player(param, name.." shared an area with you.")
+		end
 	end,
 })
 
@@ -114,7 +121,10 @@ minetest.register_chatcommand("share_all_areas", {
 			end
 		end
 		simple_protection.save()
-		minetest.chat_send_player(name, "This player has now access to all your areas.")
+		minetest.chat_send_player(name, param.." has now access to all your areas.")
+		if minetest.get_player_by_name(param) then
+			minetest.chat_send_player(param, name.." shared all areas with you.")
+		end
 	end,
 })
 
@@ -141,7 +151,10 @@ minetest.register_chatcommand("unshare_area", {
 		end
 		simple_protection.claims[pos].shared[param] = nil
 		simple_protection.save()
-		minetest.chat_send_player(name, "This player has no longer access to this area.")
+		minetest.chat_send_player(name, param.." has no longer access to this area.")
+		if minetest.get_player_by_name(param) then
+			minetest.chat_send_player(param, name.." unshared an area with you.")
+		end
 	end,
 })
 
@@ -158,7 +171,10 @@ minetest.register_chatcommand("unshare_all_areas", {
 			end
 		end
 		simple_protection.save()
-		minetest.chat_send_player(name, "This player has no longer access to your areas.")
+		minetest.chat_send_player(name, param.." has no longer access to your areas.")
+		if minetest.get_player_by_name(param) then
+			minetest.chat_send_player(param, name.." unshared all areas with you.")
+		end
 	end,
 })
 
