@@ -92,11 +92,11 @@ minetest.register_craftitem("simple_protection:claim", {
 			return
 		end
 		local player_name = user:get_player_name()
+		local pos = simple_protection.get_location(pointed_thing.under)
 		if simple_protection.old_is_protected(pos, player_name) then
 			minetest.chat_send_player(player_name, "Area is already protected by an other protection mod.")
 			return
 		end
-		local pos = simple_protection.get_location(pointed_thing.under)
 		local data = simple_protection.claims[pos]
 		if data then
 			minetest.chat_send_player(player_name, "Area already owned by: "..data.owner)
