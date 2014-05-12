@@ -92,23 +92,22 @@ minetest.register_craftitem("simple_protection:claim", {
 			return
 		end
 		local player_name = user:get_player_name()
-		local pos = simple_protection.get_location(pointed_thing.under)
-		if simple_protection.old_is_protected(pos, player_name) then
+		if simple_protection.old_is_protected(pointed_thing.under, player_name) then
 			minetest.chat_send_player(player_name, "Area is already protected by an other protection mod.")
-			return
-		end
-		local data = simple_protection.claims[pos]
-		if data then
-			minetest.chat_send_player(player_name, "Area already owned by: "..data.owner)
 			return
 		end
 		if not simple_protection.underground_claim then
 			local y = simple_protection.get_y_axis(pointed_thing.under.y)
 			if y < simple_protection.underground_limit then
-				minetest.chat_send_player(player_name, "You can not claim areas under "..
-					tostring(simple_protection.underground_limit).."m")
+				minetest.chat_send_player(player_name, "You can not claim areas under "..simple_protection.underground_limit.."m")
 				return
 			end
+		end
+		local pos = simple_protection.get_location(pointed_thing.under)
+		local data = simple_protection.claims[pos]
+		if data then
+			minetest.chat_send_player(player_name, "Area already owned by: "..data.owner)
+			return
 		end
 		itemstack:take_item(1)
 		simple_protection.claims[pos] = {owner=player_name, shared={}}
