@@ -32,13 +32,15 @@ minetest.register_chatcommand("area", {
 	privs = {interact=true},
 	func = function(name, param)
 		if param == "" then
-			minetest.chat_send_player(name, "Available area commands: /area show")
+			minetest.chat_send_player(name, "Available area commands:")
+			minetest.chat_send_player(name, "Information about current area: /area show")
 			minetest.chat_send_player(name, "(Un)share one area: /area (un)share <name>")
 			minetest.chat_send_player(name, "(Un)share all areas: /area (un)shareall <name>")
+			minetest.chat_send_player(name, "Unclaim this area: /area unclaim")
 			return
 		end
-		if param == "show" then
-			simple_protection.command_show(name)
+		if param == "show" or param == "unclaim" then
+			simple_protection["command_"..param](name)
 			return
 		end
 		-- all other commands
@@ -186,7 +188,7 @@ simple_protection.command_unshareall = function(name, param)
 	end
 end
 
-simple_protection.command_unclaim = function(name, param)
+simple_protection.command_unclaim = function(name)
 	local player = minetest.get_player_by_name(name)
 	local pos = simple_protection.get_location(player:getpos())
 	local data = simple_protection.claims[pos]

@@ -9,7 +9,6 @@ Initial mod creator: Krock
 License: WTFPL
 
 Chat commands
-^^^^^^^^^^^^^
 
 /area
 
@@ -22,3 +21,5 @@ Chat commands
 	shareall <name>		->	Shares all your areas with <name>
 	
 	unshareall <name>	->	Unshares all your areas with <name>
+	
+	unclaim			->	Unclaims the current area
