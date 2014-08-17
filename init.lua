@@ -2,10 +2,6 @@
 -- Created by Krock
 -- License: WTFPL
 
-if freeminer then
-	minetest = freeminer
-end
-
 local world_path = minetest.get_worldpath()
 simple_protection = {}
 simple_protection.claims = {}
@@ -16,6 +12,14 @@ simple_protection.file = world_path.."/s_protect.data"
 dofile(simple_protection.mod_path.."/functions.lua")
 simple_protection.load_config()
 dofile(simple_protection.mod_path.."/protection.lua")
+
+function vector.floor(v)
+	return {
+		x = math.floor(v.x),
+		y = math.floor(v.y),
+		z = math.floor(v.z)
+	}
+end
 
 minetest.register_on_protection_violation(function(pos, player_name)
 	minetest.chat_send_player(player_name, "Do not try to modify this area!")
@@ -65,7 +69,7 @@ simple_protection.command_show = function(name)
 	
 	minetest.add_entity(simple_protection.get_center(pos), "simple_protection:marker")
 	local bottom_y = simple_protection.get_y_axis(pos.y)
-	minetest.chat_send_player(name, "Area Y limits: "..(bottom_y+simple_protection.claim_heigh).." , "..bottom_y)
+	minetest.chat_send_player(name, "Vertical area limit from Y "..bottom_y.." to "..(bottom_y+simple_protection.claim_heigh))
 	if not data then
 		if bottom_y < simple_protection.underground_limit then
 			minetest.chat_send_player(name, "Area status: Not claimable")

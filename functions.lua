@@ -6,6 +6,7 @@ simple_protection.can_access = function(pos, player_name)
 	if player_name == ":pipeworks" then
 		return true
 	end
+	
 	-- get data of area
 	local data = simple_protection.get_data(pos)
 	if not data then
@@ -25,42 +26,38 @@ simple_protection.can_access = function(pos, player_name)
 	end
 	return false
 end
+
 simple_protection.get_data = function(pos)
 	local str = simple_protection.get_location(pos)
 	return simple_protection.claims[str]
 end
 
 simple_protection.get_y_axis = function(y1)
-	local y = math.floor((y1 - simple_protection.start_underground) / simple_protection.claim_heigh)
-	return y * simple_protection.claim_heigh
+	local y = (y1 - simple_protection.start_underground) / simple_protection.claim_heigh
+	return math.floor(y) * simple_protection.claim_heigh
 end
 
 simple_protection.get_location = function(pos1)
-	--round
-	pos = {x=0,y=0,z=0}
-	pos.x = (pos1.x+.5) / simple_protection.claim_size
-	--start in underground, get it as number 0
-	pos.y = (pos1.y+.5 + simple_protection.start_underground) / simple_protection.claim_heigh
-	pos.z = (pos1.z+.5) / simple_protection.claim_size
-	pos.x = pos.x - (pos.x % 1)
-	pos.y = pos.y - (pos.y % 1)
-	pos.z = pos.z - (pos.z % 1) --faster than math.floor
+	local pos = {
+		x = pos1.x / simple_protection.claim_size,
+		--start in underground, get it as number 0
+		y = (pos1.y + simple_protection.start_underground) / simple_protection.claim_heigh,
+		z = pos1.z / simple_protection.claim_size
+	}
+	pos = vector.floor(pos)
 	return pos.x..","..pos.y..","..pos.z
 end
 
 simple_protection.get_center = function(pos1)
-	--round
-	pos = {x=0,y=0,z=0}
-	local _r4 = simple_protection.claim_size
-	pos.x = pos1.x / _r4
-	pos.y = pos1.y + 1.5
-	pos.z = pos1.z / _r4
-	
-	pos.x = pos.x - (pos.x % 1)
-	pos.y = pos.y - (pos.y % 1)
-	pos.z = pos.z - (pos.z % 1) --faster than math.floor
-	pos.x = pos.x * _r4 + (_r4 / 2)
-	pos.z = pos.z * _r4 + (_r4 / 2) -- add half of chunk
+	local size = simple_protection.claim_size
+	local pos = {
+		x = pos1.x / size,
+		y = pos1.y + 1.5,
+		z = pos1.z / size
+	}
+	pos = vector.floor(pos)
+	pos.x = pos.x * size + (size / 2)
+	pos.z = pos.z * size + (size / 2) -- add half of chunk
 	return pos
 end
 

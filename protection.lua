@@ -4,7 +4,8 @@ simple_protection.old_is_protected = minetest.is_protected
 minetest.is_protected = function(pos, player_name)
 	if simple_protection.can_access(pos, player_name) then
 		return simple_protection.old_is_protected(pos, player_name)
-	else return true end
+	end
+	return true
 end
 
 simple_protection.old_item_place = minetest.item_place
@@ -66,19 +67,21 @@ minetest.register_globalstep(function(dtime)
 			-- green if access
 			local color = 0xFFFFFF
 			if has_access then
-				color = 0x00EE00
+				color = 0x00CC00
 			end
 			simple_protection.player_huds[player_name] = {
 				hudID = player:hud_add({
-					hud_elem_type = "text",
-					name = "area_hud",
-					number = color,
-					position = {x=0.15, y=0.97},
-					text="Area owner: "..data.owner,
-					scale = {x=100,y=25},
-					alignment = {x=0, y=0},
+					hud_elem_type	= "text",
+					name			= "area_hud",
+					number			= color,
+					position		= {x=0.15, y=0.97},
+					text			= "Area owner: "..data.owner,
+					scale			= {x=100,y=25},
+					alignment		= {x=0, y=0},
 				}), 
-			owner=data.owner, had_access=has_access}
+				owner = data.owner, 
+				had_access = has_access
+			}
 		end
 	end
 end)
@@ -120,14 +123,15 @@ minetest.register_craftitem("simple_protection:claim", {
 minetest.register_craft({
 	output = "simple_protection:claim",
 	recipe = {
-		{"default:copper_ingot","default:steel_ingot","default:copper_ingot"},
-		{"default:steel_ingot","default:stonebrick","default:steel_ingot"},
-		{"default:copper_ingot","default:steel_ingot","default:copper_ingot"},
+		{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
+		{"default:steel_ingot", "default:stonebrick", "default:steel_ingot"},
+		{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
 	}
 })
 
 minetest.register_entity("simple_protection:marker",{
 	initial_properties = {
+		hp_max = 1,
 		visual = "wielditem",
 		visual_size = {x=1.0/1.5,y=1.0/1.5},
 		physical = false,
@@ -135,18 +139,16 @@ minetest.register_entity("simple_protection:marker",{
 	},
 	on_activate = function(self, staticdata, dtime_s)
 		minetest.after(10, function()
-			if self and self.object then
-				self.object:remove()
-			end
+			self.object:remove()
 		end)
 	end,
 })
 
 -- hacky - I'm not a regular node!
-local _r5 = simple_protection.claim_size / 2 --too long variable name
+local size = simple_protection.claim_size / 2
 minetest.register_node("simple_protection:mark", {
 	tiles = {"simple_protection_marker.png"},
-	groups = {dig_immediate=3,not_in_creative_inventory=1},
+	groups = {dig_immediate=3, not_in_creative_inventory=1},
 	drop = "",
 	use_texture_alpha = true,
 	walkable = false,
@@ -155,10 +157,10 @@ minetest.register_node("simple_protection:mark", {
 		type = "fixed",
 		fixed = {
 			-- sides
-			{-_r5-.5, -_r5-.5, -_r5-.5,	-_r5-.5, _r5+.5,  _r5-.5},
-			{-_r5-.5, -_r5-.5,  _r5-.5,	 _r5-.5, _r5+.5,  _r5-.5},
-			{ _r5-.5, -_r5-.5, -_r5-.5,	 _r5-.5, _r5+.5,  _r5-.5},
-			{-_r5-.5, -_r5-.5, -_r5-.5,	 _r5-.5, _r5+.5, -_r5-.5},
+			{-size-.5, -size-.5, -size-.5,	-size-.5, size+.5,  size-.5},
+			{-size-.5, -size-.5,  size-.5,	 size-.5, size+.5,  size-.5},
+			{ size-.5, -size-.5, -size-.5,	 size-.5, size+.5,  size-.5},
+			{-size-.5, -size-.5, -size-.5,	 size-.5, size+.5, -size-.5},
 		},
 	},
 })
