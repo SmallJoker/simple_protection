@@ -34,7 +34,7 @@ end
 
 simple_protection.get_y_axis = function(y1)
 	local y = (y1 - simple_protection.start_underground) / simple_protection.claim_heigh
-	return math.floor(y) * simple_protection.claim_heigh
+	return math.ceil(y) * simple_protection.claim_heigh
 end
 
 simple_protection.get_location = function(pos1)
