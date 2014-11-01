@@ -115,6 +115,8 @@ minetest.register_craftitem("simple_protection:claim", {
 		itemstack:take_item(1)
 		simple_protection.claims[pos] = {owner=player_name, shared={}}
 		simple_protection.save()
+		
+		minetest.add_entity(simple_protection.get_center(user:getpos()), "simple_protection:marker")
 		minetest.chat_send_player(player_name, "Congratulations! You now own this area.")
 		return itemstack
 	end,

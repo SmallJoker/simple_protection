@@ -68,10 +68,10 @@ simple_protection.command_show = function(name)
 	local data = simple_protection.get_data(pos)
 	
 	minetest.add_entity(simple_protection.get_center(pos), "simple_protection:marker")
-	local bottom_y = simple_protection.get_y_axis(pos.y)
-	minetest.chat_send_player(name, "Vertical area limit from Y "..bottom_y.." to "..(bottom_y+simple_protection.claim_heigh))
+	local axis = simple_protection.get_y_axis(pos.y)
+	minetest.chat_send_player(name, "Vertical area limit from Y "..axis.." to "..(axis+simple_protection.claim_heigh))
 	if not data then
-		if bottom_y < simple_protection.underground_limit then
+		if axis < simple_protection.underground_limit then
 			minetest.chat_send_player(name, "Area status: Not claimable")
 		else
 			minetest.chat_send_player(name, "Area status: Unowned (!)")

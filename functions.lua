@@ -32,15 +32,14 @@ simple_protection.get_data = function(pos)
 	return simple_protection.claims[str]
 end
 
-simple_protection.get_y_axis = function(y1)
-	local y = (y1 - simple_protection.start_underground) / simple_protection.claim_heigh
-	return math.ceil(y) * simple_protection.claim_heigh
+simple_protection.get_y_axis = function(y)
+	y = (y + simple_protection.start_underground) / simple_protection.claim_heigh
+	return math.floor(y) * simple_protection.claim_heigh - simple_protection.start_underground
 end
 
 simple_protection.get_location = function(pos1)
 	local pos = {
 		x = pos1.x / simple_protection.claim_size,
-		--start in underground, get it as number 0
 		y = (pos1.y + simple_protection.start_underground) / simple_protection.claim_heigh,
 		z = pos1.z / simple_protection.claim_size
 	}
