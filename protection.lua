@@ -41,8 +41,8 @@ minetest.register_globalstep(function(dtime)
 	simple_protection.hud_time = 0
 	-- get players
 	for _,player in ipairs(minetest.get_connected_players()) do
-		local pos = player:getpos()
-		local data = simple_protection.get_data(pos)
+		local player_pos = vector.round(player:getpos())
+		local data = simple_protection.get_data(player_pos)
 		local player_name = player:get_player_name()
 		if not data then
 			data = {owner="", shared={}}
