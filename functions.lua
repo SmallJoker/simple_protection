@@ -1,3 +1,37 @@
+function vector.floor(v)
+	return {
+		x = math.floor(v.x),
+		y = math.floor(v.y),
+		z = math.floor(v.z)
+	}
+end
+
+function table_contains(t, e)
+	if not t or not e then
+		return false
+	end
+	for i, v in ipairs(t) do
+		if v == e then
+			return true
+		end
+	end
+	return false
+end
+
+function table_delete(t, e)
+	if not t or not e then
+		return false
+	end
+	local removed = false
+	for i, v in ipairs(t) do
+		if v == e then
+			table.remove(t, i)
+			removed = true
+		end
+	end
+	return removed
+end
+
 simple_protection.can_access = function(pos, player_name)
 	if not player_name or player_name == "" then
 		return false
@@ -15,10 +49,13 @@ simple_protection.can_access = function(pos, player_name)
 	if player_name == data.owner then
 		return true
 	end
-	if data.shared[player_name] then
+	if table_contains(simple_protection.share[data.owner], player_name) then
 		return true
 	end
-	if data.shared["*all"] then
+	if table_contains(data.shared, player_name) then
+		return true
+	end
+	if table_contains(data.shared, "*all") then
 		return true
 	end
 	if minetest.check_player_privs(player_name, {simple_protection=true}) then
@@ -60,7 +97,7 @@ simple_protection.get_center = function(pos1)
 	return pos
 end
 
-simple_protection.load = function()
+simple_protection.load_claims = function()
 	minetest.log("action", "Loading simple protection claims")
 	local file = io.open(simple_protection.file, "r")
 	if not file then
@@ -84,17 +121,50 @@ simple_protection.load = function()
 	io.close(file)
 end
 
+simple_protection.load_shareall = function()
+	minetest.log("action", "Loading shared claims")
+	local file = io.open(simple_protection.sharefile, "r")
+	if not file then
+		return
+	end
+	for line in file:lines() do
+		if line ~= "" then
+			local data = line:split(" ")
+			-- owner, shared1, shared2, ..
+			local _shared = {}
+			if #data > 1 then
+				for index = 2, #data do
+					if data[index] ~= "" then
+						table.insert(_shared, data[index])
+					end
+				end
+				simple_protection.share[data[1]] = _shared
+			end
+		end
+	end
+	io.close(file)
+end
+
 simple_protection.save = function()
 	local file = io.open(simple_protection.file, "w")
 	for pos, data in pairs(simple_protection.claims) do
 		if data.owner and data.owner ~= "" then
 			local shared = ""
-			for player, really in pairs(data.shared) do
-				if really then
-					shared = shared.." "..player
-				end
+			for i, player in ipairs(data.shared) do
+				shared = shared.." "..player
 			end
 			file:write(pos.." "..data.owner..shared.."\n")
+		end
+	end
+	io.close(file)
+	file = io.open(simple_protection.sharefile, "w")
+	for name, players in pairs(simple_protection.share) do
+		if #players > 0 then
+			local shared = ""
+			for i, player in ipairs(players) do
+				shared = shared.." "..player
+			end
+			file:write(name..shared.."\n")
 		end
 	end
 	io.close(file)

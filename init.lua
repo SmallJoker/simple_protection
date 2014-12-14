@@ -5,21 +5,15 @@
 local world_path = minetest.get_worldpath()
 simple_protection = {}
 simple_protection.claims = {}
+simple_protection.share = {}
 simple_protection.mod_path = minetest.get_modpath("simple_protection")
 simple_protection.conf = world_path.."/s_protect.conf"
 simple_protection.file = world_path.."/s_protect.data"
+simple_protection.sharefile = world_path.."/s_protect_share.data"
 
 dofile(simple_protection.mod_path.."/functions.lua")
 simple_protection.load_config()
 dofile(simple_protection.mod_path.."/protection.lua")
-
-function vector.floor(v)
-	return {
-		x = math.floor(v.x),
-		y = math.floor(v.y),
-		z = math.floor(v.z)
-	}
-end
 
 minetest.register_on_protection_violation(function(pos, player_name)
 	minetest.chat_send_player(player_name, "Do not try to modify this area!")
@@ -80,14 +74,18 @@ simple_protection.command_show = function(name)
 	end
 	
 	minetest.chat_send_player(name, "Area status: Owned by "..data.owner)
-	local shared = ""
-	for player, really in pairs(data.shared) do
-		if really then
-			shared = shared..player..", "
+	local text = ""
+	for i, player in ipairs(data.shared) do
+		text = text..player..", "
+	end
+	local shared = simple_protection.share[name]
+	if shared then
+		for i, player in ipairs(shared) do
+			text = text..player.."*, "
 		end
 	end
-	if shared ~= "" then
-		minetest.chat_send_player(name, "Players with access: "..shared)
+	if text ~= "" then
+		minetest.chat_send_player(name, "Players with access: "..text)
 	end
 end
 
@@ -114,11 +112,17 @@ simple_protection.command_share = function(name, param)
 		minetest.chat_send_player(name, "You do not own this area.")
 		return
 	end
-	if data.shared[param] then
+	local shared = simple_protection.share[name]
+	if shared and shared[param] then
+		minetest.chat_send_player(name, param.." already has access to all your areas.")
+		return
+	end
+	
+	if table_contains(data.shared, param) then
 		minetest.chat_send_player(name, param.." already has access to this area.")
 		return
 	end
-	data.shared[param] = true
+	table.insert(data.shared, param)
 	simple_protection.save()
 	minetest.chat_send_player(name, param.." has now access to this area.")
 	if minetest.get_player_by_name(param) then
@@ -140,11 +144,11 @@ simple_protection.command_unshare = function(name, param)
 		minetest.chat_send_player(name, "You do not own this area.")
 		return
 	end
-	if not data.shared[param] then
+	if not table_contains(data.shared, param) then
 		minetest.chat_send_player(name, "This player has no access to this area.")
 		return
 	end
-	data.shared[param] = nil
+	table_delete(data.shared, param)
 	simple_protection.save()
 	minetest.chat_send_player(name, param.." has no longer access to this area.")
 	if minetest.get_player_by_name(param) then
@@ -166,12 +170,16 @@ simple_protection.command_shareall = function(name, param)
 		end
 		return
 	end
-	--loops everywhere
-	for pos, data in pairs(simple_protection.claims) do
-		if data.owner == name then
-			data.shared[param] = true
-		end
+	
+	local shared = simple_protection.share[name]
+	if table_contains(shared, param) then
+		minetest.chat_send_player(name, param.." already has now access to all your areas.")
+		return
 	end
+	if not shared then
+		simple_protection.share[name] = {}
+	end
+	table.insert(simple_protection.share[name], param)
 	simple_protection.save()
 	minetest.chat_send_player(name, param.." has now access to all your areas.")
 	if minetest.get_player_by_name(param) then
@@ -181,13 +189,25 @@ end
 
 simple_protection.command_unshareall = function(name, param)
 	if name == param then return end
+	local removed = false
+	local shared = simple_protection.share[name]
+	if table_delete(shared, param) then
+		removed = true
+	end
+	
 	--loops everywhere
 	for pos, data in pairs(simple_protection.claims) do
 		if data.owner == name then
-			data.shared[param] = nil
+			if table_delete(data.shared, param) then
+				removed = true
+			end
 		end
 	end
 	simple_protection.save()
+	if not removed then
+		minetest.chat_send_player(name, param.." did not have access to any of your areas.")
+		return
+	end
 	minetest.chat_send_player(name, param.." has no longer access to your areas.")
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, name.." unshared all areas with you.")

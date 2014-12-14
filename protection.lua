@@ -1,4 +1,7 @@
-minetest.after(1, simple_protection.load)
+minetest.after(1, function()
+	simple_protection.load_claims()
+	simple_protection.load_shareall()
+end)
 
 simple_protection.old_is_protected = minetest.is_protected
 minetest.is_protected = function(pos, player_name)
@@ -40,18 +43,28 @@ minetest.register_globalstep(function(dtime)
 	end
 	simple_protection.hud_time = 0
 	-- get players
+	local shared = simple_protection.share
 	for _,player in ipairs(minetest.get_connected_players()) do
-		local player_pos = vector.round(player:getpos())
-		local data = simple_protection.get_data(player_pos)
+		local pos = vector.round(player:getpos())
 		local player_name = player:get_player_name()
-		if not data then
-			data = {owner="", shared={}}
+		
+		local current_owner = ""
+		local data = simple_protection.get_data(pos)
+		if data then
+			current_owner = data.owner
+		end
+		
+		local has_access = (current_owner == player_name)
+		if not has_access and data then
+			has_access = table_contains(data.shared, player_name)
+		end
+		if not has_access then
+			has_access = table_contains(shared[current_owner], player_name)
 		end
 		local changed = true
-		local has_access = (data.owner == player_name or data.shared[player_name])
 		
 		if simple_protection.player_huds[player_name] then
-			if simple_protection.player_huds[player_name].owner == data.owner and
+			if simple_protection.player_huds[player_name].owner == current_owner and
 				simple_protection.player_huds[player_name].had_access == has_access then
 				-- still the same hud
 				changed = false
@@ -63,7 +76,7 @@ minetest.register_globalstep(function(dtime)
 			simple_protection.player_huds[player_name] = nil
 		end
 		
-		if data.owner ~= "" and changed then
+		if current_owner ~= "" and changed then
 			-- green if access
 			local color = 0xFFFFFF
 			if has_access then
@@ -75,11 +88,11 @@ minetest.register_globalstep(function(dtime)
 					name			= "area_hud",
 					number			= color,
 					position		= {x=0.15, y=0.97},
-					text			= "Area owner: "..data.owner,
+					text			= "Area owner: "..current_owner,
 					scale			= {x=100,y=25},
 					alignment		= {x=0, y=0},
 				}), 
-				owner = data.owner, 
+				owner = current_owner, 
 				had_access = has_access
 			}
 		end
@@ -95,28 +108,29 @@ minetest.register_craftitem("simple_protection:claim", {
 			return
 		end
 		local player_name = user:get_player_name()
-		if simple_protection.old_is_protected(pointed_thing.under, player_name) then
+		local pos = pointed_thing.under
+		if simple_protection.old_is_protected(pos, player_name) then
 			minetest.chat_send_player(player_name, "Area is already protected by an other protection mod.")
 			return
 		end
 		if not simple_protection.underground_claim then
-			local y = simple_protection.get_y_axis(pointed_thing.under.y)
+			local y = simple_protection.get_y_axis(pos.y)
 			if y < simple_protection.underground_limit then
 				minetest.chat_send_player(player_name, "You can not claim areas under "..simple_protection.underground_limit.."m")
 				return
 			end
 		end
-		local pos = simple_protection.get_location(pointed_thing.under)
-		local data = simple_protection.claims[pos]
+		local area_pos = simple_protection.get_location(pos)
+		local data = simple_protection.claims[area_pos]
 		if data then
 			minetest.chat_send_player(player_name, "Area already owned by: "..data.owner)
 			return
 		end
 		itemstack:take_item(1)
-		simple_protection.claims[pos] = {owner=player_name, shared={}}
+		simple_protection.claims[area_pos] = {owner=player_name, shared={}}
 		simple_protection.save()
 		
-		minetest.add_entity(simple_protection.get_center(user:getpos()), "simple_protection:marker")
+		minetest.add_entity(simple_protection.get_center(pos), "simple_protection:marker")
 		minetest.chat_send_player(player_name, "Congratulations! You now own this area.")
 		return itemstack
 	end,
