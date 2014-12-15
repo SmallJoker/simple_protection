@@ -36,28 +36,46 @@ simple_protection.can_access = function(pos, player_name)
 	if not player_name or player_name == "" then
 		return false
 	end
-	-- allow pipeworks access
+	-- Allow pipeworks access
 	if player_name == ":pipeworks" then
 		return true
 	end
 	
-	-- get data of area
+	-- Data of current area
 	local data = simple_protection.get_data(pos)
+	
+	-- Area is not claimed
 	if not data then
+		-- Allow digging when claiming is not forced
+		if not simple_protection.claim_to_dig then
+			return true
+		end
+		
+		-- Claim everywhere? Disallow everywhere.
+		if simple_protection.underground_claim then
+			return false
+		end
+		-- Is it in claimable area? Yes? Disallow.
+		if pos.y >= simple_protection.underground_limit then
+			return false
+		end
 		return true
 	end
 	if player_name == data.owner then
 		return true
 	end
+	-- Owner shared the area with the player
 	if table_contains(simple_protection.share[data.owner], player_name) then
 		return true
 	end
+	-- Globally shared area
 	if table_contains(data.shared, player_name) then
 		return true
 	end
 	if table_contains(data.shared, "*all") then
 		return true
 	end
+	-- Admin power
 	if minetest.check_player_privs(player_name, {simple_protection=true}) then
 		return true
 	end
@@ -92,13 +110,13 @@ simple_protection.get_center = function(pos1)
 		z = pos1.z / size
 	}
 	pos = vector.floor(pos)
+	-- Get the middle of the area
 	pos.x = pos.x * size + (size / 2)
-	pos.z = pos.z * size + (size / 2) -- add half of chunk
+	pos.z = pos.z * size + (size / 2)
 	return pos
 end
 
 simple_protection.load_claims = function()
-	minetest.log("action", "Loading simple protection claims")
 	local file = io.open(simple_protection.file, "r")
 	if not file then
 		return
@@ -106,7 +124,7 @@ simple_protection.load_claims = function()
 	for line in file:lines() do
 		if line ~= "" then
 			local data = line:split(" ")
-			--coords, owner, shared1, shared2, ..
+			-- Line format: pos, owner, shared_player, shared_player2, ..
 			local _shared = {}
 			if #data > 2 then
 				for index = 3, #data do
@@ -119,10 +137,10 @@ simple_protection.load_claims = function()
 		end
 	end
 	io.close(file)
+	minetest.log("action", "Loaded claim data")
 end
 
 simple_protection.load_shareall = function()
-	minetest.log("action", "Loading shared claims")
 	local file = io.open(simple_protection.sharefile, "r")
 	if not file then
 		return
@@ -130,7 +148,7 @@ simple_protection.load_shareall = function()
 	for line in file:lines() do
 		if line ~= "" then
 			local data = line:split(" ")
-			-- owner, shared1, shared2, ..
+			-- Line format: owner, shared_player, shared_player2, ..
 			local _shared = {}
 			if #data > 1 then
 				for index = 2, #data do
@@ -143,6 +161,7 @@ simple_protection.load_shareall = function()
 		end
 	end
 	io.close(file)
+	minetest.log("action", "Loaded shared claims")
 end
 
 simple_protection.save = function()
@@ -157,6 +176,7 @@ simple_protection.save = function()
 		end
 	end
 	io.close(file)
+	-- Save globally shared areas
 	file = io.open(simple_protection.sharefile, "w")
 	for name, players in pairs(simple_protection.share) do
 		if #players > 0 then
@@ -171,16 +191,16 @@ simple_protection.save = function()
 end
 
 simple_protection.load_config = function()
-	-- load defaults
+	-- Load defaults
 	dofile(simple_protection.mod_path.."/settings.conf")
 	local file = io.open(simple_protection.conf, "r")
 	if file then
 		io.close(file)
-		-- load existing config
+		-- Load existing config
 		dofile(simple_protection.conf)
 		return
 	end
-	-- duplicate configuration file
+	-- Duplicate configuration file on first time
 	local src = io.open(simple_protection.mod_path.."/settings.conf", "r")
 	file = io.open(simple_protection.conf, "w")
 	
