@@ -78,7 +78,7 @@ simple_protection.command_show = function(name)
 	for i, player in ipairs(data.shared) do
 		text = text..player..", "
 	end
-	local shared = simple_protection.share[name]
+	local shared = simple_protection.share[data.owner]
 	if shared then
 		for i, player in ipairs(shared) do
 			text = text..player.."*, "
