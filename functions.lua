@@ -40,17 +40,17 @@ simple_protection.can_access = function(pos, player_name)
 	if player_name == ":pipeworks" then
 		return true
 	end
-	
+
 	-- Data of current area
 	local data = simple_protection.get_data(pos)
-	
+
 	-- Area is not claimed
 	if not data then
 		-- Allow digging when claiming is not forced
 		if not simple_protection.claim_to_dig then
 			return true
 		end
-		
+
 		-- Claim everywhere? Disallow everywhere.
 		if simple_protection.underground_claim then
 			return false
@@ -83,7 +83,7 @@ simple_protection.can_access = function(pos, player_name)
 end
 
 simple_protection.get_data = function(pos)
-	local str = simple_protection.get_location(pos)
+	local str = simple_protection.get_location(vector.round(pos))
 	return simple_protection.claims[str]
 end
 
@@ -129,7 +129,7 @@ simple_protection.load_claims = function()
 			if #data > 2 then
 				for index = 3, #data do
 					if data[index] ~= "" then
-						_shared[data[index]] = true
+						table.insert(_shared, data[index])
 					end
 				end
 			end
@@ -203,7 +203,7 @@ simple_protection.load_config = function()
 	-- Duplicate configuration file on first time
 	local src = io.open(simple_protection.mod_path.."/settings.conf", "r")
 	file = io.open(simple_protection.conf, "w")
-	
+
 	while true do
 		local block = src:read(128) -- 128B at once
 		if not block then

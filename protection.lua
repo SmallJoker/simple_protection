@@ -15,7 +15,7 @@ simple_protection.old_item_place = minetest.item_place
 minetest.item_place = function(itemstack, placer, pointed_thing)
 	local player_name = placer:get_player_name()
 	--local under_node = minetest.get_node(pointed_thing.under)
-	
+
 	-- if rightclick on special nodes
 	--[[if not placer:get_player_control().sneak then
 		if minetest.registered_nodes[under_node.name] and minetest.registered_nodes[under_node.name].on_rightclick then
@@ -23,7 +23,7 @@ minetest.item_place = function(itemstack, placer, pointed_thing)
 			return itemstack
 		end
 	end]]
-	
+
 	if simple_protection.can_access(pointed_thing.above, player_name) or not minetest.registered_nodes[itemstack:get_name()] then
 		return simple_protection.old_item_place(itemstack, placer, pointed_thing)
 	else
@@ -47,13 +47,13 @@ minetest.register_globalstep(function(dtime)
 	for _,player in ipairs(minetest.get_connected_players()) do
 		local pos = vector.round(player:getpos())
 		local player_name = player:get_player_name()
-		
+
 		local current_owner = ""
 		local data = simple_protection.get_data(pos)
 		if data then
 			current_owner = data.owner
 		end
-		
+
 		local has_access = (current_owner == player_name)
 		if not has_access and data then
 			has_access = table_contains(data.shared, player_name)
@@ -62,7 +62,7 @@ minetest.register_globalstep(function(dtime)
 			has_access = table_contains(shared[current_owner], player_name)
 		end
 		local changed = true
-		
+
 		if simple_protection.player_huds[player_name] then
 			if simple_protection.player_huds[player_name].owner == current_owner and
 				simple_protection.player_huds[player_name].had_access == has_access then
@@ -70,12 +70,12 @@ minetest.register_globalstep(function(dtime)
 				changed = false
 			end
 		end
-		
+
 		if simple_protection.player_huds[player_name] and changed then
 			player:hud_remove(simple_protection.player_huds[player_name].hudID)
 			simple_protection.player_huds[player_name] = nil
 		end
-		
+
 		if current_owner ~= "" and changed then
 			-- green if access
 			local color = 0xFFFFFF
@@ -91,8 +91,8 @@ minetest.register_globalstep(function(dtime)
 					text			= "Area owner: "..current_owner,
 					scale			= {x=100,y=25},
 					alignment		= {x=0, y=0},
-				}), 
-				owner = current_owner, 
+				}),
+				owner = current_owner,
 				had_access = has_access
 			}
 		end
@@ -129,7 +129,7 @@ minetest.register_craftitem("simple_protection:claim", {
 		itemstack:take_item(1)
 		simple_protection.claims[area_pos] = {owner=player_name, shared={}}
 		simple_protection.save()
-		
+
 		minetest.add_entity(simple_protection.get_center(pos), "simple_protection:marker")
 		minetest.chat_send_player(player_name, "Congratulations! You now own this area.")
 		return itemstack
