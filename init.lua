@@ -3,17 +3,17 @@
 -- License: WTFPL
 
 local world_path = minetest.get_worldpath()
-simple_protection = {}
-simple_protection.claims = {}
-simple_protection.share = {}
-simple_protection.mod_path = minetest.get_modpath("simple_protection")
-simple_protection.conf = world_path.."/s_protect.conf"
-simple_protection.file = world_path.."/s_protect.data"
-simple_protection.sharefile = world_path.."/s_protect_share.data"
+s_protect = {}
+s_protect.claims = {}
+s_protect.share = {}
+s_protect.mod_path = minetest.get_modpath("simple_protection")
+s_protect.conf = world_path.."/s_protect.conf"
+s_protect.file = world_path.."/s_protect.data"
+s_protect.sharefile = world_path.."/s_protect_share.data"
 
-dofile(simple_protection.mod_path.."/functions.lua")
-simple_protection.load_config()
-dofile(simple_protection.mod_path.."/protection.lua")
+dofile(s_protect.mod_path.."/functions.lua")
+s_protect.load_config()
+dofile(s_protect.mod_path.."/protection.lua")
 
 minetest.register_on_protection_violation(function(pos, player_name)
 	minetest.chat_send_player(player_name, "Do not try to modify this area!")
@@ -38,7 +38,7 @@ minetest.register_chatcommand("area", {
 			return
 		end
 		if param == "show" or param == "unclaim" then
-			return simple_protection["command_"..param](name)
+			return s_protect["command_"..param](name)
 		end
 		-- all other commands
 		local args = param:split(" ")
@@ -47,24 +47,25 @@ minetest.register_chatcommand("area", {
 		end
 		if args[1] == "share" or args[1] == "unshare" or
 			args[1] == "shareall" or args[1] == "unshareall" then
-			return simple_protection["command_"..args[1]](name, args[2])
+			return s_protect["command_"..args[1]](name, args[2])
 		end
 
 		return false, "Unknown command parameter: "..args[1]
 	end,
 })
 
-simple_protection.command_show = function(name)
+s_protect.command_show = function(name)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = vector.round(player:getpos())
-	local data = simple_protection.get_data(player_pos)
+	local data = s_protect.get_data(player_pos)
 
-	minetest.add_entity(simple_protection.get_center(player_pos), "simple_protection:marker")
-	local axis = simple_protection.get_y_axis(player_pos.y)
-	minetest.chat_send_player(name, "Vertical area limit from Y "..axis.." to "..(axis+simple_protection.claim_heigh))
+	minetest.add_entity(s_protect.get_center(player_pos), "s_protect:marker")
+	local axis = s_protect.get_y_axis(player_pos.y)
+	local y_end = axis + s_protect.claim_height
+	minetest.chat_send_player(name, "Vertical area limit from Y "..axis.." to "..y_end)
 
 	if not data then
-		if axis < simple_protection.underground_limit then
+		if axis < s_protect.underground_limit then
 			return true, "Area status: Not claimable"
 		end
 		return true, "Area status: Unowned (!)"
@@ -75,7 +76,7 @@ simple_protection.command_show = function(name)
 	for i, player in ipairs(data.shared) do
 		text = text..player..", "
 	end
-	local shared = simple_protection.share[data.owner]
+	local shared = s_protect.share[data.owner]
 	if shared then
 		for i, player in ipairs(shared) do
 			text = text..player.."*, "
@@ -87,7 +88,7 @@ simple_protection.command_show = function(name)
 	end
 end
 
-simple_protection.command_share = function(name, param)
+s_protect.command_share = function(name, param)
 	if name == param or param == "" then
 		return false, "No player name given."
 	end
@@ -96,14 +97,14 @@ simple_protection.command_share = function(name, param)
 	end
 
 	local player = minetest.get_player_by_name(name)
-	local data = simple_protection.get_data(player:getpos())
+	local data = s_protect.get_data(player:getpos())
 	if not data then
 		return false, "This area is not claimed yet."
 	end
-	if name ~= data.owner and not minetest.check_player_privs(name, {simple_protection=true}) then
+	if name ~= data.owner and not minetest.check_player_privs(name, {s_protect=true}) then
 		return false, "You do not own this area."
 	end
-	local shared = simple_protection.share[name]
+	local shared = s_protect.share[name]
 	if shared and shared[param] then
 		return true, param.." already has access to all your areas."
 	end
@@ -112,7 +113,7 @@ simple_protection.command_share = function(name, param)
 		return true, param.." already has access to this area."
 	end
 	table.insert(data.shared, param)
-	simple_protection.save()
+	s_protect.save()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, name.." shared an area with you.")
@@ -120,12 +121,12 @@ simple_protection.command_share = function(name, param)
 	return true, param.." has now access to this area."
 end
 
-simple_protection.command_unshare = function(name, param)
+s_protect.command_unshare = function(name, param)
 	if name == param or param == "" then
 		return false, "No player name given."
 	end
 	local player = minetest.get_player_by_name(name)
-	local data = simple_protection.get_data(player:getpos())
+	local data = s_protect.get_data(player:getpos())
 	if not data then
 		return false, "This area is not claimed yet."
 	end
@@ -136,7 +137,7 @@ simple_protection.command_unshare = function(name, param)
 		return true, "This player has no access to this area."
 	end
 	table_delete(data.shared, param)
-	simple_protection.save()
+	s_protect.save()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, name.." unshared an area with you.")
@@ -144,7 +145,7 @@ simple_protection.command_unshare = function(name, param)
 	return true, param.." has no longer access to this area."
 end
 
-simple_protection.command_shareall = function(name, param)
+s_protect.command_shareall = function(name, param)
 	if name == param or param == "" then
 		return false, "No player name given."
 	end
@@ -155,15 +156,15 @@ simple_protection.command_shareall = function(name, param)
 		return false, "Unknown player."
 	end
 
-	local shared = simple_protection.share[name]
+	local shared = s_protect.share[name]
 	if table_contains(shared, param) then
 		return true, param.." already has now access to all your areas."
 	end
 	if not shared then
-		simple_protection.share[name] = {}
+		s_protect.share[name] = {}
 	end
-	table.insert(simple_protection.share[name], param)
-	simple_protection.save()
+	table.insert(s_protect.share[name], param)
+	s_protect.save()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, name.." shared all areas with you.")
@@ -171,23 +172,23 @@ simple_protection.command_shareall = function(name, param)
 	return true, param.." has now access to all your areas."
 end
 
-simple_protection.command_unshareall = function(name, param)
+s_protect.command_unshareall = function(name, param)
 	if name == param then return end
 	local removed = false
-	local shared = simple_protection.share[name]
+	local shared = s_protect.share[name]
 	if table_delete(shared, param) then
 		removed = true
 	end
 
 	--loops everywhere
-	for pos, data in pairs(simple_protection.claims) do
+	for pos, data in pairs(s_protect.claims) do
 		if data.owner == name then
 			if table_delete(data.shared, param) then
 				removed = true
 			end
 		end
 	end
-	simple_protection.save()
+	s_protect.save()
 	if not removed then
 		minetest.chat_send_player(name, param.." did not have access to any of your areas.")
 		return
@@ -198,11 +199,11 @@ simple_protection.command_unshareall = function(name, param)
 	end
 end
 
-simple_protection.command_unclaim = function(name)
+s_protect.command_unclaim = function(name)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = vector.round(player:getpos())
-	local pos = simple_protection.get_location(player_pos)
-	local data = simple_protection.claims[pos]
+	local pos = s_protect.get_location(player_pos)
+	local data = s_protect.claims[pos]
 	if not data then
 		minetest.chat_send_player(name, "You do not own this area.")
 		return
@@ -212,13 +213,13 @@ simple_protection.command_unclaim = function(name)
 		minetest.chat_send_player(name, "You do not own this area.")
 		return
 	end
-	if not priv and simple_protection.claim_return then
+	if not priv and s_protect.claim_return then
 		local inv = player:get_inventory()
 		if inv:room_for_item("main", "simple_protection:claim") then
 			inv:add_item("main", "simple_protection:claim")
 		end
 	end
-	simple_protection.claims[pos] = nil
-	simple_protection.save()
+	s_protect.claims[pos] = nil
+	s_protect.save()
 	minetest.chat_send_player(name, "This area is unowned now.")
 end

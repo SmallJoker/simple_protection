@@ -32,7 +32,7 @@ function table_delete(t, e)
 	return removed
 end
 
-simple_protection.can_access = function(pos, player_name)
+s_protect.can_access = function(pos, player_name)
 	if not player_name or player_name == "" then
 		return false
 	end
@@ -42,21 +42,21 @@ simple_protection.can_access = function(pos, player_name)
 	end
 
 	-- Data of current area
-	local data = simple_protection.get_data(pos)
+	local data = s_protect.get_data(pos)
 
 	-- Area is not claimed
 	if not data then
 		-- Allow digging when claiming is not forced
-		if not simple_protection.claim_to_dig then
+		if not s_protect.claim_to_dig then
 			return true
 		end
 
 		-- Claim everywhere? Disallow everywhere.
-		if simple_protection.underground_claim then
+		if s_protect.underground_claim then
 			return false
 		end
 		-- Is it in claimable area? Yes? Disallow.
-		if pos.y >= simple_protection.underground_limit then
+		if pos.y >= s_protect.underground_limit then
 			return false
 		end
 		return true
@@ -65,7 +65,7 @@ simple_protection.can_access = function(pos, player_name)
 		return true
 	end
 	-- Owner shared the area with the player
-	if table_contains(simple_protection.share[data.owner], player_name) then
+	if table_contains(s_protect.share[data.owner], player_name) then
 		return true
 	end
 	-- Globally shared area
@@ -82,28 +82,28 @@ simple_protection.can_access = function(pos, player_name)
 	return false
 end
 
-simple_protection.get_data = function(pos)
-	local str = simple_protection.get_location(vector.round(pos))
-	return simple_protection.claims[str]
+s_protect.get_data = function(pos)
+	local str = s_protect.get_location(vector.round(pos))
+	return s_protect.claims[str]
 end
 
-simple_protection.get_y_axis = function(y)
-	y = (y + simple_protection.start_underground) / simple_protection.claim_heigh
-	return math.floor(y) * simple_protection.claim_heigh - simple_protection.start_underground
+s_protect.get_y_axis = function(y)
+	y = (y + s_protect.start_underground) / s_protect.claim_height
+	return math.floor(y) * s_protect.claim_height - s_protect.start_underground
 end
 
-simple_protection.get_location = function(pos1)
+s_protect.get_location = function(pos1)
 	local pos = {
-		x = pos1.x / simple_protection.claim_size,
-		y = (pos1.y + simple_protection.start_underground) / simple_protection.claim_heigh,
-		z = pos1.z / simple_protection.claim_size
+		x = pos1.x / s_protect.claim_size,
+		y = (pos1.y + s_protect.start_underground) / s_protect.claim_height,
+		z = pos1.z / s_protect.claim_size
 	}
 	pos = vector.floor(pos)
 	return pos.x..","..pos.y..","..pos.z
 end
 
-simple_protection.get_center = function(pos1)
-	local size = simple_protection.claim_size
+s_protect.get_center = function(pos1)
+	local size = s_protect.claim_size
 	local pos = {
 		x = pos1.x / size,
 		y = pos1.y + 1.5,
@@ -116,8 +116,8 @@ simple_protection.get_center = function(pos1)
 	return pos
 end
 
-simple_protection.load_claims = function()
-	local file = io.open(simple_protection.file, "r")
+s_protect.load_claims = function()
+	local file = io.open(s_protect.file, "r")
 	if not file then
 		return
 	end
@@ -133,15 +133,15 @@ simple_protection.load_claims = function()
 					end
 				end
 			end
-			simple_protection.claims[data[1]] = {owner=data[2], shared=_shared}
+			s_protect.claims[data[1]] = {owner=data[2], shared=_shared}
 		end
 	end
 	io.close(file)
 	minetest.log("action", "Loaded claim data")
 end
 
-simple_protection.load_shareall = function()
-	local file = io.open(simple_protection.sharefile, "r")
+s_protect.load_shareall = function()
+	local file = io.open(s_protect.sharefile, "r")
 	if not file then
 		return
 	end
@@ -156,7 +156,7 @@ simple_protection.load_shareall = function()
 						table.insert(_shared, data[index])
 					end
 				end
-				simple_protection.share[data[1]] = _shared
+				s_protect.share[data[1]] = _shared
 			end
 		end
 	end
@@ -164,9 +164,9 @@ simple_protection.load_shareall = function()
 	minetest.log("action", "Loaded shared claims")
 end
 
-simple_protection.save = function()
-	local file = io.open(simple_protection.file, "w")
-	for pos, data in pairs(simple_protection.claims) do
+s_protect.save = function()
+	local file = io.open(s_protect.file, "w")
+	for pos, data in pairs(s_protect.claims) do
 		if data.owner and data.owner ~= "" then
 			local shared = ""
 			for i, player in ipairs(data.shared) do
@@ -177,8 +177,8 @@ simple_protection.save = function()
 	end
 	io.close(file)
 	-- Save globally shared areas
-	file = io.open(simple_protection.sharefile, "w")
-	for name, players in pairs(simple_protection.share) do
+	file = io.open(s_protect.sharefile, "w")
+	for name, players in pairs(s_protect.share) do
 		if #players > 0 then
 			local shared = ""
 			for i, player in ipairs(players) do
@@ -190,19 +190,29 @@ simple_protection.save = function()
 	io.close(file)
 end
 
-simple_protection.load_config = function()
+s_protect.load_config = function()
 	-- Load defaults
-	dofile(simple_protection.mod_path.."/settings.conf")
-	local file = io.open(simple_protection.conf, "r")
+	dofile(s_protect.mod_path.."/settings.conf")
+	local file = io.open(s_protect.conf, "r")
 	if file then
 		io.close(file)
 		-- Load existing config
-		dofile(simple_protection.conf)
+		simple_protection = {}
+		dofile(s_protect.conf)
+
+		-- Backwards compatibility
+		for k, v in pairs(simple_protection) do
+			s_protect[k] = v
+		end
+		simple_protection = nil
+		if s_protect.claim_heigh then
+			s_protect.claim_height = s_protect.claim_heigh
+		end
 		return
 	end
 	-- Duplicate configuration file on first time
-	local src = io.open(simple_protection.mod_path.."/settings.conf", "r")
-	file = io.open(simple_protection.conf, "w")
+	local src = io.open(s_protect.mod_path.."/settings.conf", "r")
+	file = io.open(s_protect.conf, "w")
 
 	while true do
 		local block = src:read(128) -- 128B at once
