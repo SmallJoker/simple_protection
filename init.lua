@@ -59,7 +59,7 @@ s_protect.command_show = function(name)
 	local player_pos = vector.round(player:getpos())
 	local data = s_protect.get_data(player_pos)
 
-	minetest.add_entity(s_protect.get_center(player_pos), "s_protect:marker")
+	minetest.add_entity(s_protect.get_center(player_pos), "simple_protection:marker")
 	local axis = s_protect.get_y_axis(player_pos.y)
 	local y_end = axis + s_protect.claim_height
 	minetest.chat_send_player(name, "Vertical area limit from Y "..axis.." to "..y_end)
@@ -180,7 +180,7 @@ s_protect.command_unshareall = function(name, param)
 		removed = true
 	end
 
-	--loops everywhere
+	-- Unshare each single claim
 	for pos, data in pairs(s_protect.claims) do
 		if data.owner == name then
 			if table_delete(data.shared, param) then
@@ -188,15 +188,14 @@ s_protect.command_unshareall = function(name, param)
 			end
 		end
 	end
-	s_protect.save()
 	if not removed then
-		minetest.chat_send_player(name, param.." did not have access to any of your areas.")
-		return
+		return false, param.." did not have access to any of your areas."
 	end
-	minetest.chat_send_player(name, param.." has no longer access to your areas.")
+	s_protect.save()
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, name.." unshared all areas with you.")
 	end
+	return true, param.." has no longer access to your areas."
 end
 
 s_protect.command_unclaim = function(name)
@@ -205,13 +204,11 @@ s_protect.command_unclaim = function(name)
 	local pos = s_protect.get_location(player_pos)
 	local data = s_protect.claims[pos]
 	if not data then
-		minetest.chat_send_player(name, "You do not own this area.")
-		return
+		return false, "You do not own this area."
 	end
-	local priv = minetest.check_player_privs(name, {simple_protection=true})
+	local privs = minetest.check_player_privs(name, {simple_protection=true})
 	if name ~= data.owner and not priv then
-		minetest.chat_send_player(name, "You do not own this area.")
-		return
+		return false, "You do not own this area."
 	end
 	if not priv and s_protect.claim_return then
 		local inv = player:get_inventory()
@@ -221,5 +218,5 @@ s_protect.command_unclaim = function(name)
 	end
 	s_protect.claims[pos] = nil
 	s_protect.save()
-	minetest.chat_send_player(name, "This area is unowned now.")
+	return true, "This area is unowned now."
 end

@@ -33,18 +33,19 @@ minetest.item_place = function(itemstack, placer, pointed_thing)
 	end
 end
 
-s_protect.hud_time = 0
+local hud_time = 0
 s_protect.player_huds = {}
 
 minetest.register_globalstep(function(dtime)
-	s_protect.hud_time = s_protect.hud_time + dtime
-	if s_protect.hud_time < 3 then
+	hud_time = hud_time + dtime
+	if hud_time < 3 then
 		return
 	end
-	s_protect.hud_time = 0
-	-- get players
+	hud_time = 0
+
+
 	local shared = s_protect.share
-	for _,player in ipairs(minetest.get_connected_players()) do
+	for _, player in ipairs(minetest.get_connected_players()) do
 		local pos = vector.round(player:getpos())
 		local player_name = player:get_player_name()
 
@@ -56,23 +57,24 @@ minetest.register_globalstep(function(dtime)
 
 		local has_access = (current_owner == player_name)
 		if not has_access and data then
+			-- Check if this area is shared with this player
 			has_access = table_contains(data.shared, player_name)
 		end
 		if not has_access then
+			-- Check if all areas are shared with this player
 			has_access = table_contains(shared[current_owner], player_name)
 		end
 		local changed = true
 
-		if s_protect.player_huds[player_name] then
-			if s_protect.player_huds[player_name].owner == current_owner and
-				s_protect.player_huds[player_name].had_access == has_access then
-				-- still the same hud
-				changed = false
-			end
+		local hud_table = s_protect.player_huds[player_name]
+		if hud_table and hud_table.owner == current_owner
+				and hud_table.had_access == has_access then
+			-- still the same hud
+			changed = false
 		end
 
-		if s_protect.player_huds[player_name] and changed then
-			player:hud_remove(s_protect.player_huds[player_name].hudID)
+		if hud_table and changed then
+			player:hud_remove(hud_table.hudID)
 			s_protect.player_huds[player_name] = nil
 		end
 
