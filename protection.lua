@@ -1,3 +1,6 @@
+local S = s_protect.gettext
+local SR = s_protect.gettext_replace
+
 minetest.after(1, function()
 	s_protect.load_claims()
 	s_protect.load_shareall()
@@ -11,7 +14,7 @@ minetest.is_protected = function(pos, player_name)
 	return true
 end
 
-s_protect.old_item_place = minetest.item_place
+local old_item_place = minetest.item_place
 minetest.item_place = function(itemstack, placer, pointed_thing)
 	local player_name = placer:get_player_name()
 	--local under_node = minetest.get_node(pointed_thing.under)
@@ -25,10 +28,10 @@ minetest.item_place = function(itemstack, placer, pointed_thing)
 	end]]
 
 	if s_protect.can_access(pointed_thing.above, player_name) or not minetest.registered_nodes[itemstack:get_name()] then
-		return s_protect.old_item_place(itemstack, placer, pointed_thing)
+		return old_item_place(itemstack, placer, pointed_thing)
 	else
 		local data = s_protect.get_data(pointed_thing.above)
-		minetest.chat_send_player(player_name, "Area owned by: "..data.owner)
+		minetest.chat_send_player(player_name, SR("Area owned by: $", data.owner))
 		return itemstack
 	end
 end
@@ -86,13 +89,13 @@ minetest.register_globalstep(function(dtime)
 			end
 			s_protect.player_huds[player_name] = {
 				hudID = player:hud_add({
-					hud_elem_type	= "text",
-					name			= "area_hud",
-					number			= color,
-					position		= {x=0.15, y=0.97},
-					text			= "Area owner: "..current_owner,
-					scale			= {x=100,y=25},
-					alignment		= {x=0, y=0},
+					hud_elem_type = "text",
+					name          = "area_hud",
+					number        = color,
+					position      = {x=0.15, y=0.97},
+					text          = SR("Area owner: $", current_owner),
+					scale         = {x=100, y=25},
+					alignment     = {x=0, y=0},
 				}),
 				owner = current_owner,
 				had_access = has_access
@@ -102,7 +105,7 @@ minetest.register_globalstep(function(dtime)
 end)
 
 minetest.register_craftitem("simple_protection:claim", {
-	description = "Claim stick",
+	description = S("Claim stick"),
 	inventory_image = "simple_protection_claim.png",
 	stack_max = 10,
 	on_use = function(itemstack, user, pointed_thing)
@@ -112,20 +115,23 @@ minetest.register_craftitem("simple_protection:claim", {
 		local player_name = user:get_player_name()
 		local pos = pointed_thing.under
 		if s_protect.old_is_protected(pos, player_name) then
-			minetest.chat_send_player(player_name, "Area is already protected by an other protection mod.")
+			minetest.chat_send_player(player_name,
+					S("This area is already protected by an other protection mod."))
 			return
 		end
 		if not s_protect.underground_claim then
 			local y = s_protect.get_y_axis(pos.y)
 			if y < s_protect.underground_limit then
-				minetest.chat_send_player(player_name, "You can not claim areas under "..s_protect.underground_limit.."m")
+				minetest.chat_send_player(player_name, SR("You can not claim areas below $.",
+						s_protect.underground_limit.."m"))
 				return
 			end
 		end
 		local area_pos = s_protect.get_location(pos)
 		local data = s_protect.claims[area_pos]
 		if data then
-			minetest.chat_send_player(player_name, "Area already owned by: "..data.owner)
+			minetest.chat_send_player(player_name,
+					SR("This area is already owned by: $", data.owner))
 			return
 		end
 		itemstack:take_item(1)
@@ -133,7 +139,7 @@ minetest.register_craftitem("simple_protection:claim", {
 		s_protect.save()
 
 		minetest.add_entity(s_protect.get_center(pos), "simple_protection:marker")
-		minetest.chat_send_player(player_name, "Congratulations! You now own this area.")
+		minetest.chat_send_player(player_name, S("Congratulations! You now own this area."))
 		return itemstack
 	end,
 })
