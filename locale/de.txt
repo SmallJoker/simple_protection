@@ -1,0 +1,75 @@
+# The dollar sign is reserved as placeholder to insert non-translated text
+# Translated by: Krock/SmallJoker
+
+
+# Privilege description
+Allows to modify and delete protected areas = Erlaubt das Abaendern und Entfernen von geschuetzten Gebieten
+
+#### AREA COMMAND ####
+
+# Command description
+Manages all of your areas. = Verwaltet alle deine geschuetzten Gebiete
+
+# /area
+Available area commands:
+Information about this area = Informationen ueber dieses Gebiet:
+(Un)share one area = Eine Zugriffs-Berechtigung eines Gebietes hinzufuegen/entfernen
+(Un)share all areas = Eine Zugriffs-Berechtigung fuer alle Gebiete hinzufuegen/entfernen
+Unclaim this area = Den Schutz fuer dieses Gebiet aufheben
+
+# Errors of /area
+Invalid number of arguments. Check '/area' for correct usage. = Ungueltige Anzahl an Parametern. Siehe '/area' fuer die korrekte Anwendung.
+Unknown command parameter: $ = Unbekannter Befehls-Parameter: $
+No player name given. = Kein Spielernahme gegeben.
+Unknown player. = Unbekannter Spieler.
+This area is not claimed yet. = Dieses Gebiet ist noch nicht geschuetzt.
+You do not own this area. = Du besitzt dieses Gebiet nicht.
+
+# /area show
+Vertical area limit from Y @1 to @2 = Senkrechte Weite des Gebietes von Y @1 bis @1
+Area status: @1 = Gebiets-Status: @1
+Not claimable = Nicht schuetzbar
+Unowned (!) = Nicht geschuetzt (!)
+Owned by $ = Von $ geschuetzt
+Players with access: $ = Spieler mit Zugriff: $
+
+# /area share <name>
+$ already has access to all your areas. = $ hat bereits Zugriff auf alle deine Gebiete.
+$ already has access to this area. = $ hat bereits Zugriff auf dieses Gebiet.
+$ shared an area with you. = Du hast jetzt Zugriff auf ein Gebiet von $.
+$ has now access to this area. = $ kann jetzt dieses Gebiet abaendern.
+
+# /area unshare <name>
+That player has no access to this area. = Dieser Spiler hat keinen Zufriff auf dieses Gebiet.
+$ unshared an area with you. = Du hast nun keinen Zugriff auf ein Gebiet von $ mehr.
+$ has no longer access to this area. = $ kann jetzt dieses Gebiet nicht mehr abaendern.
+
+# /area shareall <name>
+You can not share all your areas with everybody. = Du kannst nicht alle Gebiete mit jedem teilen.
+$ already has now access to all your areas. = $ hat bereits Zugriff auf alle deine Gebiete
+$ shared all areas with you. = $ hat dir Zufriff auf alle die Gebiete erlaubt.
+$ has now access to all your areas. = $ kann jetzt alle deine Gebiete abaendern.
+
+# /area unshareall <name>
+$ does not have access to any of your areas. = $ hat keinen Zugriff auf deine Gebiete.
+$ unshared all areas with you. = $ hat dir den Zugriff auf die Gebiete verwehrt.
+$ has no longer access to your areas. = $ kann keines deiner Gebiete mehr abaendern.
+
+# /area unclaim
+This area is unowned now. = Dieses Gebiet ist nun nicht mehr geschuetzt.
+
+
+#### Protection ####
+
+# Item place information
+Area owned by: $ = Gebiet geschuetzt durch: $
+# Hud text
+Area owner: $ = Gebiets-Besizer: $
+
+# Item: Claim stick
+Claim stick = Gebiets-Besetzer-Tool
+This area is already protected by an other protection mod. = Dieses Gebiet ist bereits durch eine andere Mod geschuetzt.
+You can not claim areas below $. = Du kannst keine Gebiete unterhalb von $ schuetzen.
+This area is already owned by: $ = $ besitzt dieses Gebiet bereits.
+Congratulations! You now own this area. = Glueckwunsch! Du besitzt dieses Gebiet jetzt.
+Do not try to modify this area! = Versuch nicht, dieses Gebiet zu verunstalten!

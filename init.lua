@@ -48,17 +48,20 @@ minetest.register_privilege("simple_protection", S("Allows to modify and delete 
 
 minetest.register_chatcommand("area", {
 	description = S("Manages all of your areas."),
-	privs = {interact=true},
+	privs = {interact = true},
 	func = function(name, param)
 		if param == "" then
-			local function chat_send(text)
-				minetest.chat_send_player(name, S(text))
+			local function chat_send(text, raw_text)
+				if raw_text then
+					raw_text = ": "..raw_text
+				end
+				minetest.chat_send_player(name, S(text).." "..(raw_text or ""))
 			end
 			chat_send("Available area commands:")
-			chat_send("Information about this area: /area show")
-			chat_send("(Un)share one area: /area (un)share <name>")
-			chat_send("(Un)share all areas: /area (un)shareall <name>")
-			chat_send("Unclaim this area: /area unclaim")
+			chat_send("Information about this area", "/area show")
+			chat_send("(Un)share one area",  "/area (un)share <name>")
+			chat_send("(Un)share all areas", "/area (un)shareall <name>")
+			chat_send("Unclaim this area",   "/area unclaim")
 			return
 		end
 		if param == "show" or param == "unclaim" then
@@ -67,7 +70,7 @@ minetest.register_chatcommand("area", {
 		-- all other commands
 		local args = param:split(" ")
 		if #args ~= 2 then
-			return false, S("Invalid number of arguments, check '/area' for correct usage.")
+			return false, S("Invalid number of arguments. Check '/area' for correct usage.")
 		end
 		if args[1] == "share" or args[1] == "unshare" or
 			args[1] == "shareall" or args[1] == "unshareall" then
@@ -214,7 +217,7 @@ s_protect.command_unshareall = function(name, param)
 		end
 	end
 	if not removed then
-		return false, SR("$ did not have access to any of your areas.", param)
+		return false, SR("$ does not have access to any of your areas.", param)
 	end
 	s_protect.save()
 	if minetest.get_player_by_name(param) then

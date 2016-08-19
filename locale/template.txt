@@ -1,4 +1,6 @@
 # The dollar sign is reserved as placeholder to insert non-translated text
+# Translated by: <foobar>
+
 
 # Privilege description
 Allows to modify and delete protected areas =
@@ -10,13 +12,13 @@ Manages all of your areas. =
 
 # /area
 Available area commands:
-Information about this area: /area show =
-(Un)share one area: /area (un)share <name> =
-(Un)share all areas: /area (un)shareall <name> =
-Unclaim this area: /area unclaim =
+Information about this area =
+(Un)share one area =
+(Un)share all areas =
+Unclaim this area =
 
 # Errors of /area
-Invalid number of arguments, check '/area' for correct usage. =
+Invalid number of arguments. Check '/area' for correct usage. =
 Unknown command parameter: $ =
 No player name given. =
 Unknown player. =
@@ -49,13 +51,12 @@ $ shared all areas with you. =
 $ has now access to all your areas. =
 
 # /area unshareall <name>
-$ did not have access to any of your areas. =
+$ does not have access to any of your areas. =
 $ unshared all areas with you. =
 $ has no longer access to your areas. =
 
 # /area unclaim
 This area is unowned now. =
-
 
 
 #### Protection ####
