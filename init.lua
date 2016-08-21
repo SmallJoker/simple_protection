@@ -25,7 +25,7 @@ end
 
 -- Function to insert words without translating
 s_protect.gettext_replace = function(rawtext, replacement, ...)
-	return s_protect.gettext(rawtext, {...}):gsub("[$]", replacement)
+	return s_protect.gettext(rawtext, ...):gsub("[$]", replacement)
 end
 local S = s_protect.gettext
 local SR = s_protect.gettext_replace
