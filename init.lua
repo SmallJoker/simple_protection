@@ -234,7 +234,7 @@ s_protect.command_unclaim = function(name)
 	if not data then
 		return false, S("You do not own this area.")
 	end
-	local privs = minetest.check_player_privs(name, {simple_protection=true})
+	local priv = minetest.check_player_privs(name, {simple_protection=true})
 	if name ~= data.owner and not priv then
 		return false, S("You do not own this area.")
 	end
