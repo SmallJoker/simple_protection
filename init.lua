@@ -94,9 +94,9 @@ s_protect.command_show = function(name)
 
 	if not data then
 		if axis < s_protect.underground_limit then
-			return true, S("Area status: @1", "Not claimable")
+			return true, S("Area status: @1", S("Not claimable"))
 		end
-		return true, S("Area status: @1", "Unowned (!)")
+		return true, S("Area status: @1", S("Unowned (!)"))
 	end
 
 	minetest.chat_send_player(name, SR("Area status: @1", data.owner, "Owned by $"))
