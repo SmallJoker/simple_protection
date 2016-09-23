@@ -1,0 +1,75 @@
+# The dollar sign is reserved as placeholder to insert non-translated text
+# Translated by: BrunoMine
+
+# Privilege description
+Allows to modify and delete protected areas = Permitir modificar e deletar areas protegidas
+
+#### AREA COMMAND ####
+
+# Command description
+Manages all of your areas. = Gerencia todas as suas areas.
+
+# /area
+Available area commands: = Comandos disponiveis:
+Information about this area: /area show = Dados sobre essa area: /area show
+(Un)share one area: /area (un)share <name> = (Des)compartilha uma area: /area (un)share <nome>
+(Un)share all areas: /area (un)shareall <name> = (Des)compartilha todas areas: /area (un)shareall <nome>
+Unclaim this area: /area unclaim = Desfazer-se dessa area: /area unclaim
+
+# Errors of /area
+Invalid number of arguments, check '/area' for correct usage. = Numero de argumentos invalido, use '/area' para o uso correto.
+Unknown command parameter: $ = Parametro de comando desconhecido: $
+No player name given. = Nenhum nome de jogador dado.
+Unknown player. = Jogador desconhecido.
+This area is not claimed yet. = Essa area nao foi reivindicada ainda.
+You do not own this area. = Voce nao pode possuir essa area.
+
+# /area show
+Vertical area limit from Y @1 to @2 = Limite vertical da area em Y @1 a @2
+Area status: @1 = Status da area: @1
+Not claimable = Nao reivindicada
+Unowned (!) = Sem dono (!)
+Owned by $ = Reivindicada por $
+Players with access: $ = Jogadores com acesso: $
+
+# /area share <name>
+$ already has access to all your areas. = $ ja possui acesso a todas suas areas.
+$ already has access to this area. = $ ja possui acesso a essa area.
+$ shared an area with you. = $ compartilhou uma area contigo.
+$ has now access to this area. = $ agora tem acesso nessa area.
+
+# /area unshare <name>
+That player has no access to this area. = Esse jogador nao tem acesso a essa area.
+$ unshared an area with you. = $ descompartilhou uma area contigo.
+$ has no longer access to this area. = $ deixou de ter acesso a essa area.
+
+# /area shareall <name>
+You can not share all your areas with everybody. = Nao podes compartilhar todas as suas areas com todos.
+$ already has now access to all your areas. = $ ja possui agora acesso a todas suas areas.
+$ shared all areas with you. = $ compartilhou todas as areas contigo.
+$ has now access to all your areas. = $ agora tem acesso a todas suas areas.
+
+# /area unshareall <name>
+$ did not have access to any of your areas. = $ nao tem acesso a nenhuma de suas areas.
+$ unshared all areas with you. = $ descompartilhou todas areas contigo.
+$ has no longer access to your areas. = $ deixou de ter acesso a todas suas areas.
+
+# /area unclaim
+This area is unowned now. = Essa area deixou de ser reivindicada agora.
+
+
+
+#### Protection ####
+
+# Item place information
+Area owned by: $ = Area possuida por: $
+# Hud text
+Area owner: $ = Area de: $
+
+# Item: Claim stick
+Claim stick = Graveto Reivindicador
+This area is already protected by an other protection mod. = Essa area ja foi protegida por um outro mod protetor.
+You can not claim areas below $. = Nao podes reivindicar areas abaixo $.
+This area is already owned by: $ = Essa area ja foi reivindicada por: $.
+Congratulations! You now own this area. = Parabens! Agora reivindicaste essa area.
+Do not try to modify this area! = Nao tente modificar essa area!
