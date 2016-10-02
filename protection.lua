@@ -1,5 +1,4 @@
 local S = s_protect.gettext
-local SR = s_protect.gettext_replace
 
 minetest.after(1, function()
 	s_protect.load_claims()
@@ -31,7 +30,7 @@ minetest.item_place = function(itemstack, placer, pointed_thing)
 		return old_item_place(itemstack, placer, pointed_thing)
 	else
 		local data = s_protect.get_data(pointed_thing.above)
-		minetest.chat_send_player(player_name, SR("Area owned by: $", data.owner))
+		minetest.chat_send_player(player_name, S("Area owned by: @1", data.owner))
 		return itemstack
 	end
 end
@@ -93,7 +92,7 @@ minetest.register_globalstep(function(dtime)
 					name          = "area_hud",
 					number        = color,
 					position      = {x=0.15, y=0.97},
-					text          = SR("Area owner: $", current_owner),
+					text          = S("Area owner: @1", current_owner),
 					scale         = {x=100, y=25},
 					alignment     = {x=0, y=0},
 				}),
@@ -122,7 +121,7 @@ minetest.register_craftitem("simple_protection:claim", {
 		if not s_protect.underground_claim then
 			local y = s_protect.get_y_axis(pos.y)
 			if y < s_protect.underground_limit then
-				minetest.chat_send_player(player_name, SR("You can not claim areas below $.",
+				minetest.chat_send_player(player_name, S("You can not claim areas below @1.",
 						s_protect.underground_limit.."m"))
 				return
 			end
@@ -131,7 +130,7 @@ minetest.register_craftitem("simple_protection:claim", {
 		local data = s_protect.claims[area_pos]
 		if data then
 			minetest.chat_send_player(player_name,
-					SR("This area is already owned by: $", data.owner))
+					S("This area is already owned by: @1", data.owner))
 			return
 		end
 		itemstack:take_item(1)

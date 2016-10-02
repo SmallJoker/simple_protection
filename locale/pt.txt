@@ -1,4 +1,3 @@
-# The dollar sign is reserved as placeholder to insert non-translated text
 # Translated by: BrunoMine
 
 # Privilege description
@@ -18,7 +17,7 @@ Unclaim this area: /area unclaim = Desfazer-se dessa area: /area unclaim
 
 # Errors of /area
 Invalid number of arguments, check '/area' for correct usage. = Numero de argumentos invalido, use '/area' para o uso correto.
-Unknown command parameter: $ = Parametro de comando desconhecido: $
+Unknown command parameter: @1 = Parametro de comando desconhecido: @1
 No player name given. = Nenhum nome de jogador dado.
 Unknown player. = Jogador desconhecido.
 This area is not claimed yet. = Essa area nao foi reivindicada ainda.
@@ -29,30 +28,30 @@ Vertical area limit from Y @1 to @2 = Limite vertical da area em Y @1 a @2
 Area status: @1 = Status da area: @1
 Not claimable = Nao reivindicada
 Unowned (!) = Sem dono (!)
-Owned by $ = Reivindicada por $
-Players with access: $ = Jogadores com acesso: $
+Owned by @1 = Reivindicada por @1
+Players with access: @1 = Jogadores com acesso: @1
 
 # /area share <name>
-$ already has access to all your areas. = $ ja possui acesso a todas suas areas.
-$ already has access to this area. = $ ja possui acesso a essa area.
-$ shared an area with you. = $ compartilhou uma area contigo.
-$ has now access to this area. = $ agora tem acesso nessa area.
+@1 already has access to all your areas. = @1 ja possui acesso a todas suas areas.
+@1 already has access to this area. = @1 ja possui acesso a essa area.
+@1 shared an area with you. = @1 compartilhou uma area contigo.
+@1 has now access to this area. = @1 agora tem acesso nessa area.
 
 # /area unshare <name>
 That player has no access to this area. = Esse jogador nao tem acesso a essa area.
-$ unshared an area with you. = $ descompartilhou uma area contigo.
-$ has no longer access to this area. = $ deixou de ter acesso a essa area.
+@1 unshared an area with you. = @1 descompartilhou uma area contigo.
+@1 has no longer access to this area. = @1 deixou de ter acesso a essa area.
 
 # /area shareall <name>
 You can not share all your areas with everybody. = Nao podes compartilhar todas as suas areas com todos.
-$ already has now access to all your areas. = $ ja possui agora acesso a todas suas areas.
-$ shared all areas with you. = $ compartilhou todas as areas contigo.
-$ has now access to all your areas. = $ agora tem acesso a todas suas areas.
+@1 already has now access to all your areas. = @1 ja possui agora acesso a todas suas areas.
+@1 shared all areas with you. = @1 compartilhou todas as areas contigo.
+@1 has now access to all your areas. = @1 agora tem acesso a todas suas areas.
 
 # /area unshareall <name>
-$ did not have access to any of your areas. = $ nao tem acesso a nenhuma de suas areas.
-$ unshared all areas with you. = $ descompartilhou todas areas contigo.
-$ has no longer access to your areas. = $ deixou de ter acesso a todas suas areas.
+@1 did not have access to any of your areas. = @1 nao tem acesso a nenhuma de suas areas.
+@1 unshared all areas with you. = @1 descompartilhou todas areas contigo.
+@1 has no longer access to your areas. = @1 deixou de ter acesso a todas suas areas.
 
 # /area unclaim
 This area is unowned now. = Essa area deixou de ser reivindicada agora.
@@ -62,14 +61,14 @@ This area is unowned now. = Essa area deixou de ser reivindicada agora.
 #### Protection ####
 
 # Item place information
-Area owned by: $ = Area possuida por: $
+Area owned by: @1 = Area possuida por: @1
 # Hud text
-Area owner: $ = Area de: $
+Area owner: @1 = Area de: @1
 
 # Item: Claim stick
 Claim stick = Graveto Reivindicador
 This area is already protected by an other protection mod. = Essa area ja foi protegida por um outro mod protetor.
-You can not claim areas below $. = Nao podes reivindicar areas abaixo $.
-This area is already owned by: $ = Essa area ja foi reivindicada por: $.
+You can not claim areas below @1. = Nao podes reivindicar areas abaixo @1.
+This area is already owned by: @1 = Essa area ja foi reivindicada por: @1.
 Congratulations! You now own this area. = Parabens! Agora reivindicaste essa area.
 Do not try to modify this area! = Nao tente modificar essa area!

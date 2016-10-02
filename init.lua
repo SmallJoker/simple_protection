@@ -22,13 +22,7 @@ end
 if minetest.get_modpath("intllib") then
     s_protect.gettext = intllib.Getter()
 end
-
--- Function to insert words without translating
-s_protect.gettext_replace = function(rawtext, replacement, ...)
-	return s_protect.gettext(rawtext, ...):gsub("[$]", replacement)
-end
 local S = s_protect.gettext
-local SR = s_protect.gettext_replace
 -- INTTLIB SUPPORT END
 
 
@@ -77,7 +71,7 @@ minetest.register_chatcommand("area", {
 			return s_protect["command_"..args[1]](name, args[2])
 		end
 
-		return false, SR("Unknown command parameter: $", args[1])
+		return false, S("Unknown command parameter: @1", args[1])
 	end,
 })
 
@@ -99,7 +93,7 @@ s_protect.command_show = function(name)
 		return true, S("Area status: @1", S("Unowned (!)"))
 	end
 
-	minetest.chat_send_player(name, SR("Area status: @1", data.owner, "Owned by $"))
+	minetest.chat_send_player(name, S("Area status: @1", S("Owned by @1", data.owner)))
 	local text = ""
 	for i, player in ipairs(data.shared) do
 		text = text..player..", "
@@ -112,7 +106,7 @@ s_protect.command_show = function(name)
 	end
 
 	if text ~= "" then
-		return true, SR("Players with access: $", text)
+		return true, S("Players with access: @1", text)
 	end
 end
 
@@ -134,19 +128,19 @@ s_protect.command_share = function(name, param)
 	end
 	local shared = s_protect.share[name]
 	if shared and shared[param] then
-		return true, SR("$ already has access to all your areas.", param)
+		return true, S("@1 already has access to all your areas.", param)
 	end
 
 	if table_contains(data.shared, param) then
-		return true, SR("$ already has access to this area.", param)
+		return true, S("@1 already has access to this area.", param)
 	end
 	table.insert(data.shared, param)
 	s_protect.save()
 
 	if minetest.get_player_by_name(param) then
-		minetest.chat_send_player(param, SR("$ shared an area with you.", name))
+		minetest.chat_send_player(param, S("@1 shared an area with you.", name))
 	end
-	return true, SR("$ has now access to this area.", param)
+	return true, S("@1 has now access to this area.", param)
 end
 
 s_protect.command_unshare = function(name, param)
@@ -168,9 +162,9 @@ s_protect.command_unshare = function(name, param)
 	s_protect.save()
 
 	if minetest.get_player_by_name(param) then
-		minetest.chat_send_player(param, SR("$ unshared an area with you.", name))
+		minetest.chat_send_player(param, S("@1 unshared an area with you.", name))
 	end
-	return true, SR("$ has no longer access to this area.", param)
+	return true, S("@1 has no longer access to this area.", param)
 end
 
 s_protect.command_shareall = function(name, param)
@@ -186,7 +180,7 @@ s_protect.command_shareall = function(name, param)
 
 	local shared = s_protect.share[name]
 	if table_contains(shared, param) then
-		return true, SR("$ already has now access to all your areas.", param)
+		return true, S("@1 already has now access to all your areas.", param)
 	end
 	if not shared then
 		s_protect.share[name] = {}
@@ -195,9 +189,9 @@ s_protect.command_shareall = function(name, param)
 	s_protect.save()
 
 	if minetest.get_player_by_name(param) then
-		minetest.chat_send_player(param, SR("$ shared all areas with you.", name))
+		minetest.chat_send_player(param, S("@1 shared all areas with you.", name))
 	end
-	return true, SR("$ has now access to all your areas.", param)
+	return true, S("@1 has now access to all your areas.", param)
 end
 
 s_protect.command_unshareall = function(name, param)
@@ -217,13 +211,13 @@ s_protect.command_unshareall = function(name, param)
 		end
 	end
 	if not removed then
-		return false, SR("$ does not have access to any of your areas.", param)
+		return false, S("@1 does not have access to any of your areas.", param)
 	end
 	s_protect.save()
 	if minetest.get_player_by_name(param) then
-		minetest.chat_send_player(param, SR("$ unshared all areas with you.", name))
+		minetest.chat_send_player(param, S("@1 unshared all areas with you.", name))
 	end
-	return true, SR("$ has no longer access to your areas.", param)
+	return true, S("@1 has no longer access to your areas.", param)
 end
 
 s_protect.command_unclaim = function(name)

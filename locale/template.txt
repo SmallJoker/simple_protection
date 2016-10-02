@@ -1,4 +1,3 @@
-# The dollar sign is reserved as placeholder to insert non-translated text
 # Translated by: <foobar>
 
 
@@ -19,7 +18,7 @@ Unclaim this area =
 
 # Errors of /area
 Invalid number of arguments. Check '/area' for correct usage. =
-Unknown command parameter: $ =
+Unknown command parameter: @1 =
 No player name given. =
 Unknown player. =
 This area is not claimed yet. =
@@ -30,30 +29,30 @@ Vertical area limit from Y @1 to @2 =
 Area status: @1 =
 Not claimable =
 Unowned (!) =
-Owned by $ =
-Players with access: $ =
+Owned by @1 =
+Players with access: @1 =
 
 # /area share <name>
-$ already has access to all your areas. =
-$ already has access to this area. =
-$ shared an area with you. =
-$ has now access to this area. =
+@1 already has access to all your areas. =
+@1 already has access to this area. =
+@1 shared an area with you. =
+@1 has now access to this area. =
 
 # /area unshare <name>
 That player has no access to this area. =
-$ unshared an area with you. =
-$ has no longer access to this area. =
+@1 unshared an area with you. =
+@1 has no longer access to this area. =
 
 # /area shareall <name>
 You can not share all your areas with everybody. =
-$ already has now access to all your areas. =
-$ shared all areas with you. =
-$ has now access to all your areas. =
+@1 already has now access to all your areas. =
+@1 shared all areas with you. =
+@1 has now access to all your areas. =
 
 # /area unshareall <name>
-$ does not have access to any of your areas. =
-$ unshared all areas with you. =
-$ has no longer access to your areas. =
+@1 does not have access to any of your areas. =
+@1 unshared all areas with you. =
+@1 has no longer access to your areas. =
 
 # /area unclaim
 This area is unowned now. =
@@ -62,14 +61,14 @@ This area is unowned now. =
 #### Protection ####
 
 # Item place information
-Area owned by: $ =
+Area owned by: @1 =
 # Hud text
-Area owner: $ =
+Area owner: @1 =
 
 # Item: Claim stick
 Claim stick =
 This area is already protected by an other protection mod. =
-You can not claim areas below $. =
-This area is already owned by: $ =
+You can not claim areas below @1. =
+This area is already owned by: @1 =
 Congratulations! You now own this area. =
 Do not try to modify this area! =
