@@ -190,6 +190,7 @@ s_protect.save = function()
 	io.close(file)
 end
 
+simple_protection = false
 s_protect.load_config = function()
 	-- Load defaults
 	dofile(s_protect.mod_path.."/settings.conf")
