@@ -57,6 +57,13 @@ You can not share all your areas with everybody. =
 # /area unclaim
 This area is unowned now. =
 
+# /area delete <name>
+Missing privilege: @1 =
+Removed =
+Globally shared areas =
+@1 claimed area(s) =
+@1 does not own any claimed areas. =
+
 
 #### Protection ####
 

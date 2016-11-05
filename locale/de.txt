@@ -57,6 +57,13 @@ You can not share all your areas with everybody. = Du kannst nicht alle Gebiete 
 # /area unclaim
 This area is unowned now. = Dieses Gebiet ist nun nicht mehr geschuetzt.
 
+# /area delete <name>
+Missing privilege: @1 = Fehlendes Privileg: @1
+Removed = Entfernt
+Globally shared areas = Globale Gebietszugiffe
+@1 claimed area(s) = @1 geschuetzte(s) Gebiet(e)
+@1 does not own any claimed areas. = @1 besitzt keine geschuetzten Gebiete.
+
 
 #### Protection ####
 

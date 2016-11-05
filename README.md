@@ -19,7 +19,8 @@ Chat commands:
 	shareall <name>		-> Shares all your areas with <name>
 	unshareall <name>	-> Unshares all your areas with <name>
 	unclaim				-> Unclaims the current area
-	
+	delete <name>		-> Removes all areas of this player (requires "server" privilege)
+
 About /area show:
 -----------------
 
