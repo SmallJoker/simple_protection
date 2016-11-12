@@ -1,5 +1,6 @@
 # Translated by: BrunoMine
 
+
 # Privilege description
 Allows to modify and delete protected areas = Permitir modificar e deletar areas protegidas
 
@@ -49,13 +50,19 @@ You can not share all your areas with everybody. = Nao podes compartilhar todas 
 @1 has now access to all your areas. = @1 agora tem acesso a todas suas areas.
 
 # /area unshareall <name>
-@1 did not have access to any of your areas. = @1 nao tem acesso a nenhuma de suas areas.
+@1 does not have access to any of your areas. = @1 nao tem acesso a nenhuma de suas areas.
 @1 unshared all areas with you. = @1 descompartilhou todas areas contigo.
 @1 has no longer access to your areas. = @1 deixou de ter acesso a todas suas areas.
 
 # /area unclaim
 This area is unowned now. = Essa area deixou de ser reivindicada agora.
 
+# /area delete <name>
+Missing privilege: @1 = Perderam o privilegio: @1
+Removed = Removido
+Globally shared areas = Areas compartilhadas globalmente
+@1 claimed area(s) = @1 area(s) reivindicada(s)
+@1 does not own any claimed areas. = @1 nao possui nenhuma area reivindicada.
 
 
 #### Protection ####
