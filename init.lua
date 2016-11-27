@@ -290,6 +290,9 @@ s_protect.command_list = function(name, param)
 	if not param or param == "" then
 		param = name
 	end
+	if not has_sp_priv and param ~= name then
+		return false, S("Missing privilege: @1", "simple_protection")
+	end
 
 	local list = {}
 	local width = s_protect.claim_size
