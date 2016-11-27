@@ -11,14 +11,15 @@ Manages all of your areas. = Gerencia todas as suas areas.
 
 # /area
 Available area commands: = Comandos disponiveis:
-Information about this area: /area show = Dados sobre essa area: /area show
-(Un)share one area: /area (un)share <name> = (Des)compartilha uma area: /area (un)share <nome>
-(Un)share all areas: /area (un)shareall <name> = (Des)compartilha todas areas: /area (un)shareall <nome>
-Unclaim this area: /area unclaim = Desfazer-se dessa area: /area unclaim
+Information about this area = Dados sobre essa area
+(Un)share one area = (Des)compartilha uma area
+(Un)share all areas = (Des)compartilha todas areas
+#List claimed areas =
+#Delete all areas of a player =
+Unclaim this area = Desfazer-se dessa area
 
 # Errors of /area
-Invalid number of arguments, check '/area' for correct usage. = Numero de argumentos invalido, use '/area' para o uso correto.
-Unknown command parameter: @1 = Parametro de comando desconhecido: @1
+Unknown command parameter: @1. Check '/area' for correct usage. = Parametro de comando desconhecido: @1. Use '/area' para o uso correto.
 No player name given. = Nenhum nome de jogador dado.
 Unknown player. = Jogador desconhecido.
 This area is not claimed yet. = Essa area nao foi reivindicada ainda.
@@ -63,6 +64,10 @@ Removed = Removido
 Globally shared areas = Areas compartilhadas globalmente
 @1 claimed area(s) = @1 area(s) reivindicada(s)
 @1 does not own any claimed areas. = @1 nao possui nenhuma area reivindicada.
+
+# /area list [name]
+#This command is not available. =
+#Listing all areas of @1. Amount: @2 =
 
 
 #### Protection ####

@@ -14,11 +14,12 @@ Available area commands:
 Information about this area = Informationen ueber dieses Gebiet:
 (Un)share one area = Eine Zugriffs-Berechtigung eines Gebietes hinzufuegen/entfernen
 (Un)share all areas = Eine Zugriffs-Berechtigung fuer alle Gebiete hinzufuegen/entfernen
+List claimed areas = Geschuetzte Gebiete auflisten
+Delete all areas of a player = Alle Gebiete eines Spielers loeschen
 Unclaim this area = Den Schutz fuer dieses Gebiet aufheben
 
 # Errors of /area
-Invalid number of arguments. Check '/area' for correct usage. = Ungueltige Anzahl an Parametern. Siehe '/area' fuer die korrekte Anwendung.
-Unknown command parameter: @1 = Unbekannter Befehls-Parameter: @1
+Unknown command parameter: @1. Check '/area' for correct usage. = Unbekannter Befehls-Parameter: @1. Siehe '/area' fuer die korrekte Anwendung.
 No player name given. = Kein Spielernahme gegeben.
 Unknown player. = Unbekannter Spieler.
 This area is not claimed yet. = Dieses Gebiet ist noch nicht geschuetzt.
@@ -39,7 +40,7 @@ Players with access: @1 = Spieler mit Zugriff: @1
 @1 has now access to this area. = @1 kann jetzt dieses Gebiet abaendern.
 
 # /area unshare <name>
-That player has no access to this area. = Dieser Spiler hat keinen Zufriff auf dieses Gebiet.
+That player has no access to this area. = Dieser Spieler hat keinen Zugriff auf dieses Gebiet.
 @1 unshared an area with you. = Du hast nun keinen Zugriff auf ein Gebiet von @1 mehr.
 @1 has no longer access to this area. = @1 kann jetzt dieses Gebiet nicht mehr abaendern.
 
@@ -63,6 +64,10 @@ Removed = Entfernt
 Globally shared areas = Globale Gebietszugiffe
 @1 claimed area(s) = @1 geschuetzte(s) Gebiet(e)
 @1 does not own any claimed areas. = @1 besitzt keine geschuetzten Gebiete.
+
+# /area list [name]
+This command is not available. = Dieser Befehl ist nicht verfuegbar.
+Listing all areas of @1. Amount: @2 = Auslistung der Gebiete von @1. Anzahl: @2
 
 
 #### Protection ####

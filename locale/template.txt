@@ -14,11 +14,12 @@ Available area commands:
 Information about this area =
 (Un)share one area =
 (Un)share all areas =
+List claimed areas =
+Delete all areas of a player =
 Unclaim this area =
 
 # Errors of /area
-Invalid number of arguments. Check '/area' for correct usage. =
-Unknown command parameter: @1 =
+Unknown command parameter: @1. Check '/area' for correct usage. =
 No player name given. =
 Unknown player. =
 This area is not claimed yet. =
@@ -63,6 +64,10 @@ Removed =
 Globally shared areas =
 @1 claimed area(s) =
 @1 does not own any claimed areas. =
+
+# /area list [name]
+This command is not available. =
+Listing all areas of @1. Amount: @2 =
 
 
 #### Protection ####

@@ -52,33 +52,28 @@ minetest.register_chatcommand("area", {
 				end
 				minetest.chat_send_player(name, S(text)..(raw_text or ""))
 			end
+			local privs = minetest.get_player_privs(name)
 			chat_send("Available area commands:")
 			chat_send("Information about this area", "/area show")
 			chat_send("(Un)share one area",  "/area (un)share <name>")
 			chat_send("(Un)share all areas", "/area (un)shareall <name>")
+			if s_protect.area_list or privs.simple_protection then
+				chat_send("List claimed areas", "/area list [name]")
+			end
 			chat_send("Unclaim this area",   "/area unclaim")
-			if minetest.check_player_privs(name, {server=true}) then
+			if privs.server then
 				chat_send("Delete all areas of a player",   "/area delete <name>")
 			end
 			return
 		end
-		if param == "show" or param == "unclaim" then
-			return s_protect["command_"..param](name)
-		end
-		-- all other commands
+
 		local args = param:split(" ")
-		if #args ~= 2 or args[2] == "" then
-			return false, S("Invalid number of arguments. Check '/area' for correct usage.")
-		end
-		if args[1] == "share"
-				or args[1] == "unshare"
-				or args[1] == "shareall"
-				or args[1] == "unshareall"
-				or args[1] == "delete" then
-			return s_protect["command_"..args[1]](name, args[2])
+		local func = s_protect["command_"..args[1]]
+		if not func then
+			return false, S("Unknown command parameter: @1. Check '/area' for correct usage.", args[1])
 		end
 
-		return false, S("Unknown command parameter: @1", args[1])
+		return func(name, args[2])
 	end,
 })
 
@@ -118,7 +113,7 @@ s_protect.command_show = function(name)
 end
 
 s_protect.command_share = function(name, param)
-	if name == param then
+	if not param or name == param then
 		return false, S("No player name given.")
 	end
 	if not minetest.auth_table[param] and param ~= "*all" then
@@ -151,7 +146,7 @@ s_protect.command_share = function(name, param)
 end
 
 s_protect.command_unshare = function(name, param)
-	if name == param or param == "" then
+	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
 	local player = minetest.get_player_by_name(name)
@@ -175,7 +170,7 @@ s_protect.command_unshare = function(name, param)
 end
 
 s_protect.command_shareall = function(name, param)
-	if name == param or param == "" then
+	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
 	if not minetest.auth_table[param] then
@@ -202,7 +197,7 @@ s_protect.command_shareall = function(name, param)
 end
 
 s_protect.command_unshareall = function(name, param)
-	if name == param or param == "" then
+	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
 	local removed = false
@@ -253,7 +248,7 @@ s_protect.command_unclaim = function(name)
 end
 
 s_protect.command_delete = function(name, param)
-	if name == param or param == "" then
+	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
 	if not minetest.check_player_privs(name, {server=true}) then
@@ -285,4 +280,31 @@ s_protect.command_delete = function(name, param)
 	end
 	s_protect.save()
 	return true, S("Removed")..": "..table.concat(removed, ", ")
+end
+
+s_protect.command_list = function(name, param)
+	local has_sp_priv = minetest.check_player_privs(name, {simple_protection=true})
+	if not s_protect.area_list and not has_sp_priv then
+		return false, S("This command is not available.")
+	end
+	if not param or param == "" then
+		param = name
+	end
+
+	local list = {}
+	local width = s_protect.claim_size
+	local height = s_protect.claim_height
+	for pos, data in pairs(s_protect.claims) do
+		if data.owner == param then
+			local abs_pos = minetest.string_to_pos(pos)
+			table.insert(list, string.format("%5i,%5i,%5i",
+				abs_pos.x * width + (width / 2),
+				abs_pos.y * height - s_protect.start_underground + (height / 2),
+				abs_pos.z * width + (width / 2)
+			))
+		end
+	end
+
+	local text = S("Listing all areas of @1. Amount: @2", param, tostring(#list))
+	return true, text.."\n"..table.concat(list, "\n")
 end
