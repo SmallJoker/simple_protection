@@ -58,11 +58,11 @@ minetest.register_chatcommand("area", {
 			chat_send("(Un)share one area",  "/area (un)share <name>")
 			chat_send("(Un)share all areas", "/area (un)shareall <name>")
 			if s_protect.area_list or privs.simple_protection then
-				chat_send("List claimed areas", "/area list [name]")
+				chat_send("List claimed areas", "/area list [<name>]")
 			end
 			chat_send("Unclaim this area",   "/area unclaim")
 			if privs.server then
-				chat_send("Delete all areas of a player",   "/area delete <name>")
+				chat_send("Delete all areas of a player", "/area delete <name>")
 			end
 			return
 		end
