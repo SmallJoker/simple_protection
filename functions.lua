@@ -33,7 +33,7 @@ function table_delete(t, e)
 end
 
 s_protect.can_access = function(pos, player_name)
-	if not player_name or player_name == "" then
+	if not player_name then
 		return false
 	end
 	-- Allow pipeworks access
