@@ -193,7 +193,7 @@ end
 simple_protection = false
 s_protect.load_config = function()
 	-- Load defaults
-	dofile(s_protect.mod_path.."/settings.conf")
+	dofile(s_protect.mod_path.."/default_settings.lua")
 	local file = io.open(s_protect.conf, "r")
 	if file then
 		io.close(file)
@@ -212,7 +212,7 @@ s_protect.load_config = function()
 		return
 	end
 	-- Duplicate configuration file on first time
-	local src = io.open(s_protect.mod_path.."/settings.conf", "r")
+	local src = io.open(s_protect.mod_path.."/default_settings.lua", "r")
 	file = io.open(s_protect.conf, "w")
 
 	while true do
