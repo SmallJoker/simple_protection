@@ -84,3 +84,4 @@ You can not claim areas below @1. =
 This area is already owned by: @1 =
 Congratulations! You now own this area. =
 Do not try to modify this area! =
+You can not claim any further areas: Limit (@1) reached. =

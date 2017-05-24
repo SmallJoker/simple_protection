@@ -133,6 +133,26 @@ minetest.register_craftitem("simple_protection:claim", {
 					S("This area is already owned by: @1", data.owner))
 			return
 		end
+		-- Count number of claims for this user
+		local claims_count = 0
+		local claims_max = s_protect.max_claims
+
+		if minetest.check_player_privs(player_name, {simple_protection=true}) then
+			claims_max = claims_max * 2
+		end
+
+		for k, v in pairs(s_protect.claims) do
+			if v.owner == player_name then
+				claims_count = claims_count + 1
+				if claims_count >= claims_max then
+					minetest.chat_send_player(player_name,
+						S("You can not claim any further areas: Limit (@1) reached.",
+						tostring(claims_max)))
+					return
+				end
+			end
+		end
+
 		itemstack:take_item(1)
 		s_protect.claims[area_pos] = {owner=player_name, shared={}}
 		s_protect.save()

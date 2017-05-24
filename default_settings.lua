@@ -50,3 +50,10 @@ s_protect.claim_to_dig = false
 -- Allows players to list their areas using '/area list'
 -- Type: Boolean
 s_protect.area_list = true
+
+-- Limits the amount of claims per player
+-- For values < 10: Open [world_path]/world.mt and modify
+--   the setting value of 'load_mod_simple_protection' to 'false'
+-- This value is doubled for users with the 'simple_protection' privilege
+-- Type: Integer
+s_protect.max_claims = 100
