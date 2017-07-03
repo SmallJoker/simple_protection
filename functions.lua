@@ -40,6 +40,10 @@ s_protect.can_access = function(pos, player_name)
 	if player_name == ":pipeworks" then
 		return true
 	end
+	-- Admin power
+	if minetest.check_player_privs(player_name, {simple_protection=true}) then
+		return true
+	end
 
 	-- Data of current area
 	local data = s_protect.get_data(pos)
@@ -73,10 +77,6 @@ s_protect.can_access = function(pos, player_name)
 		return true
 	end
 	if table_contains(data.shared, "*all") then
-		return true
-	end
-	-- Admin power
-	if minetest.check_player_privs(player_name, {simple_protection=true}) then
 		return true
 	end
 	return false

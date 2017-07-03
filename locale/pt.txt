@@ -83,4 +83,5 @@ This area is already protected by an other protection mod. = Essa area ja foi pr
 You can not claim areas below @1. = Nao podes reivindicar areas abaixo @1.
 This area is already owned by: @1 = Essa area ja foi reivindicada por: @1.
 Congratulations! You now own this area. = Parabens! Agora reivindicaste essa area.
-Do not try to modify this area! = Nao tente modificar essa area!
+#You can not claim any further areas: Limit (@1) reached. =
+#Please claim this area to modify it. =

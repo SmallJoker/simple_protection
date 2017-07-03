@@ -31,14 +31,6 @@ dofile(s_protect.mod_path.."/functions.lua")
 s_protect.load_config()
 dofile(s_protect.mod_path.."/protection.lua")
 
-minetest.register_on_protection_violation(function(pos, player_name)
-	minetest.chat_send_player(player_name, S("Do not try to modify this area!"))
-	--PUNISH HIM!!!!
-
-	--local player = minetest.get_player_by_name(player_name)
-	--player:set_hp(player:get_hp() - 1)
-end)
-
 minetest.register_privilege("simple_protection", S("Allows to modify and delete protected areas"))
 
 minetest.register_chatcommand("area", {

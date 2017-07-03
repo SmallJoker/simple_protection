@@ -83,5 +83,5 @@ This area is already protected by an other protection mod. = Dieses Gebiet ist b
 You can not claim areas below @1. = Du kannst keine Gebiete unterhalb von @1 schuetzen.
 This area is already owned by: @1 = @1 besitzt dieses Gebiet bereits.
 Congratulations! You now own this area. = Glueckwunsch! Du besitzt dieses Gebiet jetzt.
-Do not try to modify this area! = Versuch nicht, dieses Gebiet zu verunstalten!
 You can not claim any further areas: Limit (@1) reached. = Du kannst keine weiteren Gebiete schuetzen lassen: Limit (@1) erreicht.
+Please claim this area to modify it. = Bitte schuetze das Gebiet um dieses abaendern zu koennen.
