@@ -20,8 +20,12 @@ s_protect.gettext = function(rawtext, replacements, ...)
 	return text
 end
 
-if minetest.get_modpath("intllib") then
-    s_protect.gettext = intllib.Getter()
+if minetest.global_exists("intllib") then
+	if intllib.make_gettext_pair then
+		s_protect.gettext = intllib.make_gettext_pair()
+	else
+		s_protect.gettext = intllib.Getter()
+	end
 end
 local S = s_protect.gettext
 -- INTTLIB SUPPORT END
