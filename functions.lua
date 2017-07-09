@@ -40,8 +40,10 @@ s_protect.can_access = function(pos, player_name)
 	if player_name == ":pipeworks" then
 		return true
 	end
-	-- Admin power
-	if minetest.check_player_privs(player_name, {simple_protection=true}) then
+
+	-- Admin power, handle privileges
+	local privs = minetest.get_player_privs(player_name)
+	if privs.simple_protection or privs.protection_bypass then
 		return true
 	end
 
@@ -82,24 +84,39 @@ s_protect.can_access = function(pos, player_name)
 	return false
 end
 
+local function get_location(pos_)
+	local pos = vector.round(pos_)
+	return vector.floor({
+		x =  pos.x                                / s_protect.claim_size,
+		y = (pos.y + s_protect.start_underground) / s_protect.claim_height,
+		z =  pos.z                                / s_protect.claim_size
+	})
+end
+
 s_protect.get_data = function(pos)
-	local str = s_protect.get_location(vector.round(pos))
-	return s_protect.claims[str]
+	local pos = get_location(pos)
+	local str = pos.x..","..pos.y..","..pos.z
+	return s_protect.claims[str], str
 end
 
-s_protect.get_y_axis = function(y)
-	y = (y + s_protect.start_underground) / s_protect.claim_height
-	return math.floor(y) * s_protect.claim_height - s_protect.start_underground
-end
+s_protect.get_area_bounds = function(pos_)
+	local cs = s_protect.claim_size
+	local cy = s_protect.claim_height
 
-s_protect.get_location = function(pos1)
-	local pos = {
-		x = pos1.x / s_protect.claim_size,
-		y = (pos1.y + s_protect.start_underground) / s_protect.claim_height,
-		z = pos1.z / s_protect.claim_size
+	local p = get_location(pos_)
+
+	local minp = {
+		x = p.x * cs,
+		y = p.y * cy - s_protect.start_underground,
+		z = p.z * cs
 	}
-	pos = vector.floor(pos)
-	return pos.x..","..pos.y..","..pos.z
+	local maxp = {
+		x = minp.x + cs - 1,
+		y = minp.y + cy - 1,
+		z = minp.z + cs - 1
+	}
+
+	return minp, maxp
 end
 
 s_protect.get_center = function(pos1)

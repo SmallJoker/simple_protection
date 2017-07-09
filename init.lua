@@ -10,6 +10,7 @@ s_protect.mod_path = minetest.get_modpath("simple_protection")
 s_protect.conf = world_path.."/s_protect.conf"
 s_protect.file = world_path.."/s_protect.data"
 s_protect.sharefile = world_path.."/s_protect_share.data"
+s_protect.store = false -- AreaStore support
 
 -- INTTLIB SUPPORT START
 s_protect.gettext = function(rawtext, replacements, ...)
@@ -79,10 +80,9 @@ s_protect.command_show = function(name)
 	local data = s_protect.get_data(player_pos)
 
 	minetest.add_entity(s_protect.get_center(player_pos), "simple_protection:marker")
-	local axis = s_protect.get_y_axis(player_pos.y)
-	local y_end = axis + s_protect.claim_height
+	local minp, maxp = s_protect.get_area_bounds(player_pos)
 	minetest.chat_send_player(name, S("Vertical area limit from Y @1 to @2",
-			tostring(axis), tostring(y_end)))
+			tostring(minp.y), tostring(maxp.y)))
 
 	if not data then
 		if axis < s_protect.underground_limit then
@@ -222,9 +222,7 @@ end
 
 s_protect.command_unclaim = function(name)
 	local player = minetest.get_player_by_name(name)
-	local player_pos = vector.round(player:getpos())
-	local pos = s_protect.get_location(player_pos)
-	local data = s_protect.claims[pos]
+	local data, pos = s_protect.get_data(player:getpos())
 	if not data then
 		return false, S("You do not own this area.")
 	end
@@ -232,7 +230,7 @@ s_protect.command_unclaim = function(name)
 	if name ~= data.owner and not priv then
 		return false, S("You do not own this area.")
 	end
-	if not priv and s_protect.claim_return then
+	if s_protect.claim_return and name == data.owner then
 		local inv = player:get_inventory()
 		if inv:room_for_item("main", "simple_protection:claim") then
 			inv:add_item("main", "simple_protection:claim")

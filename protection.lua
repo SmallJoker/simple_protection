@@ -28,15 +28,6 @@ end
 local old_item_place = minetest.item_place
 minetest.item_place = function(itemstack, placer, pointed_thing)
 	local player_name = placer:get_player_name()
-	--local under_node = minetest.get_node(pointed_thing.under)
-
-	-- if rightclick on special nodes
-	--[[if not placer:get_player_control().sneak then
-		if minetest.registered_nodes[under_node.name] and minetest.registered_nodes[under_node.name].on_rightclick then
-			minetest.registered_nodes[under_node.name].on_rightclick(pos, node, placer, itemstack, pointed_thing)
-			return itemstack
-		end
-	end]]
 
 	if s_protect.can_access(pointed_thing.above, player_name)
 			or not minetest.registered_nodes[itemstack:get_name()] then
@@ -133,15 +124,14 @@ minetest.register_craftitem("simple_protection:claim", {
 			return
 		end
 		if not s_protect.underground_claim then
-			local y = s_protect.get_y_axis(pos.y)
-			if y < s_protect.underground_limit then
+			local minp, maxp = s_protect.get_area_bounds(pos)
+			if minp.y < s_protect.underground_limit then
 				minetest.chat_send_player(player_name, S("You can not claim areas below @1.",
 						s_protect.underground_limit.."m"))
 				return
 			end
 		end
-		local area_pos = s_protect.get_location(pos)
-		local data = s_protect.claims[area_pos]
+		local data, area_pos = s_protect.get_data(pos)
 		if data then
 			minetest.chat_send_player(player_name,
 					S("This area is already owned by: @1", data.owner))
