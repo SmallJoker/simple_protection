@@ -84,7 +84,7 @@ s_protect.can_access = function(pos, player_name)
 	return false
 end
 
-local function get_location(pos_)
+s_protect.get_location = function(pos_)
 	local pos = vector.round(pos_)
 	return vector.floor({
 		x =  pos.x                                / s_protect.claim_size,
@@ -92,6 +92,8 @@ local function get_location(pos_)
 		z =  pos.z                                / s_protect.claim_size
 	})
 end
+-- Speed up the function access
+local get_location = s_protect.get_location
 
 s_protect.get_data = function(pos)
 	local pos = get_location(pos)

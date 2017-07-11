@@ -35,6 +35,7 @@ local S = s_protect.gettext
 dofile(s_protect.mod_path.."/functions.lua")
 s_protect.load_config()
 dofile(s_protect.mod_path.."/protection.lua")
+dofile(s_protect.mod_path.."/radar.lua")
 
 minetest.register_privilege("simple_protection", S("Allows to modify and delete protected areas"))
 
@@ -52,12 +53,13 @@ minetest.register_chatcommand("area", {
 			local privs = minetest.get_player_privs(name)
 			chat_send("Available area commands:")
 			chat_send("Information about this area", "/area show")
-			chat_send("(Un)share one area",  "/area (un)share <name>")
-			chat_send("(Un)share all areas", "/area (un)shareall <name>")
+			--chat_send("View of surrounding areas",   "/area radar")
+			chat_send("(Un)share one area",          "/area (un)share <name>")
+			chat_send("(Un)share all areas",         "/area (un)shareall <name>")
 			if s_protect.area_list or privs.simple_protection then
 				chat_send("List claimed areas", "/area list [<name>]")
 			end
-			chat_send("Unclaim this area",   "/area unclaim")
+			chat_send("Unclaim this area",           "/area unclaim")
 			if privs.server then
 				chat_send("Delete all areas of a player", "/area delete <name>")
 			end
