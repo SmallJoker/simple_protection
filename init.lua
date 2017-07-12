@@ -53,7 +53,7 @@ minetest.register_chatcommand("area", {
 			local privs = minetest.get_player_privs(name)
 			chat_send("Available area commands:")
 			chat_send("Information about this area", "/area show")
-			--chat_send("View of surrounding areas",   "/area radar")
+			chat_send("View of surrounding areas",   "/area radar")
 			chat_send("(Un)share one area",          "/area (un)share <name>")
 			chat_send("(Un)share all areas",         "/area (un)shareall <name>")
 			if s_protect.area_list or privs.simple_protection then
