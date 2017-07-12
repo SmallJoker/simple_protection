@@ -52,10 +52,10 @@ s_protect.command_radar = function(name)
 	end
 	end
 	minetest.show_formspec(name, "covfefe",
-		"size[6,7]" ..
+		"size[6,7.5]" ..
 		"button_exit[2,0;2,1;exit;Close]" ..
 		"label[0,1;Green = Modifyable, Light gray = Not claimed" ..
-			"\n-1 and 1 = Y axis modifier]" ..
+			"\n+ and - = Area up/down (no claims on current level)]" ..
 		"image[0.5,2;6,6;" ..
 			minetest.formspec_escape("[combine:288x288" .. parts) ..
 		"]"
