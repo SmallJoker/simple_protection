@@ -13,14 +13,15 @@ Chat commands:
 --------------
 /area &lt;args ..&gt;
 
-	show				-> Shows up the information about the current area
+	show			-> Shows up the information about the current area
+	radar				-> Displays and provides information about the areas around you
 	share <name>		-> Shares the current area with <name>
 	unshare <name>		-> Unshares the current area with <name>
 	shareall <name>		-> Shares all your areas with <name>
 	unshareall <name>	-> Unshares all your areas with <name>
-	unclaim				-> Unclaims the current area
-	delete <name>		-> Removes all areas of <name> (requires "server" privilege)
 	list [<name>]		-> Lists all areas (<name> is optional)
+	unclaim			-> Unclaims the current area
+	delete <name>		-> Removes all areas of <name> (requires "server" privilege)
 
 About /area show:
 -----------------
