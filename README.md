@@ -14,7 +14,7 @@ Chat commands:
 /area &lt;args ..&gt;
 
 	show			-> Shows up the information about the current area
-	radar				-> Displays and provides information about the areas around you
+	radar			-> Displays and provides information about the areas around you
 	share <name>		-> Shares the current area with <name>
 	unshare <name>		-> Unshares the current area with <name>
 	shareall <name>		-> Shares all your areas with <name>
