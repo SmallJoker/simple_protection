@@ -76,13 +76,34 @@ s_protect.command_radar = function(name)
 	local marker_str = string.format(":%i,%i=%s", pp_x, pp_z,
 		combine_escape("object_marker_red.png^[resize:8x8"))
 
+	-- Rotation calculation
+	local dir_label = "North (Z+)"
+	local dir_mod = ""
+	local look_angle = player.get_look_horizontal and player:get_look_horizontal()
+	if not look_angle then
+		look_angle = player:get_look_yaw() - math.pi / 2
+	end
+	look_angle = look_angle * 180 / math.pi
+
+	if     look_angle >=  45 and look_angle < 135 then
+		dir_label = "West (X-)"
+		dir_mod = "^[transformR270"
+	elseif look_angle >= 135 and look_angle < 225 then
+		dir_label = "South (Z-)"
+		dir_mod = "^[transformR180"
+	elseif look_angle >= 225 and look_angle < 315 then
+		dir_label = "East (X+)"
+		dir_mod = "^[transformR90"
+	end
+
 	minetest.show_formspec(name, "covfefe",
 		"size[10.5,7]" ..
-		"button_exit[9.5,0;1,1;exit;X]" ..
-		"label[2,0;North (Z+)]" ..
+		"button_exit[9.5,0;1,2;exit;X]" ..
+		"label[2,0;"..dir_label.."]" ..
 		"image[0,0.5;7,7;" ..
 			minetest.formspec_escape("[combine:300x300"
-				.. parts .. marker_str) .. "]" ..
+				.. parts .. marker_str)
+				.. dir_mod .. "]" ..
 		"label[0,6.8;1 square = 1 area = "
 			.. s_protect.claim_size .. "x"
 			.. s_protect.claim_height .. "x"
