@@ -166,6 +166,8 @@ minetest.register_craftitem("simple_protection:claim", {
 		return itemstack
 	end,
 })
+minetest.register_alias("simple_protection:claim_stick", "simple_protection:claim")
+minetest.register_alias("claim_stick", "simple_protection:claim")
 
 minetest.register_craft({
 	output = "simple_protection:claim",
