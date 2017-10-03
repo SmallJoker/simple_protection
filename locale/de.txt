@@ -12,8 +12,8 @@ Manages all of your areas. = Verwaltet alle deine geschuetzten Gebiete
 # /area
 Available area commands:
 Information about this area = Informationen ueber dieses Gebiet:
-(Un)share one area = Eine Zugriffs-Berechtigung eines Gebietes hinzufuegen/entfernen
-(Un)share all areas = Eine Zugriffs-Berechtigung fuer alle Gebiete hinzufuegen/entfernen
+(Un)share one area = Zugriffs-Berechtigung eines Gebietes hinzufuegen/entfernen
+(Un)share all areas = Zugriffs-Berechtigung fuer alle Gebiete hinzufuegen/entfernen
 List claimed areas = Geschuetzte Gebiete auflisten
 Delete all areas of a player = Alle Gebiete eines Spielers loeschen
 Unclaim this area = Den Schutz fuer dieses Gebiet aufheben
@@ -32,6 +32,17 @@ Not claimable = Nicht schuetzbar
 Unowned (!) = Nicht geschuetzt (!)
 Owned by @1 = Von @1 geschuetzt
 Players with access: @1 = Spieler mit Zugriff: @1
+
+# /area radar
+North @1 = Nord @1
+East @1 = Ost @1
+South @1 = Sued @1
+West @1 = West @1
+Your position = Deine Position
+Your area = Dein Gebiet
+Area claimed = Gebiet geschuetzt
+No access for you = Keine Berechtigung
+Access for everybody = Zugriff fuer jeden
 
 # /area share <name>
 @1 already has access to all your areas. = @1 hat bereits Zugriff auf alle deine Gebiete.

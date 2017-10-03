@@ -1,5 +1,5 @@
 -- /area radar
-
+local S = s_protect.gettext
 local data_cache
 
 local function colorize_area(name, force)
@@ -77,7 +77,7 @@ s_protect.command_radar = function(name)
 		combine_escape("object_marker_red.png^[resize:8x8"))
 
 	-- Rotation calculation
-	local dir_label = "North (Z+)"
+	local dir_label = S("North @1", "(Z+)")
 	local dir_mod = ""
 	local look_angle = player.get_look_horizontal and player:get_look_horizontal()
 	if not look_angle then
@@ -86,13 +86,13 @@ s_protect.command_radar = function(name)
 	look_angle = look_angle * 180 / math.pi
 
 	if     look_angle >=  45 and look_angle < 135 then
-		dir_label = "West (X-)"
+		dir_label = S("West @1", "(X-)")
 		dir_mod = "^[transformR270"
 	elseif look_angle >= 135 and look_angle < 225 then
-		dir_label = "South (Z-)"
+		dir_label = S("South @1", "(Z-)")
 		dir_mod = "^[transformR180"
 	elseif look_angle >= 225 and look_angle < 315 then
-		dir_label = "East (X+)"
+		dir_label = S("East @1", "(X+)")
 		dir_mod = "^[transformR90"
 	end
 
@@ -109,19 +109,20 @@ s_protect.command_radar = function(name)
 			.. s_protect.claim_height .. "x"
 			.. s_protect.claim_size .. " nodes (X,Y,Z)]" ..
 		"image[6.25,1.25;0.5,0.5;object_marker_red.png]" ..
-		"label[7,1.25;Your position]" ..
+		"label[7,1.25;" .. S("Your position") .. "]" ..
 		"image[6,2;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "owner") .. "]" ..
-		"label[7,2.25;Your area]" ..
+		"label[7,2.25;" .. S("Your area") .. "]" ..
 		"image[6,3;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "other") .. "]" ..
-		"label[7,3;Area claimed\nNo access for you]" ..
+		"label[7,3;" .. S("Area claimed")
+			.. "\n" .. S("No access for you") .. "]" ..
 		"image[6,4;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "*all") .. "]" ..
-		"label[7,4.25;Shared for everybody]" ..
+		"label[7,4.25;" .. S("Access for everybody") .. "]" ..
 		"image[6,5;1,1;simple_protection_radar_down.png]" ..
 		"image[7,5;1,1;simple_protection_radar_up.png]" ..
 		"label[6,6;One area unit ("..s_protect.claim_height
-			.. ") up/down\n= no claims on this Y level]"
+			.. "m) up/down\n= no claims on this Y level]"
 	)
 end

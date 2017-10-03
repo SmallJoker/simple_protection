@@ -33,6 +33,17 @@ Unowned (!) =
 Owned by @1 =
 Players with access: @1 =
 
+# /area radar
+North @1 =
+East @1 =
+South @1 =
+West @1 =
+Your position =
+Your area =
+Area claimed =
+No access for you =
+Access for everybody =
+
 # /area share <name>
 @1 already has access to all your areas. =
 @1 already has access to this area. =
