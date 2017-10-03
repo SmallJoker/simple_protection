@@ -36,8 +36,9 @@ s_protect.can_access = function(pos, player_name)
 	if not player_name then
 		return false
 	end
-	-- Allow pipeworks access
-	if player_name == ":pipeworks" then
+	-- Allow access for pipeworks and unidentified mods
+	if player_name == ":pipeworks"
+			or player_name == "" then
 		return true
 	end
 
