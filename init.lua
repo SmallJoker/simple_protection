@@ -7,8 +7,8 @@ s_protect = {}
 s_protect.claims = {}
 s_protect.share = {}
 s_protect.mod_path = minetest.get_modpath("simple_protection")
-s_protect.conf = world_path.."/s_protect.conf"
-s_protect.file = world_path.."/s_protect.data"
+s_protect.conf      = world_path.."/s_protect.conf"
+s_protect.file      = world_path.."/s_protect.data"
 s_protect.sharefile = world_path.."/s_protect_share.data"
 s_protect.store = false -- AreaStore support
 
@@ -34,7 +34,9 @@ local S = s_protect.gettext
 
 dofile(s_protect.mod_path.."/functions.lua")
 s_protect.load_config()
+
 dofile(s_protect.mod_path.."/protection.lua")
+dofile(s_protect.mod_path.."/hud.lua")
 dofile(s_protect.mod_path.."/radar.lua")
 
 minetest.register_privilege("simple_protection", S("Allows to modify and delete protected areas"))

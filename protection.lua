@@ -10,8 +10,8 @@ local function notify_player(pos, player_name)
 	if not data and s_protect.claim_to_dig then
 		minetest.chat_send_player(player_name, S("Please claim this area to modify it."))
 	elseif not data then
-		minetest.log("warning", "[simple_protection] Access refused but no area was found "..
-			"near pos=".. minetest.pos_to_string(pos))
+		-- Access restricted by another protection mod. Not my job.
+		return
 	else
 		minetest.chat_send_player(player_name, S("Area owned by: @1", data.owner))
 	end
@@ -40,73 +40,6 @@ end
 
 minetest.register_on_protection_violation(notify_player)
 
-local hud_time = 0
-s_protect.player_huds = {}
-
-minetest.register_globalstep(function(dtime)
-	hud_time = hud_time + dtime
-	if hud_time < 3 then
-		return
-	end
-	hud_time = 0
-
-
-	local shared = s_protect.share
-	for _, player in ipairs(minetest.get_connected_players()) do
-		local pos = vector.round(player:getpos())
-		local player_name = player:get_player_name()
-
-		local current_owner = ""
-		local data = s_protect.get_data(pos)
-		if data then
-			current_owner = data.owner
-		end
-
-		local has_access = (current_owner == player_name)
-		if not has_access and data then
-			-- Check if this area is shared with this player
-			has_access = table_contains(data.shared, player_name)
-		end
-		if not has_access then
-			-- Check if all areas are shared with this player
-			has_access = table_contains(shared[current_owner], player_name)
-		end
-		local changed = true
-
-		local hud_table = s_protect.player_huds[player_name]
-		if hud_table and hud_table.owner == current_owner
-				and hud_table.had_access == has_access then
-			-- still the same hud
-			changed = false
-		end
-
-		if hud_table and changed then
-			player:hud_remove(hud_table.hudID)
-			s_protect.player_huds[player_name] = nil
-		end
-
-		if current_owner ~= "" and changed then
-			-- green if access
-			local color = 0xFFFFFF
-			if has_access then
-				color = 0x00CC00
-			end
-			s_protect.player_huds[player_name] = {
-				hudID = player:hud_add({
-					hud_elem_type = "text",
-					name          = "area_hud",
-					number        = color,
-					position      = {x=0.15, y=0.97},
-					text          = S("Area owner: @1", current_owner),
-					scale         = {x=100, y=25},
-					alignment     = {x=0, y=0},
-				}),
-				owner = current_owner,
-				had_access = has_access
-			}
-		end
-	end
-end)
 
 minetest.register_craftitem("simple_protection:claim", {
 	description = S("Claim stick"),
