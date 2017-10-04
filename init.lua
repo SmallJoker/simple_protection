@@ -106,7 +106,7 @@ s_protect.command_show = function(name)
 			tostring(minp.y), tostring(maxp.y)))
 
 	if not data then
-		if minp.y < s_protect.underground_limit then
+		if s_protect.underground_limit and minp.y < s_protect.underground_limit then
 			return true, S("Area status: @1", S("Not claimable"))
 		end
 		return true, S("Area status: @1", S("Unowned (!)"))

@@ -51,11 +51,12 @@ minetest.register_craftitem("simple_protection:claim", {
 					S("This area is already protected by an other protection mod."))
 			return
 		end
-		if not s_protect.underground_claim then
+		if s_protect.underground_limit then
 			local minp, maxp = s_protect.get_area_bounds(pos)
 			if minp.y < s_protect.underground_limit then
-				minetest.chat_send_player(player_name, S("You can not claim areas below @1.",
-						s_protect.underground_limit.."m"))
+				minetest.chat_send_player(player_name,
+					S("You can not claim areas below @1.",
+					s_protect.underground_limit .. "m"))
 				return
 			end
 		end

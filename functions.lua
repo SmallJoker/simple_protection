@@ -58,8 +58,8 @@ s_protect.can_access = function(pos, player_name)
 			return true
 		end
 
-		-- Claim everywhere? Disallow everywhere.
-		if s_protect.underground_claim then
+		-- Must claim everywhere? Disallow everywhere.
+		if not s_protect.underground_limit then
 			return false
 		end
 		-- Is it in claimable area? Yes? Disallow.
@@ -228,7 +228,14 @@ s_protect.load_config = function()
 		end
 		simple_protection = nil
 		if s_protect.claim_heigh then
+			minetest.log("warning", "[simple_protection] "
+				.. "Loaded deprecated setting: claim_heigh")
 			s_protect.claim_height = s_protect.claim_heigh
+		end
+		if s_protect.underground_claim then
+			minetest.log("warning", "[simple_protection] "
+				.. "Loaded deprecated setting: underground_claim")
+			s_protect.underground_limit = nil
 		end
 		return
 	end
