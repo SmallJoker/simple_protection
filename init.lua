@@ -35,9 +35,26 @@ local S = s_protect.gettext
 dofile(s_protect.mod_path.."/functions.lua")
 s_protect.load_config()
 
+minetest.after(1, function()
+	s_protect.load_claims()
+	s_protect.load_shareall()
+end)
+
 dofile(s_protect.mod_path.."/protection.lua")
 dofile(s_protect.mod_path.."/hud.lua")
 dofile(s_protect.mod_path.."/radar.lua")
+
+-- Prevent chest duplicates
+-- protector redo does not use the "formspec" meta field
+if minetest.registered_nodes["landrush:shared_chest"] then
+	minetest.register_alias("simple_protection:chest", "landrush:shared_chest")
+else
+	dofile(s_protect.mod_path.."/chest.lua")
+
+	-- Just to make sure there can't be unknown nodes
+	minetest.register_alias("landrush:shared_chest", "simple_protection:chest")
+end
+
 
 minetest.register_privilege("simple_protection", S("Allows to modify and delete protected areas"))
 

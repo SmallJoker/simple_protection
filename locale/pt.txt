@@ -33,6 +33,16 @@ Unowned (!) = Sem dono (!)
 Owned by @1 = Reivindicada por @1
 Players with access: @1 = Jogadores com acesso: @1
 
+# /area radar
+#North @1 =
+#East @1 =
+#South @1 =
+#West @1 =
+#Your position =
+#Your area =
+#Area claimed\nNo access for you =
+#Access for everybody =
+
 # /area share <name>
 @1 already has access to all your areas. = @1 ja possui acesso a todas suas areas.
 @1 already has access to this area. = @1 ja possui acesso a essa area.
@@ -78,10 +88,17 @@ Area owned by: @1 = Area possuida por: @1
 Area owner: @1 = Area de: @1
 
 # Item: Claim stick
-Claim stick = Graveto Reivindicador
+Claim Stick = Graveto Reivindicador
+#(click to protect) =
 This area is already protected by an other protection mod. = Essa area ja foi protegida por um outro mod protetor.
 You can not claim areas below @1. = Nao podes reivindicar areas abaixo @1.
 This area is already owned by: @1 = Essa area ja foi reivindicada por: @1.
 Congratulations! You now own this area. = Parabens! Agora reivindicaste essa area.
 #You can not claim any further areas: Limit (@1) reached. =
 #Please claim this area to modify it. =
+
+
+#### Shared Chest ####
+
+#Shared Chest =
+#(by protection) =

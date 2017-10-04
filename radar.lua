@@ -115,8 +115,7 @@ s_protect.command_radar = function(name)
 		"label[7,2.25;" .. S("Your area") .. "]" ..
 		"image[6,3;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "other") .. "]" ..
-		"label[7,3;" .. S("Area claimed")
-			.. "\n" .. S("No access for you") .. "]" ..
+		"label[7,3;" .. S("Area claimed\nNo access for you") .. "]" ..
 		"image[6,4;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "*all") .. "]" ..
 		"label[7,4.25;" .. S("Access for everybody") .. "]" ..

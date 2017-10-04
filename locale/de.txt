@@ -40,8 +40,7 @@ South @1 = Sued @1
 West @1 = West @1
 Your position = Deine Position
 Your area = Dein Gebiet
-Area claimed = Gebiet geschuetzt
-No access for you = Keine Berechtigung
+Area claimed\nNo access for you = Gebiet geschuetzt\nKeine Berechtigung
 Access for everybody = Zugriff fuer jeden
 
 # /area share <name>
@@ -89,10 +88,17 @@ Area owned by: @1 = Gebiet geschuetzt durch: @1
 Area owner: @1 = Gebiets-Besitzer: @1
 
 # Item: Claim stick
-Claim stick = Gebiets-Besetzer-Tool
+Claim Stick = Gebietsschutz
+#(click to protect) = (kicken zum schuetzen)
 This area is already protected by an other protection mod. = Dieses Gebiet ist bereits durch eine andere Mod geschuetzt.
 You can not claim areas below @1. = Du kannst keine Gebiete unterhalb von @1 schuetzen.
 This area is already owned by: @1 = @1 besitzt dieses Gebiet bereits.
 Congratulations! You now own this area. = Glueckwunsch! Du besitzt dieses Gebiet jetzt.
 You can not claim any further areas: Limit (@1) reached. = Du kannst keine weiteren Gebiete schuetzen lassen: Limit (@1) erreicht.
 Please claim this area to modify it. = Bitte schuetze das Gebiet um dieses abaendern zu koennen.
+
+
+#### Shared Chest ####
+
+Shared Chest = Geteilte Truhe
+(by protection) = (durch Gebietsschutz)

@@ -157,7 +157,7 @@ s_protect.load_claims = function()
 		end
 	end
 	io.close(file)
-	minetest.log("action", "Loaded claim data")
+	minetest.log("action", "[simple_protection] Loaded claim data")
 end
 
 s_protect.load_shareall = function()
@@ -181,9 +181,10 @@ s_protect.load_shareall = function()
 		end
 	end
 	io.close(file)
-	minetest.log("action", "Loaded shared claims")
+	minetest.log("action", "[simple_protection] Loaded shared claims")
 end
 
+-- TODO: Save to temporary file, then os.rename / os.remove for safety
 s_protect.save = function()
 	local file = io.open(s_protect.file, "w")
 	for pos, data in pairs(s_protect.claims) do

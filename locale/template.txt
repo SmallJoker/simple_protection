@@ -40,8 +40,7 @@ South @1 =
 West @1 =
 Your position =
 Your area =
-Area claimed =
-No access for you =
+Area claimed\nNo access for you =
 Access for everybody =
 
 # /area share <name>
@@ -89,10 +88,17 @@ Area owned by: @1 =
 Area owner: @1 =
 
 # Item: Claim stick
-Claim stick =
+Claim Stick =
+(click to protect) =
 This area is already protected by an other protection mod. =
 You can not claim areas below @1. =
 This area is already owned by: @1 =
 Congratulations! You now own this area. =
 You can not claim any further areas: Limit (@1) reached. =
 Please claim this area to modify it. =
+
+
+#### Shared Chest ####
+
+Shared Chest =
+(by protection) =

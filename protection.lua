@@ -1,10 +1,5 @@
 local S = s_protect.gettext
 
-minetest.after(1, function()
-	s_protect.load_claims()
-	s_protect.load_shareall()
-end)
-
 local function notify_player(pos, player_name)
 	local data = s_protect.get_data(pos)
 	if not data and s_protect.claim_to_dig then
@@ -42,7 +37,7 @@ minetest.register_on_protection_violation(notify_player)
 
 
 minetest.register_craftitem("simple_protection:claim", {
-	description = S("Claim stick"),
+	description = S("Claim Stick") .. " " .. S("(click to protect)"),
 	inventory_image = "simple_protection_claim.png",
 	stack_max = 10,
 	on_use = function(itemstack, user, pointed_thing)
