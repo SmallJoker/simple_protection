@@ -1,16 +1,18 @@
--- Based on ideas of the LandRush mod
--- Created by Krock
--- License: WTFPL
+--[[
+File: init.lua
+
+Initialisations
+Module loading
+Chat commands
+]]
 
 local world_path = minetest.get_worldpath()
 s_protect = {}
-s_protect.claims = {}
 s_protect.share = {}
 s_protect.mod_path = minetest.get_modpath("simple_protection")
 s_protect.conf      = world_path.."/s_protect.conf"
 s_protect.file      = world_path.."/s_protect.data"
 s_protect.sharefile = world_path.."/s_protect_share.data"
-s_protect.store = false -- AreaStore support
 
 -- INTTLIB SUPPORT START
 s_protect.gettext = function(rawtext, replacements, ...)
@@ -35,10 +37,8 @@ local S = s_protect.gettext
 dofile(s_protect.mod_path.."/functions.lua")
 s_protect.load_config()
 
-minetest.after(1, function()
-	s_protect.load_claims()
-	s_protect.load_shareall()
-end)
+dofile(s_protect.mod_path.."/database_raw.lua")
+minetest.after(0.5, s_protect.load_db)
 
 dofile(s_protect.mod_path.."/protection.lua")
 dofile(s_protect.mod_path.."/hud.lua")
@@ -154,7 +154,7 @@ s_protect.command_share = function(name, param)
 		return true, S("@1 already has access to this area.", param)
 	end
 	table.insert(data.shared, param)
-	s_protect.save()
+	s_protect.save_db()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 shared an area with you.", name))
@@ -177,8 +177,8 @@ s_protect.command_unshare = function(name, param)
 	if not table_contains(data.shared, param) then
 		return true, S("That player has no access to this area.")
 	end
-	table_delete(data.shared, param)
-	s_protect.save()
+	table_erase(data.shared, param)
+	s_protect.save_db()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 unshared an area with you.", name))
@@ -205,7 +205,7 @@ s_protect.command_shareall = function(name, param)
 		s_protect.share[name] = {}
 	end
 	table.insert(s_protect.share[name], param)
-	s_protect.save()
+	s_protect.save_db()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 shared all areas with you.", name))
@@ -219,14 +219,14 @@ s_protect.command_unshareall = function(name, param)
 	end
 	local removed = false
 	local shared = s_protect.share[name]
-	if table_delete(shared, param) then
+	if table_erase(shared, param) then
 		removed = true
 	end
 
 	-- Unshare each single claim
 	for pos, data in pairs(s_protect.claims) do
 		if data.owner == name then
-			if table_delete(data.shared, param) then
+			if table_erase(data.shared, param) then
 				removed = true
 			end
 		end
@@ -234,7 +234,7 @@ s_protect.command_unshareall = function(name, param)
 	if not removed then
 		return false, S("@1 does not have access to any of your areas.", param)
 	end
-	s_protect.save()
+	s_protect.save_db()
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 unshared all areas with you.", name))
 	end
@@ -258,7 +258,7 @@ s_protect.command_unclaim = function(name)
 		end
 	end
 	s_protect.claims[pos] = nil
-	s_protect.save()
+	s_protect.save_db()
 	return true, S("This area is unowned now.")
 end
 
@@ -293,7 +293,7 @@ s_protect.command_delete = function(name, param)
 	if #removed == 0 then
 		return false, S("@1 does not own any claimed areas.", param)
 	end
-	s_protect.save()
+	s_protect.save_db()
 	return true, S("Removed")..": "..table.concat(removed, ", ")
 end
 

@@ -1,3 +1,11 @@
+--[[
+File: hud.lua
+
+areas HUD overlap compatibility
+HUD display and refreshing
+]]
+
+
 local S = s_protect.gettext
 
 s_protect.player_huds = {}
@@ -37,11 +45,10 @@ end
 
 minetest.register_globalstep(function(dtime)
 	hud_time = hud_time + dtime
-	if hud_time < 3 then
+	if hud_time < 2.9 then
 		return
 	end
 	hud_time = 0
-
 
 	local shared = s_protect.share
 	for _, player in ipairs(minetest.get_connected_players()) do

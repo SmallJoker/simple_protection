@@ -1,3 +1,11 @@
+--[[
+File: protection.lua
+
+Protection callback handler
+Node placement checks
+Claim Stick item definition
+]]
+
 local S = s_protect.gettext
 
 local function notify_player(pos, player_name)
@@ -88,7 +96,7 @@ minetest.register_craftitem("simple_protection:claim", {
 
 		itemstack:take_item(1)
 		s_protect.claims[area_pos] = {owner=player_name, shared={}}
-		s_protect.save()
+		s_protect.save_db()
 
 		minetest.add_entity(s_protect.get_center(pos), "simple_protection:marker")
 		minetest.chat_send_player(player_name, S("Congratulations! You now own this area."))
