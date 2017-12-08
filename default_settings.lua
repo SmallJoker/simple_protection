@@ -14,23 +14,23 @@ simple_protection/default_settings.lua
 
 
 -- Width and length of claims in nodes
--- !! Distorts the claims locations' along the X and Z axis !!
+-- !! Distorts the claim locations along the X and Z axis !!
 -- Type: Integer, positive, even number
 s_protect.claim_size = 16
 
 -- Height of claims in nodes
--- !! Distorts the claims locations' along the Y axis !!
+-- !! Distorts the claim locations along the Y axis !!
 -- Type: Integer, positive
-s_protect.claim_height = 80
+s_protect.claim_height = 150
 
 -- Defines the Y offset where the 0th claim should start in the underground
--- Example of claim (0,0,0): Ymin = -[20], Ymax = 80 - [20] = 60
+-- Example of claim (0,0,0): Ymin = -(50) = -50, Ymax = 150 - (50) - 1 = 99
 -- Type: Integer
-s_protect.start_underground = 20
+s_protect.start_underground = 50
 
 -- Only allows claiming above this Y value
 -- To disable this limit, set the value to 'nil'
--- Type: Integer/nil
+-- Type: Integer or nil
 s_protect.underground_limit = -300
 
 -- Returns the claim stick when unclaiming the area
