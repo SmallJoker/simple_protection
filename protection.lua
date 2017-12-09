@@ -9,7 +9,7 @@ Claim Stick item definition
 local S = s_protect.gettext
 
 local function notify_player(pos, player_name)
-	local data = s_protect.get_data(pos)
+	local data = s_protect.get_claim(pos)
 	if not data and s_protect.claim_to_dig then
 		minetest.chat_send_player(player_name, S("Please claim this area to modify it."))
 	elseif not data then
@@ -68,35 +68,31 @@ minetest.register_craftitem("simple_protection:claim", {
 				return
 			end
 		end
-		local data, area_pos = s_protect.get_data(pos)
+		local data, index = s_protect.get_claim(pos)
 		if data then
 			minetest.chat_send_player(player_name,
 					S("This area is already owned by: @1", data.owner))
 			return
 		end
 		-- Count number of claims for this user
-		local claims_count = 0
 		local claims_max = s_protect.max_claims
 
 		if minetest.check_player_privs(player_name, {simple_protection=true}) then
 			claims_max = claims_max * 2
 		end
 
-		for k, v in pairs(s_protect.claims) do
-			if v.owner == player_name then
-				claims_count = claims_count + 1
-				if claims_count >= claims_max then
-					minetest.chat_send_player(player_name,
-						S("You can not claim any further areas: Limit (@1) reached.",
-						tostring(claims_max)))
-					return
-				end
-			end
+		local claims, count = s_protect.get_player_claims(player_name)
+		if count >= claims_max then
+			minetest.chat_send_player(player_name,
+				S("You can not claim any further areas: Limit (@1) reached.",
+				tostring(claims_max)))
+			return
 		end
 
 		itemstack:take_item(1)
-		s_protect.claims[area_pos] = {owner=player_name, shared={}}
-		s_protect.save_db()
+		s_protect.update_claims({
+			[index] = {owner=player_name, shared={}}
+		})
 
 		minetest.add_entity(s_protect.get_center(pos), "simple_protection:marker")
 		minetest.chat_send_player(player_name, S("Congratulations! You now own this area."))

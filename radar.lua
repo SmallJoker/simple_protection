@@ -31,15 +31,15 @@ end
 
 s_protect.command_radar = function(name)
 	local player = minetest.get_player_by_name(name)
-	local player_pos = player:getpos()
+	local player_pos = player:get_pos()
 	local pos = s_protect.get_location(player_pos)
 	local map_w = 15 - 1
 	local map_wh = map_w / 2
 	local img_w = 20
 
-	local claims = s_protect.claims
+	local get_single = s_protect.get_claim
 	local function getter(x, ymod, z)
-		data_cache = claims[x .."," .. (pos.y + ymod) .. "," .. z]
+		data_cache = get_single(x .."," .. (pos.y + ymod) .. "," .. z, true)
 		return data_cache
 	end
 

@@ -97,8 +97,8 @@ minetest.register_chatcommand("area", {
 
 s_protect.command_show = function(name)
 	local player = minetest.get_player_by_name(name)
-	local player_pos = vector.round(player:getpos())
-	local data = s_protect.get_data(player_pos)
+	local player_pos = player:get_pos()
+	local data = s_protect.get_claim(player_pos)
 
 	minetest.add_entity(s_protect.get_center(player_pos), "simple_protection:marker")
 	local minp, maxp = s_protect.get_area_bounds(player_pos)
@@ -129,21 +129,29 @@ s_protect.command_show = function(name)
 	end
 end
 
+local function check_ownership(name)
+	local player = minetest.get_player_by_name(name)
+	local data, index = s_protect.get_claim(player:get_pos())
+	if not data then
+		return false, S("This area is not claimed yet.")
+	end
+	local priv = minetest.check_player_privs(name, {simple_protection=true})
+	if name ~= data.owner and not priv then
+		return false, S("You do not own this area.")
+	end
+	return true, data, index
+end
+
 s_protect.command_share = function(name, param)
 	if not param or name == param then
 		return false, S("No player name given.")
 	end
-	if not minetest.auth_table[param] and param ~= "*all" then
+	if not minetest.builtin_auth_handler.get_auth(param) and param ~= "*all" then
 		return false, S("Unknown player.")
 	end
-
-	local player = minetest.get_player_by_name(name)
-	local data = s_protect.get_data(player:getpos())
-	if not data then
-		return false, S("This area is not claimed yet.")
-	end
-	if name ~= data.owner and not minetest.check_player_privs(name, {s_protect=true}) then
-		return false, S("You do not own this area.")
+	local success, data, index = check_ownership(name)
+	if not success then
+		return success, data
 	end
 	local shared = s_protect.share[name]
 	if shared and shared[param] then
@@ -154,7 +162,7 @@ s_protect.command_share = function(name, param)
 		return true, S("@1 already has access to this area.", param)
 	end
 	table.insert(data.shared, param)
-	s_protect.save_db()
+	s_protect.set_claim(data, index)
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 shared an area with you.", name))
@@ -166,19 +174,15 @@ s_protect.command_unshare = function(name, param)
 	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
-	local player = minetest.get_player_by_name(name)
-	local data = s_protect.get_data(player:getpos())
-	if not data then
-		return false, S("This area is not claimed yet.")
-	end
-	if name ~= data.owner and not minetest.check_player_privs(name, {simple_protection=true}) then
-		return false, S("You do not own this area.")
+	local success, data, index = check_ownership(name)
+	if not success then
+		return success, data
 	end
 	if not table_contains(data.shared, param) then
 		return true, S("That player has no access to this area.")
 	end
 	table_erase(data.shared, param)
-	s_protect.save_db()
+	s_protect.set_claim(data, index)
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 unshared an area with you.", name))
@@ -190,7 +194,7 @@ s_protect.command_shareall = function(name, param)
 	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
-	if not minetest.auth_table[param] then
+	if not minetest.builtin_auth_handler.get_auth(param) then
 		if param == "*all" then
 			return false, S("You can not share all your areas with everybody.")
 		end
@@ -205,7 +209,7 @@ s_protect.command_shareall = function(name, param)
 		s_protect.share[name] = {}
 	end
 	table.insert(s_protect.share[name], param)
-	s_protect.save_db()
+	s_protect.save_share_db()
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 shared all areas with you.", name))
@@ -221,20 +225,20 @@ s_protect.command_unshareall = function(name, param)
 	local shared = s_protect.share[name]
 	if table_erase(shared, param) then
 		removed = true
+		s_protect.save_share_db()
 	end
 
 	-- Unshare each single claim
-	for pos, data in pairs(s_protect.claims) do
-		if data.owner == name then
-			if table_erase(data.shared, param) then
-				removed = true
-			end
+	local claims = s_protect.get_player_claims(name)
+	for index, data in pairs(claims) do
+		if table_erase(data.shared, param) then
+			removed = true
 		end
 	end
 	if not removed then
 		return false, S("@1 does not have access to any of your areas.", param)
 	end
-	s_protect.save_db()
+	s_protect.update_claims(claims)
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 unshared all areas with you.", name))
 	end
@@ -242,23 +246,18 @@ s_protect.command_unshareall = function(name, param)
 end
 
 s_protect.command_unclaim = function(name)
-	local player = minetest.get_player_by_name(name)
-	local data, pos = s_protect.get_data(player:getpos())
-	if not data then
-		return false, S("You do not own this area.")
-	end
-	local priv = minetest.check_player_privs(name, {simple_protection=true})
-	if name ~= data.owner and not priv then
-		return false, S("You do not own this area.")
+	local success, data, index = check_ownership(name)
+	if not success then
+		return success, data
 	end
 	if s_protect.claim_return and name == data.owner then
+		local player = minetest.get_player_by_name(name)
 		local inv = player:get_inventory()
 		if inv:room_for_item("main", "simple_protection:claim") then
 			inv:add_item("main", "simple_protection:claim")
 		end
 	end
-	s_protect.claims[pos] = nil
-	s_protect.save_db()
+	s_protect.set_claim(nil, index)
 	return true, S("This area is unowned now.")
 end
 
@@ -274,26 +273,23 @@ s_protect.command_delete = function(name, param)
 	if s_protect.share[param] then
 		s_protect.share[param] = nil
 		table.insert(removed, S("Globally shared areas"))
+		s_protect.save_share_db()
 	end
 
 	-- Delete all claims
-	local counter = 0
-	local claims = s_protect.claims
-	for pos, data in pairs(claims) do
-		if data.owner == param then
-			claims[pos] = nil
-			counter = counter + 1
-		end
+	local claims, count = s_protect.get_player_claims(param)
+	for index in pairs(claims) do
+		claims[index] = false
 	end
+	s_protect.update_claims(claims)
 
-	if counter > 0 then
-		table.insert(removed, S("@1 claimed area(s)", tostring(counter)))
+	if count > 0 then
+		table.insert(removed, S("@1 claimed area(s)", tostring(count)))
 	end
 
 	if #removed == 0 then
 		return false, S("@1 does not own any claimed areas.", param)
 	end
-	s_protect.save_db()
 	return true, S("Removed")..": "..table.concat(removed, ", ")
 end
 
@@ -312,15 +308,16 @@ s_protect.command_list = function(name, param)
 	local list = {}
 	local width = s_protect.claim_size
 	local height = s_protect.claim_height
-	for pos, data in pairs(s_protect.claims) do
-		if data.owner == param then
-			local abs_pos = minetest.string_to_pos(pos)
-			table.insert(list, string.format("%5i,%5i,%5i",
-				abs_pos.x * width + (width / 2),
-				abs_pos.y * height - s_protect.start_underground + (height / 2),
-				abs_pos.z * width + (width / 2)
-			))
-		end
+
+	local claims = s_protect.get_player_claims(param)
+	for index in pairs(claims) do
+		-- TODO: Add database-specific function to convert the index to a position
+		local abs_pos = minetest.string_to_pos(index)
+		table.insert(list, string.format("%5i,%5i,%5i",
+			abs_pos.x * width + (width / 2),
+			abs_pos.y * height - s_protect.start_underground + (height / 2),
+			abs_pos.z * width + (width / 2)
+		))
 	end
 
 	local text = S("Listing all areas of @1. Amount: @2", param, tostring(#list))

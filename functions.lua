@@ -50,7 +50,7 @@ s_protect.can_access = function(pos, player_name)
 	end
 
 	-- Data of current area
-	local data = s_protect.get_data(pos)
+	local data = s_protect.get_claim(pos)
 
 	-- Area is not claimed
 	if not data then

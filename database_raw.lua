@@ -2,23 +2,19 @@
 File: database_raw.lua
 
 Raw text format database functions:
-	get_data
-	load_db
-	save_db
+	load_db()
+	save_share_db()
+	get_claim(<pos or index>, direct access)
+	set_claim(data, index)
+	get_player_claims(player name)
+	update_claims(claims table)
+
 minetest.safe_file_write compatibility code
 ]]
 
-s_protect.claims = {}
-local last_save = os.time()
-local is_db_dirty = false
-
--- Speed up the function access
-local get_location = s_protect.get_location
-function s_protect.get_data(pos)
-	local pos = get_location(pos)
-	local str = pos.x..","..pos.y..","..pos.z
-	return s_protect.claims[str], str
-end
+local claim_data = {}
+local claim_db = { time = os.time(), dirty = false }
+local share_db = { time = os.time(), dirty = false }
 
 function s_protect.load_db()
 	-- Don't forget the "parties"
@@ -40,7 +36,7 @@ function s_protect.load_db()
 					end
 				end
 			end
-			s_protect.claims[data[1]] = {owner=data[2], shared=_shared}
+			claim_data[data[1]] = {owner=data[2], shared=_shared}
 		end
 	end
 	io.close(file)
@@ -80,36 +76,87 @@ if not minetest.safe_file_write then
 	end
 end
 
-function s_protect.save_db()
-	local dtime = os.time() - last_save
+local function delay(db_info, func)
+	local dtime = os.time() - db_info.time
 	if dtime < 6 then
 		-- Excessive save requests. Delay them.
-		if not is_db_dirty then
-			minetest.after(6 - dtime, s_protect.save_db)
+		if not db_info.dirty then
+			minetest.after(6 - dtime, func)
 		end
-		is_db_dirty = true
+		db_info.dirty = true
+		return true
+	end
+	db_info.time = os.time()
+	db_info.dirty = false
+end
+
+local function save_claims()
+	if delay(claim_db, save_claims) then
 		return
 	end
-	last_save = os.time()
-	is_db_dirty = false
 
 	local contents = ""
-	for pos, data in pairs(s_protect.claims) do
+	for pos, data in pairs(claim_data) do
 		if data.owner and data.owner ~= "" then
 			contents = contents ..
-				pos .. " ".. data.owner ..
+				pos .. " ".. data.owner .. " " ..
 				table.concat(data.shared, " ") .. "\n"
 		end
 	end
 	minetest.safe_file_write(s_protect.file, contents)
+end
+
+function s_protect.save_share_db()
+	if delay(share_db, s_protect.save_share_db) then
+		return
+	end
 
 	-- Save globally shared areas
 	contents = ""
 	for name, players in pairs(s_protect.share) do
 		if #players > 0 then
-			contents = contents .. name ..
+			contents = contents .. name .. " " ..
 				table.concat(players, " ") .. "\n"
 		end
 	end
 	minetest.safe_file_write(s_protect.sharefile, contents)
+end
+
+-- Speed up the function access
+local get_location = s_protect.get_location
+function s_protect.get_claim(pos, direct_access)
+	if direct_access then
+		return claim_data[pos], pos
+	end
+	local pos = get_location(pos)
+	local index = pos.x..","..pos.y..","..pos.z
+	return claim_data[index], index
+end
+
+function s_protect.set_claim(data, index)
+	claim_data[index] = data
+	save_claims()
+end
+
+function s_protect.get_player_claims(owner)
+	local count = 0
+	local claims = {}
+	for index, data in pairs(claim_data) do
+		if data.owner == owner then
+			claims[index] = data
+			count = count + 1
+		end
+	end
+	return claims, count
+end
+
+function s_protect.update_claims(updated)
+	for index, data in pairs(updated) do
+		if not data then
+			claim_data[index] = nil
+		else
+			claim_data[index] = data
+		end
+	end
+	save_claims()
 end
