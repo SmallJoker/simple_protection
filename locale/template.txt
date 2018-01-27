@@ -10,7 +10,7 @@ Allows to modify and delete protected areas =
 Manages all of your areas. =
 
 # /area
-Available area commands:
+Available area commands: =
 Information about this area =
 (Un)share one area =
 (Un)share all areas =
