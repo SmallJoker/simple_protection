@@ -42,6 +42,10 @@ Your position = Votre position
 Your area = Votre zone
 Area claimed\nNo access for you = Zone revendiquée\nNon accessible pour vous
 Access for everybody = Accès pour tout le monde
+One area unit (@1m) up/down\n-> no claims on this Y level = Une unité de zone (@1m) haut/bas\n-> Rien de revendiqué à ce niveau Y
+square = carré
+area = zone
+nodes = blocs
 
 # /area share <name>
 @1 already has access to all your areas. = @1 a déjà accès à toutes vos zones.

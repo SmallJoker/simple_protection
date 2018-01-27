@@ -104,10 +104,10 @@ s_protect.command_radar = function(name)
 			minetest.formspec_escape("[combine:300x300"
 				.. parts .. marker_str)
 				.. dir_mod .. "]" ..
-		"label[0,6.8;1 square = 1 area = "
+		"label[0,6.8;1 " .. S("square") .. " = 1 " .. S("area") .. " = "
 			.. s_protect.claim_size .. "x"
 			.. s_protect.claim_height .. "x"
-			.. s_protect.claim_size .. " nodes (X,Y,Z)]" ..
+			.. s_protect.claim_size .. S("nodes") .. " (X,Y,Z)]" ..
 		"image[6.25,1.25;0.5,0.5;object_marker_red.png]" ..
 		"label[7,1.25;" .. S("Your position") .. "]" ..
 		"image[6,2;1,1;simple_protection_radar.png^"
@@ -121,7 +121,6 @@ s_protect.command_radar = function(name)
 		"label[7,4.25;" .. S("Access for everybody") .. "]" ..
 		"image[6,5;1,1;simple_protection_radar_down.png]" ..
 		"image[7,5;1,1;simple_protection_radar_up.png]" ..
-		"label[6,6;One area unit ("..s_protect.claim_height
-			.. "m) up/down\n= no claims on this Y level]"
+		"label[6,6;" .. S("One area unit (@1m) up/down\n-> no claims on this Y level", s_protect.claim_height) .. "]"
 	)
 end
