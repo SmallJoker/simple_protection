@@ -107,7 +107,7 @@ s_protect.command_radar = function(name)
 		"label[0,6.8;1 " .. S("square") .. " = 1 " .. S("area") .. " = "
 			.. s_protect.claim_size .. "x"
 			.. s_protect.claim_height .. "x"
-			.. s_protect.claim_size .. S("nodes") .. " (X,Y,Z)]" ..
+			.. s_protect.claim_size .. " " .. S("nodes") .. " (X,Y,Z)]" ..
 		"image[6.25,1.25;0.5,0.5;object_marker_red.png]" ..
 		"label[7,1.25;" .. S("Your position") .. "]" ..
 		"image[6,2;1,1;simple_protection_radar.png^"
