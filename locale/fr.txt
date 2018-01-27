@@ -7,30 +7,30 @@ Allows to modify and delete protected areas = Permet de modifier et supprimer de
 #### AREA COMMAND ####
 
 # Command description
-Manages all of your areas. = Gère toutes vos zones.
+Manages all of your areas. = Gestion de toutes vos zones.
 
 # /area
 Available area commands: = Commandes de zone disponibles :
 Information about this area = Informations sur cette zone
-(Un)share one area = (Ne pas)Partager une zone
-(Un)share all areas = (Ne pas)Partager toutes les zones
+(Un)share one area = Partager (ou pas) une zone
+(Un)share all areas = Partager (ou pas) toutes les zones
 List claimed areas = Liste des zones revendiquées
 Delete all areas of a player = Supprimer toutes les zones d'un joueur
 Unclaim this area = Libérer cette zone
 
 # Errors of /area
-Unknown command parameter: @1. Check '/area' for correct usage. = Paramètre de commande inconnu : @1. Tappez '/area' pour voir les paramètres.
+Unknown command parameter: @1. Check '/area' for correct usage. = Paramètre de commande inconnu : @1. Tappez '/area' pour voir les paramètres possible.
 No player name given. = Aucun nom de joueur donné.
 Unknown player. = Joueur inconnu.
 This area is not claimed yet. = Cette zone n'est pas encore revendiquée.
 You do not own this area. = Vous ne possédez pas cette zone.
 
 # /area show
-Vertical area limit from Y @1 to @2 = Limite verticale de zone de Y @1 à @2
+Vertical area limit from Y @1 to @2 = Limite verticale de zone pour Y @1 à @2
 Area status: @1 = Statut de la zone : @1
 Not claimable = Non revendiquable
 Unowned (!) = Pas de propriétaire (!)
-Owned by @1 = Possédé par @1
+Owned by @1 = Possédée par @1
 Players with access: @1 = Joueurs avec accès : @1
 
 # /area radar
@@ -43,9 +43,7 @@ Your area = Votre zone
 Area claimed\nNo access for you = Zone revendiquée\nNon accessible pour vous
 Access for everybody = Accès pour tout le monde
 One area unit (@1m) up/down\n-> no claims on this Y level = Une unité de zone (@1m) haut/bas\n-> Rien de revendiqué à ce niveau Y
-square = carré
-area = zone
-nodes = blocs
+square \= 1 area \= @1x@2x@3 nodes (X,Y,Z) = carré \= 1 zone \= @1x@2x@3 blocs (X,Y,Z)
 
 # /area share <name>
 @1 already has access to all your areas. = @1 a déjà accès à toutes vos zones.
@@ -75,7 +73,7 @@ This area is unowned now. = Cette zone n'est plus revendiquée.
 # /area delete <name>
 Missing privilege: @1 = Privilège manquant : @1
 Removed = Supprimé
-Globally shared areas = Zones partagées globallement
+Globally shared areas = Zones partagées globalement
 @1 claimed area(s) = @1 a revendiqué des zones
 @1 does not own any claimed areas. = @1 ne possède aucune zone revendiquée.
 
@@ -97,8 +95,8 @@ Claim Stick = Bâton de protection
 This area is already protected by an other protection mod. = Cette zone est déjà protégée par un autre mod de protection.
 You can not claim areas below @1. = Vous ne pouvez pas revendiquer les zones ci-dessous @1.
 This area is already owned by: @1 = Cette zone est déjà détenue par : @1.
-Congratulations! You now own this area. = Toutes nos félicitations! Vous possédez maintenant cette zone.
-You can not claim any further areas: Limit (@1) reached. = Vous ne pouvez pas revendiquer d'autres zones : La limite (@1) a été atteinte.
+Congratulations! You now own this area. = Félicitations ! Vous possédez maintenant cette zone.
+You can not claim any further areas: Limit (@1) reached. = Vous ne pouvez pas revendiquer d'autres zones : La limite de @1 a été atteinte.
 Please claim this area to modify it. = Veuillez revendiquer cette zone pour la modifier.
 
 
