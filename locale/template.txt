@@ -42,6 +42,8 @@ Your position =
 Your area =
 Area claimed\nNo access for you =
 Access for everybody =
+One area unit (@1m) up/down\n-> no claims on this Y level =
+square \= 1 area \= @1x@2x@3 nodes (X,Y,Z) =
 
 # /area share <name>
 @1 already has access to all your areas. =
