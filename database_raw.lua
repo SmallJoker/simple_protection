@@ -68,12 +68,15 @@ function s_protect.load_shareall()
 end
 
 -- <= 0.4.16 compatibility
-if not minetest.safe_file_write then
-	function minetest.safe_file_write(path, content)
-		local file = io.open(path, "w")
-		file:write(content)
-		io.close(file)
-	end
+local function write_file(path, content)
+	local file = io.open(path, "w")
+	file:write(content)
+	io.close(file)
+end
+
+-- Superior function
+if minetest.safe_file_write then
+	write_file = minetest.safe_file_write
 end
 
 local function delay(db_info, func)
@@ -95,15 +98,15 @@ local function save_claims()
 		return
 	end
 
-	local contents = ""
+	local contents = {}
 	for pos, data in pairs(claim_data) do
 		if data.owner and data.owner ~= "" then
-			contents = contents ..
+			contents[#contents + 1] =
 				pos .. " ".. data.owner .. " " ..
-				table.concat(data.shared, " ") .. "\n"
+				table.concat(data.shared, " ")
 		end
 	end
-	minetest.safe_file_write(s_protect.file, contents)
+	write_file(s_protect.file, table.concat(contents, "\n"))
 end
 
 function s_protect.save_share_db()
@@ -112,14 +115,14 @@ function s_protect.save_share_db()
 	end
 
 	-- Save globally shared areas
-	contents = ""
+	local contents = {}
 	for name, players in pairs(s_protect.share) do
 		if #players > 0 then
-			contents = contents .. name .. " " ..
-				table.concat(players, " ") .. "\n"
+			contents[#contents + 1] = name .. " " ..
+				table.concat(players, " ")
 		end
 	end
-	minetest.safe_file_write(s_protect.sharefile, contents)
+	write_file(s_protect.sharefile, table.concat(contents, "\n"))
 end
 
 -- Speed up the function access
