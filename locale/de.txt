@@ -10,8 +10,8 @@ Allows to modify and delete protected areas = Erlaubt das Abaendern und Entferne
 Manages all of your areas. = Verwaltet alle deine geschuetzten Gebiete
 
 # /area
-Available area commands:
-Information about this area = Informationen ueber dieses Gebiet:
+Available area commands = Verfuegbare 'area' Befehle
+Information about this area = Informationen ueber dieses Gebiet
 (Un)share one area = Zugriffs-Berechtigung eines Gebietes hinzufuegen/entfernen
 (Un)share all areas = Zugriffs-Berechtigung fuer alle Gebiete hinzufuegen/entfernen
 List claimed areas = Geschuetzte Gebiete auflisten

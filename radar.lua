@@ -29,7 +29,7 @@ local function combine_escape(str)
 	return str:gsub("%^%[", "\\%^\\%["):gsub(":", "\\:")
 end
 
-s_protect.command_radar = function(name)
+s_protect.register_subcommand("radar", function(name)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = player:get_pos()
 	local pos = s_protect.get_location(player_pos)
@@ -98,7 +98,7 @@ s_protect.command_radar = function(name)
 
 	minetest.show_formspec(name, "covfefe",
 		"size[10.5,7]" ..
-		"button_exit[9.5,0;1,2;exit;X]" ..
+		"button_exit[9.5,0;1,1;exit;X]" ..
 		"label[2,0;"..dir_label.."]" ..
 		"image[0,0.5;7,7;" ..
 			minetest.formspec_escape("[combine:300x300"
@@ -124,4 +124,4 @@ s_protect.command_radar = function(name)
 		"label[6,6;" .. S("One area unit (@1m) up/down\n-> no claims on this Y level",
 			s_protect.claim_height) .. "]"
 	)
-end
+end)

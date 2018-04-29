@@ -6,6 +6,8 @@ like seen in [landrush](https://github.com/Bremaweb/landrush).
 
 You can claim areas by punching those with a claim stick.
 
+![Screenshot](https://raw.githubusercontent.com/SmallJoker/simple_protection/master/screenshot.png)
+
 
 License: CC0
 
@@ -15,7 +17,6 @@ License: CC0
 **Optional dependencies**
 - [intllib](https://github.com/minetest-mods/intllib/): Translations
 - [areas](https://github.com/ShadowNinja/areas): HUD compatibility
-- landrush: Only to prevent shared chests from turning into unknown nodes
 
 
 Features

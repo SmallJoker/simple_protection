@@ -10,7 +10,7 @@ Allows to modify and delete protected areas = Permet de modifier et supprimer de
 Manages all of your areas. = Gestion de toutes vos zones.
 
 # /area
-Available area commands: = Commandes de zone disponibles :
+Available area commands = Commandes de zone disponibles
 Information about this area = Informations sur cette zone
 (Un)share one area = Partager (ou pas) une zone
 (Un)share all areas = Partager (ou pas) toutes les zones
