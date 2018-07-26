@@ -1,0 +1,81 @@
+simple_protection API
+=====================
+
+This file provides information about the API of simple_protection for the use in
+custom mods. The API might change slightly when the development goes on, so avoid
+using internal tables or functions which are not documented here.
+
+
+Types
+-----
+
+* `ClaimData` -> `table`
+```
+	{
+		owner = "foobar", -- string, owner of the area
+		shared = { "covfefe", "leprechaun" },
+		 -- ^ table, list of players who explicitly have access to this area
+	}
+```
+* `ClaimIndex` -> `?`
+	* This might be any value, depending on the database backend.
+	* Can be obtained with `get_claim` and is used for `set_claim`
+
+
+Helper functions
+----------------
+These functions are grouped so that they make sense and then sorted alphabetically.
+
+* `s_protect.can_access(pos, player_name)` -> `boolean`
+	* Returns whether the player may modify the given position
+	* `pos`: Position as a `vector`
+	* `player_name`: Is a `string` for the player to check
+		* `nil`: Always returns `false`
+		* `""`: Returns `true`. Warning: `get_player_name()` returns this value on
+		  objects which are not players, such as Lua entities.
+* `s_protect.get_area_bounds(pos)` -> `vector, vector`
+	* Returns the minimal node position (1st value) and maximal node position
+	  (2nd value) of the current claim. The coordinate values are inside the claim.
+	* `pos`: Position as a `vector`
+* `s_protect.get_center(pos)` -> `vector`
+	* Returns the center node position of the current claim near to `pos.y`.
+	* `pos`: Position as a `vector`
+* `s_protect.get_location(pos)` -> `vector`
+	* Returns the location of the given claim (whole numbers) in claim-coordinates
+	* `pos`: Position as a `vector`
+	* This function is only helpful to iterate through multiple claims.
+* `s_protect.load_config()`
+	* Causes simple_protection to (initialize and) reload the configuration.
+
+
+Protection management
+---------------------
+
+* `s_protect.get_claim(pos)` -> `ClaimData, ClaimIndex`
+	* Returns the area information or `nil` when no area was found at the given
+	  position.
+	* `pos`: Position as a `vector`
+* `s_protect.get_player_claims(owner)` -> `table, count`
+	* Returns a table of claims which the player owns, whereas `ClaimIndex` is the
+	  key and `ClaimData` the value of the resulting table. The second argument
+	  describes how many entries the table has (i.e. how many claims).
+	* `owner`: Player name as `string`
+* `s_protect.set_claim(data, index)`
+	* Updates the area data for the given index. It will be saved automatically.
+	* `data`: Area information as `ClaimData`
+	* `index`: `ClaimIndex` provided by `get_claim`
+* `s_protect.update_claims(update_table)`
+	* Updates multiple areas according to the supplied table
+	* `update_table`: `table` of areas to update, whereas the key is `ClaimIndex`
+	  and the value `ClaimData`. Set the value to `nil` to remove the claim.
+
+
+Chat commands
+-------------
+
+* `s_protect.register_subcommand(name, func)`
+	* Registers a new subcommand for `/area`; throws errors on failure
+	* `name`: `string` name of the new command
+	* `func`: `function` to call when the command is executed
+		* See "Chat command definition" in the Minetest core Lua API.
+
