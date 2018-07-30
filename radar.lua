@@ -12,13 +12,14 @@ local function colorize_area(name, force)
 			data_cache.owner == name then
 		return "[colorize:#0F0:180"
 	end
+	local is_shared = s_protect.is_shared
 	if force == "shared" or not force and (
-			   table_contains(data_cache.shared, name)
-			or table_contains(s_protect.share[data_cache.owner], name)) then
+			   is_shared(data_cache, name)
+			or is_shared(data_cache.owner, name)) then
 		return "[colorize:#0F0:80"
 	end
 	if force == "*all" or not force and
-			table_contains(data_cache.shared, "*all") then
+			is_shared(data_cache, "*all") then
 		return "[colorize:#00F:180"
 	end
 	-- Claimed but not shared

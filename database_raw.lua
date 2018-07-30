@@ -163,3 +163,21 @@ function s_protect.update_claims(updated)
 	end
 	save_claims()
 end
+
+local function table_contains(t, to_find)
+	for i, v in pairs(t) do
+		if v == to_find then
+			return true
+		end
+	end
+	return false
+end
+function s_protect.is_shared(id, player_name)
+	if type(id) == "table" and id.shared then
+		-- by area
+		return table_contains(id.shared, player_name)
+	end
+	assert(type(id) == "string", "is_shared(): Either ClaimData or string expected")
+	-- by owner
+	return table_contains(s_protect.share[id] or {}, player_name)
+end

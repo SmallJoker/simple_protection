@@ -50,7 +50,7 @@ minetest.register_globalstep(function(dtime)
 	end
 	hud_time = 0
 
-	local shared = s_protect.share
+	local is_shared = s_protect.is_shared
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local player_name = player:get_player_name()
 
@@ -63,11 +63,11 @@ minetest.register_globalstep(function(dtime)
 		local has_access = (current_owner == player_name)
 		if not has_access and data then
 			-- Check if this area is shared with this player
-			has_access = table_contains(data.shared, player_name)
+			has_access = is_shared(data, player_name)
 		end
 		if not has_access then
 			-- Check if all areas are shared with this player
-			has_access = table_contains(shared[current_owner], player_name)
+			has_access = is_shared(current_owner, player_name)
 		end
 		local changed = true
 

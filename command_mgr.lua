@@ -51,7 +51,6 @@ minetest.register_chatcommand("area", {
 })
 
 s_protect.register_subcommand("show", function(name, param)
-print(param)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = player:get_pos()
 	local data = s_protect.get_claim(player_pos)
@@ -109,12 +108,12 @@ s_protect.register_subcommand("share", function(name, param)
 	if not success then
 		return success, data
 	end
-	local shared = s_protect.share[name]
-	if shared and shared[param] then
+
+	if s_protect.is_shared(name, param) then
 		return true, S("@1 already has access to all your areas.", param)
 	end
 
-	if table_contains(data.shared, param) then
+	if s_protect.is_shared(data, param) then
 		return true, S("@1 already has access to this area.", param)
 	end
 	table.insert(data.shared, param)
@@ -134,7 +133,7 @@ s_protect.register_subcommand("unshare", function(name, param)
 	if not success then
 		return success, data
 	end
-	if not table_contains(data.shared, param) then
+	if not s_protect.is_shared(data, param) then
 		return true, S("That player has no access to this area.")
 	end
 	table_erase(data.shared, param)
@@ -157,8 +156,7 @@ s_protect.register_subcommand("shareall", function(name, param)
 		return false, S("Unknown player.")
 	end
 
-	local shared = s_protect.share[name]
-	if table_contains(shared, param) then
+	if s_protect.is_shared(name, param) then
 		return true, S("@1 already has now access to all your areas.", param)
 	end
 	if not shared then

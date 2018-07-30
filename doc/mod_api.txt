@@ -68,6 +68,14 @@ Protection management
 	* Updates multiple areas according to the supplied table
 	* `update_table`: `table` of areas to update, whereas the key is `ClaimIndex`
 	  and the value `ClaimData`. Set the value to `nil` to remove the claim.
+* `s_protect.is_shared(id, player_name)` -> `boolean`
+	* Returns whether the owner shared an area (or multiple) with `player_name`
+	* `id`: Can be either `ClaimData` or the owner name as `string`:
+		* Type `ClaimData`: Checks whether `player_name` is contained in
+		  the given area's share list.
+		* Type `string`: Checks whether all areas of the given owner are
+		  shared with `player_name`
+	* `player_name`: `string`, the player to check
 
 
 Chat commands

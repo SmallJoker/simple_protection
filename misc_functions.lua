@@ -7,17 +7,6 @@ Configuration loading
 ]]
 
 -- Helper functions
-function table_contains(t, e)
-	if not t or not e then
-		return false
-	end
-	for i, v in ipairs(t) do
-		if v == e then
-			return true
-		end
-	end
-	return false
-end
 
 function table_erase(t, e)
 	if not t or not e then
@@ -72,15 +61,16 @@ s_protect.can_access = function(pos, player_name)
 	if player_name == data.owner then
 		return true
 	end
+
 	-- Owner shared the area with the player
-	if table_contains(s_protect.share[data.owner], player_name) then
+	if s_protect.is_shared(data.owner, player_name) then
 		return true
 	end
 	-- Globally shared area
-	if table_contains(data.shared, player_name) then
+	if s_protect.is_shared(data, player_name) then
 		return true
 	end
-	if table_contains(data.shared, "*all") then
+	if s_protect.is_shared(data, "*all") then
 		return true
 	end
 	return false
