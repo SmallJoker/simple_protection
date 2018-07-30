@@ -1,26 +1,11 @@
 --[[
 File: functions.lua
 
-Table helper functions
 Protection helper functions
 Configuration loading
 ]]
 
 -- Helper functions
-
-function table_erase(t, e)
-	if not t or not e then
-		return false
-	end
-	local removed = false
-	for i, v in ipairs(t) do
-		if v == e then
-			table.remove(t, i)
-			removed = true
-		end
-	end
-	return removed
-end
 
 s_protect.can_access = function(pos, player_name)
 	if not player_name then
@@ -137,12 +122,12 @@ s_protect.load_config = function()
 		end
 		simple_protection = nil
 		if s_protect.claim_heigh then
-			minetest.log("warning", "[simple_protection] "
+			minetest.log("error", "[simple_protection] "
 				.. "Loaded deprecated setting: claim_heigh")
 			s_protect.claim_height = s_protect.claim_heigh
 		end
 		if s_protect.underground_claim then
-			minetest.log("warning", "[simple_protection] "
+			minetest.log("error", "[simple_protection] "
 				.. "Loaded deprecated setting: underground_claim")
 			s_protect.underground_limit = nil
 		end

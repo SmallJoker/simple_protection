@@ -97,6 +97,20 @@ local function check_ownership(name)
 	return true, data, index
 end
 
+local function table_erase(t, e)
+	if not t or not e then
+		return false
+	end
+	local removed = false
+	for i, v in ipairs(t) do
+		if v == e then
+			table.remove(t, i)
+			removed = true
+		end
+	end
+	return removed
+end
+
 s_protect.register_subcommand("share", function(name, param)
 	if not param or name == param then
 		return false, S("No player name given.")
