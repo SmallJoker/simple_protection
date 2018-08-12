@@ -6,6 +6,12 @@ Module loading
 Glue
 ]]
 
+if not minetest.safe_file_write then
+	error("[simple_protection] Your Minetest version is no longer supported."
+		.. " (version < 0.4.17)")
+end
+
+
 local world_path = minetest.get_worldpath()
 s_protect = {}
 s_protect.share = {}
