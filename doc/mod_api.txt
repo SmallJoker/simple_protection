@@ -1,13 +1,23 @@
-simple_protection API
-=====================
+# simple_protection API
 
 This file provides information about the API of simple_protection for the use in
 custom mods. The API might change slightly when the development goes on, so avoid
 using internal tables or functions which are not documented here.
 
+### Table of contents
 
-Types
------
+* Types: Custom tables or values
+* Helper functions: General purpose functions
+* Protection management: Claim-specific API functions
+* Callbacks: Registrable callbacks
+
+### Notation
+
+* `function_name(arg1, arg2, ...)` -> `returned data type`
+	* Function description
+
+
+## Types
 
 * `ClaimData` -> `table`
 ```
@@ -22,8 +32,8 @@ Types
 	* Can be obtained with `get_claim` and is used for `set_claim`
 
 
-Helper functions
-----------------
+## Helper functions
+
 These functions are grouped so that they make sense and then sorted alphabetically.
 
 * `s_protect.can_access(pos, player_name)` -> `boolean`
@@ -48,8 +58,7 @@ These functions are grouped so that they make sense and then sorted alphabetical
 	* Causes simple_protection to (initialize and) reload the configuration.
 
 
-Protection management
----------------------
+## Protection management
 
 * `s_protect.get_claim(pos)` -> `ClaimData, ClaimIndex`
 	* Returns the area information or `nil` when no area was found at the given
@@ -78,12 +87,21 @@ Protection management
 	* `player_name`: `string`, the player to check
 
 
-Chat commands
--------------
+## Callbacks
 
+* `s_protect.registered_on_access(func)`
+	* Override or extend access to a certain claim. Depending on the returned
+	  value of the registered function.
+	* `func`: `function(pos, player_name)` called in `s_protect.can_access`.
+		* Is only called on protected areas. Use settings to control unclaimed areas.
+		* Must return a boolean or `nil`
+		* `pos`: `vector` position of the interaction
+		* `player_name`: `string` name of the interacting player
+	* If `func() -> false`: Access is denied instantly regardless of shared areas.
+	* If `func() -> true`:  Access is granted if no other callback returns `false`.
+	* If `func() -> nil`:   Normal protection handling
 * `s_protect.register_subcommand(name, func)`
 	* Registers a new subcommand for `/area`; throws errors on failure
 	* `name`: `string` name of the new command
 	* `func`: `function` to call when the command is executed
 		* See "Chat command definition" in the Minetest core Lua API.
-

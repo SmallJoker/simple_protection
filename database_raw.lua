@@ -23,15 +23,13 @@ function s_protect.load_db()
 		return
 	end
 	for line in file:lines() do
-		if line ~= "" then
-			local data = line:split(" ")
+		local data = line:split(" ")
+		if #data >= 2 then
 			-- Line format: pos, owner, shared_player, shared_player2, ..
 			local _shared = {}
-			if #data > 2 then
-				for index = 3, #data do
-					if data[index] ~= "" then
-						table.insert(_shared, data[index])
-					end
+			for index = 3, #data do
+				if data[index] ~= "" then
+					table.insert(_shared, data[index])
 				end
 			end
 			claim_data[data[1]] = {owner=data[2], shared=_shared}

@@ -7,6 +7,10 @@ Configuration loading
 
 -- Helper functions
 
+-- Cache for performance
+local get_player_privs = minetest.get_player_privs
+local registered_on_access = {}
+
 s_protect.can_access = function(pos, player_name)
 	if not player_name then
 		return false
@@ -18,7 +22,7 @@ s_protect.can_access = function(pos, player_name)
 	end
 
 	-- Admin power, handle privileges
-	local privs = minetest.get_player_privs(player_name)
+	local privs = get_player_privs(player_name)
 	if privs.simple_protection or privs.protection_bypass then
 		return true
 	end
@@ -47,6 +51,24 @@ s_protect.can_access = function(pos, player_name)
 		return true
 	end
 
+	-- Complicated-looking return value handling:
+	-- false: Forbid access instantly
+	-- true:  Access granted if none returns false
+	-- nil:   Do nothing
+	local override_access = false
+	for i = 1, #registered_on_access do
+		local ret = registered_on_access[i](vector.new(pos), player_name)
+		if ret == false then
+			return false
+		end
+		if ret == true then
+			override_access = true
+		end
+	end
+	if override_access then
+		return true
+	end
+
 	-- Owner shared the area with the player
 	if s_protect.is_shared(data.owner, player_name) then
 		return true
@@ -59,6 +81,10 @@ s_protect.can_access = function(pos, player_name)
 		return true
 	end
 	return false
+end
+
+s_protect.register_on_access = function(func)
+	registered_on_access[#registered_on_access + 1] = func
 end
 
 s_protect.get_location = function(pos_)
