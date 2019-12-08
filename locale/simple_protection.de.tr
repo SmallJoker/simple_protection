@@ -1,0 +1,108 @@
+# textdomain: simple_protection
+# Translated by: Krock/SmallJoker
+
+
+# Privilege description
+Allows to modify and delete protected areas=Erlaubt das Abändern und Entfernen von geschützten Gebieten
+
+#### AREA COMMAND ####
+
+# Command description
+Manages all of your areas.=Verwaltet alle deine geschützten Gebiete
+
+# /area
+Available area commands=Verfügbare 'area' Befehle
+Information about this area=Informationen über dieses Gebiet
+View of surrounding areas=Übersicht von allen Gebieten
+(Un)share one area=Zugriffs-Berechtigung eines Gebietes hinzufügen/entfernen
+(Un)share all areas=Zugriffs-Berechtigung für alle Gebiete hinzufügen/entfernen
+List claimed areas=Geschützte Gebiete auflisten
+Delete all areas of a player=Alle Gebiete eines Spielers löschen
+Unclaim this area=Den Schutz für dieses Gebiet aufheben
+
+# Errors of /area
+Unknown command parameter: @1. Check '/area' for correct usage.=Unbekannter Befehls-Parameter: @1. Siehe '/area' für die korrekte Anwendung.
+No player name given.=Kein Spielernahme gegeben.
+Unknown player.=Unbekannter Spieler.
+This area is not claimed yet.=Dieses Gebiet ist noch nicht geschützt.
+You do not own this area.=Du besitzt dieses Gebiet nicht.
+
+# /area show
+Vertical from Y @1 to @2=Senkrecht von Y @1 bis @2
+Area status: @1=Gebiets-Status: @1
+Not claimable=Nicht schützbar
+Unowned (!)=Nicht geschützt (!)
+Owned by @1=Von @1 geschützt
+Players with access: @1=Spieler mit Zugriff: @1
+
+# /area radar
+North @1=Nord @1
+East @1=Ost @1
+South @1=Süd @1
+West @1=West @1
+Your position=Deine Position
+Your area=Dein Gebiet
+Area claimed\nNo access for you=Gebiet geschützt\nKeine Berechtigung
+Access for everybody=Zugriff für jeden
+One area unit (@1m) up/down\n-> no claims on this Y level=Ein Gebiet (@1m) ober-/unterhalb
+square \= 1 area \= @1x@2x@3 nodes (X,Y,Z)=1 Quadrat \= 1 Gebiet \= @1x@2x@3 Blöcke (X,Y,Z)
+
+# /area share <name>
+@1 already has access to all your areas.=@1 hat bereits Zugriff auf alle deine Gebiete.
+@1 already has access to this area.=@1 hat bereits Zugriff auf dieses Gebiet.
+@1 shared an area with you.=Du hast jetzt Zugriff auf ein Gebiet von @1.
+@1 has now access to this area.=@1 kann jetzt dieses Gebiet abändern.
+
+# /area unshare <name>
+That player has no access to this area.=Dieser Spieler hat keinen Zugriff auf dieses Gebiet.
+@1 unshared an area with you.=Du hast nun keinen Zugriff auf ein Gebiet von @1 mehr.
+@1 has no longer access to this area.=@1 kann jetzt dieses Gebiet nicht mehr abändern.
+
+# /area shareall <name>
+You can not share all your areas with everybody.=Du kannst nicht alle Gebiete mit jedem teilen.
+@1 already has now access to all your areas.=@1 hat bereits Zugriff auf alle deine Gebiete
+@1 shared all areas with you.=@1 hat dir Zufriff auf alle die Gebiete erlaubt.
+@1 has now access to all your areas.=@1 kann jetzt alle deine Gebiete abändern.
+
+# /area unshareall <name>
+@1 does not have access to any of your areas.=@1 hat keinen Zugriff auf deine Gebiete.
+@1 unshared all areas with you.=@1 hat dir den Zugriff auf die Gebiete verwehrt.
+@1 has no longer access to your areas.=@1 kann keines deiner Gebiete mehr abändern.
+
+# /area unclaim
+This area is unowned now.=Dieses Gebiet ist nun nicht mehr geschützt.
+
+# /area delete <name>
+Missing privilege: @1=Fehlendes Privileg: @1
+Removed=Entfernt
+Globally shared areas=Globale Gebietszugiffe
+@1 claimed area(s)=@1 geschützte(s) Gebiet(e)
+@1 does not own any claimed areas.=@1 besitzt keine geschützten Gebiete.
+
+# /area list [name]
+This command is not available.=Dieser Befehl ist nicht verfügbar.
+Listing all areas of @1. Amount: @2=Auslistung der Gebiete von @1. Anzahl: @2
+
+
+#### Protection ####
+
+# Item place information
+Area owned by: @1=Gebiet geschützt durch: @1
+# Hud text
+Area owner: @1=Gebiets-Besitzer: @1
+
+# Item: Claim stick
+Claim Stick=Gebietsschutz
+#(click to protect)=(kicken zum schützen)
+This area is already protected by an other protection mod.=Dieses Gebiet ist bereits durch eine andere Mod geschützt.
+You can not claim areas below @1.=Du kannst keine Gebiete unterhalb von @1 schützen.
+This area is already owned by: @1=@1 besitzt dieses Gebiet bereits.
+Congratulations! You now own this area.=Glückwunsch! Du besitzt dieses Gebiet jetzt.
+You can not claim any further areas: Limit (@1) reached.=Du kannst keine weiteren Gebiete schützen lassen: Limit (@1) erreicht.
+Please claim this area to modify it.=Bitte schütze das Gebiet um dieses abändern zu können.
+
+
+#### Shared Chest ####
+
+Shared Chest=Geteilte Truhe
+(by protection)=(durch Gebietsschutz)

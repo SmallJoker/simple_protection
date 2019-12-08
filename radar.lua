@@ -1,5 +1,5 @@
 -- /area radar
-local S = s_protect.gettext
+local S = s_protect.translator
 local data_cache
 
 local function colorize_area(name, force)

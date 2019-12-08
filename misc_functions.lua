@@ -105,45 +105,52 @@ s_protect.get_center = function(pos1)
 	return pos
 end
 
-simple_protection = false
 s_protect.load_config = function()
 	-- Load defaults
 	dofile(s_protect.mod_path.."/default_settings.lua")
 	local file = io.open(s_protect.conf, "r")
-	if file then
-		io.close(file)
-		-- Load existing config
-		simple_protection = {}
-		dofile(s_protect.conf)
+	if not file then
+		-- Duplicate configuration file on first time
+		local src = io.open(s_protect.mod_path.."/default_settings.lua", "r")
+		file = io.open(s_protect.conf, "w")
 
-		-- Backwards compatibility
-		for k, v in pairs(simple_protection) do
-			s_protect[k] = v
-		end
-		simple_protection = nil
-		if s_protect.claim_heigh then
-			minetest.log("error", "[simple_protection] "
-				.. "Loaded deprecated setting: claim_heigh")
-			s_protect.claim_height = s_protect.claim_heigh
-		end
-		if s_protect.underground_claim then
-			minetest.log("error", "[simple_protection] "
-				.. "Loaded deprecated setting: underground_claim")
-			s_protect.underground_limit = nil
+		while true do
+			local block = src:read(128) -- 128B at once
+			if not block then
+				io.close(src)
+				io.close(file)
+				break
+			end
+			file:write(block)
 		end
 		return
 	end
-	-- Duplicate configuration file on first time
-	local src = io.open(s_protect.mod_path.."/default_settings.lua", "r")
-	file = io.open(s_protect.conf, "w")
 
-	while true do
-		local block = src:read(128) -- 128B at once
-		if not block then
-			io.close(src)
-			io.close(file)
-			break
-		end
-		file:write(block)
+	io.close(file)
+
+	-- Load existing config
+	simple_protection = {}
+	dofile(s_protect.conf)
+
+	-- Backwards compatibility
+	for k, v in pairs(simple_protection) do
+		s_protect[k] = v
+	end
+	simple_protection = nil
+
+	-- Sanity check individual settings
+	assert((s_protect.claim_size % 2) == 0 and s_protect.claim_size >= 4,
+		"claim_size must be even and >= 4")
+	assert(s_protect.claim_height >= 4, "claim_height must be >= 4")
+
+	if s_protect.claim_heigh then
+		minetest.log("warning", "[simple_protection] "
+			.. "Deprecated setting: claim_heigh")
+		s_protect.claim_height = s_protect.claim_heigh
+	end
+	if s_protect.underground_claim then
+		minetest.log("warning", "[simple_protection] "
+			.. "Deprecated setting: underground_claim")
+		s_protect.underground_limit = nil
 	end
 end

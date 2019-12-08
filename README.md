@@ -12,10 +12,10 @@ You can claim areas by punching those with a claim stick.
 License: CC0
 
 **Dependencies**
+- Minetest 5.0.0+
 - default: Crafting recipes
 
 **Optional dependencies**
-- [intllib](https://github.com/minetest-mods/intllib/): Translations
 - [areas](https://github.com/ShadowNinja/areas): HUD compatibility
 
 

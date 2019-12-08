@@ -6,7 +6,7 @@ Node placement checks
 Claim Stick item definition
 ]]
 
-local S = s_protect.gettext
+local S = s_protect.translator
 
 local function notify_player(pos, player_name)
 	local data = s_protect.get_claim(pos)

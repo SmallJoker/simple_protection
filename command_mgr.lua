@@ -1,4 +1,4 @@
-local S = s_protect.gettext
+local S = s_protect.translator
 
 local commands = {}
 
@@ -57,7 +57,7 @@ s_protect.register_subcommand("show", function(name, param)
 
 	minetest.add_entity(s_protect.get_center(player_pos), "simple_protection:marker")
 	local minp, maxp = s_protect.get_area_bounds(player_pos)
-	minetest.chat_send_player(name, S("Vertical area limit from Y @1 to @2",
+	minetest.chat_send_player(name, S("Vertical from Y @1 to @2",
 			tostring(minp.y), tostring(maxp.y)))
 
 	if not data then
