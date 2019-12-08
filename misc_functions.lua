@@ -57,7 +57,9 @@ s_protect.can_access = function(pos, player_name)
 	-- nil:   Do nothing
 	local override_access = false
 	for i = 1, #registered_on_access do
-		local ret = registered_on_access[i](vector.new(pos), player_name)
+		local ret = registered_on_access[i](
+			vector.new(pos), player_name, data.owner)
+
 		if ret == false then
 			return false
 		end

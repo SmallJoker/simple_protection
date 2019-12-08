@@ -92,11 +92,12 @@ These functions are grouped so that they make sense and then sorted alphabetical
 * `s_protect.registered_on_access(func)`
 	* Override or extend access to a certain claim. Depending on the returned
 	  value of the registered function.
-	* `func`: `function(pos, player_name)` called in `s_protect.can_access`.
+	* `func`: `function(pos, player_name, owner_name)` called in `s_protect.can_access`.
 		* Is only called on protected areas. Use settings to control unclaimed areas.
 		* Must return a boolean or `nil`
 		* `pos`: `vector` position of the interaction
 		* `player_name`: `string` name of the interacting player
+		* `owner_name`: `string` name of the claim owner (player)
 	* If `func() -> false`: Access is denied instantly regardless of shared areas.
 	* If `func() -> true`:  Access is granted if no other callback returns `false`.
 	* If `func() -> nil`:   Normal protection handling
