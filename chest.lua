@@ -1,4 +1,4 @@
-local S = s_protect.translator
+local S = s_protect.gettext
 
 -- A shared chest for simple_protection but works with other protection mods too
 

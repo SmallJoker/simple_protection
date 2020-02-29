@@ -8,6 +8,8 @@ Raw text format database functions:
 	set_claim(data, index)
 	get_player_claims(player name)
 	update_claims(claims table)
+
+minetest.safe_file_write compatibility code
 ]]
 
 local claim_data = {}
@@ -23,13 +25,15 @@ function s_protect.load_db()
 		return
 	end
 	for line in file:lines() do
-		local data = line:split(" ")
-		if #data >= 2 then
+		if line ~= "" then
+			local data = line:split(" ")
 			-- Line format: pos, owner, shared_player, shared_player2, ..
 			local _shared = {}
-			for index = 3, #data do
-				if data[index] ~= "" then
-					table.insert(_shared, data[index])
+			if #data > 2 then
+				for index = 3, #data do
+					if data[index] ~= "" then
+						table.insert(_shared, data[index])
+					end
 				end
 			end
 			claim_data[data[1]] = {owner=data[2], shared=_shared}
@@ -63,6 +67,18 @@ function s_protect.load_shareall()
 	minetest.log("action", "[simple_protection] Loaded shared claims")
 end
 
+-- <= 0.4.16 compatibility
+local function write_file(path, content)
+	local file = io.open(path, "w")
+	file:write(content)
+	io.close(file)
+end
+
+-- Superior function
+if minetest.safe_file_write then
+	write_file = minetest.safe_file_write
+end
+
 local function delay(db_info, func)
 	local dtime = os.time() - db_info.time
 	if dtime < 6 then
@@ -90,7 +106,7 @@ local function save_claims()
 				table.concat(data.shared, " ")
 		end
 	end
-	minetest.safe_file_write(s_protect.file, table.concat(contents, "\n"))
+	write_file(s_protect.file, table.concat(contents, "\n"))
 end
 
 function s_protect.save_share_db()
@@ -106,7 +122,7 @@ function s_protect.save_share_db()
 				table.concat(players, " ")
 		end
 	end
-	minetest.safe_file_write(s_protect.sharefile, table.concat(contents, "\n"))
+	write_file(s_protect.sharefile, table.concat(contents, "\n"))
 end
 
 -- Speed up the function access
@@ -146,22 +162,4 @@ function s_protect.update_claims(updated)
 		end
 	end
 	save_claims()
-end
-
-local function table_contains(t, to_find)
-	for i, v in pairs(t) do
-		if v == to_find then
-			return true
-		end
-	end
-	return false
-end
-function s_protect.is_shared(id, player_name)
-	if type(id) == "table" and id.shared then
-		-- by area
-		return table_contains(id.shared, player_name)
-	end
-	assert(type(id) == "string", "is_shared(): Either ClaimData or string expected")
-	-- by owner
-	return table_contains(s_protect.share[id] or {}, player_name)
 end

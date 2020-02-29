@@ -1,5 +1,5 @@
 -- /area radar
-local S = s_protect.translator
+local S = s_protect.gettext
 local data_cache
 
 local function colorize_area(name, force)
@@ -12,14 +12,13 @@ local function colorize_area(name, force)
 			data_cache.owner == name then
 		return "[colorize:#0F0:180"
 	end
-	local is_shared = s_protect.is_shared
 	if force == "shared" or not force and (
-			   is_shared(data_cache, name)
-			or is_shared(data_cache.owner, name)) then
+			   table_contains(data_cache.shared, name)
+			or table_contains(s_protect.share[data_cache.owner], name)) then
 		return "[colorize:#0F0:80"
 	end
 	if force == "*all" or not force and
-			is_shared(data_cache, "*all") then
+			table_contains(data_cache.shared, "*all") then
 		return "[colorize:#00F:180"
 	end
 	-- Claimed but not shared
@@ -116,13 +115,12 @@ s_protect.register_subcommand("radar", function(name)
 		"label[7,2.25;" .. S("Your area") .. "]" ..
 		"image[6,3;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "other") .. "]" ..
-		"label[7,3;" .. S("Area claimed\nNo access for you") .. "]" ..
+		"label[7,3;" .. S("Area claimed") .. "\n" .. S("No access for you") .. "]" ..
 		"image[6,4;1,1;simple_protection_radar.png^"
 			.. colorize_area(nil, "*all") .. "]" ..
 		"label[7,4.25;" .. S("Access for everybody") .. "]" ..
 		"image[6,5;1,1;simple_protection_radar_down.png]" ..
 		"image[7,5;1,1;simple_protection_radar_up.png]" ..
-		"label[6,6;" .. S("One area unit (@1m) up/down\n-> no claims on this Y level",
-			s_protect.claim_height) .. "]"
+		"label[6,6;" .. S("One area unit (@1m) up/down", s_protect.claim_height) .. "\n" .. S("-> no claims on this Y level") .. "]"
 	)
 end)

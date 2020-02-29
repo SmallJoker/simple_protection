@@ -31,7 +31,8 @@ s_protect.start_underground = 50
 -- Only allows claiming above this Y value
 -- To disable this limit, set the value to 'nil'
 -- Type: Integer or nil
-s_protect.underground_limit = -300
+-- s_protect.underground_limit = -300
+s_protect.underground_limit = false
 
 -- Returns the claim stick when unclaiming the area
 -- Type: Boolean
@@ -48,6 +49,7 @@ s_protect.claim_to_dig = false
 s_protect.area_list = true
 
 -- Limits the amount of claims per player
+-- For values < 10: Stop this nonsense
 -- Doubled limit for players with the 'simple_protection' privilege
 -- Type: Integer
 s_protect.max_claims = 200

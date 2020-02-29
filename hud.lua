@@ -6,20 +6,20 @@ HUD display and refreshing
 ]]
 
 
-local S = s_protect.translator
+local S = s_protect.gettext
 
 s_protect.player_huds = {}
 
 local hud_time = 0
 local prefix = ""
 local align_x = 1
-local pos_x = 0.02
+local pos_x = 0.01
+local pos_y = 0.8
 
--- If areas is installed: Move the HUD to th opposite side
 if minetest.get_modpath("areas") then
 	prefix = "Simple Protection:\n"
-	align_x = -1
-	pos_x = 0.95
+	--align_x = -1
+	pos_x = pos_x
 end
 
 local function generate_hud(player, current_owner, has_access)
@@ -29,11 +29,11 @@ local function generate_hud(player, current_owner, has_access)
 		color = 0x00CC00
 	end
 	s_protect.player_huds[player:get_player_name()] = {
-		hud_id = player:hud_add({
+		hudID = player:hud_add({
 			hud_elem_type = "text",
 			name          = "area_hud",
 			number        = color,
-			position      = {x=pos_x, y=0.98},
+			position      = {x=pos_x, y=pos_y},
 			text          = prefix
 				.. S("Area owner: @1", current_owner),
 			scale         = {x=100, y=25},
@@ -51,7 +51,7 @@ minetest.register_globalstep(function(dtime)
 	end
 	hud_time = 0
 
-	local is_shared = s_protect.is_shared
+	local shared = s_protect.share
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local player_name = player:get_player_name()
 
@@ -64,11 +64,11 @@ minetest.register_globalstep(function(dtime)
 		local has_access = (current_owner == player_name)
 		if not has_access and data then
 			-- Check if this area is shared with this player
-			has_access = is_shared(data, player_name)
+			has_access = table_contains(data.shared, player_name)
 		end
 		if not has_access then
 			-- Check if all areas are shared with this player
-			has_access = is_shared(current_owner, player_name)
+			has_access = table_contains(shared[current_owner], player_name)
 		end
 		local changed = true
 
@@ -79,12 +79,12 @@ minetest.register_globalstep(function(dtime)
 			changed = false
 		end
 
-		if changed and hud_table then
-			player:hud_remove(hud_table.hud_id)
+		if hud_table and changed then
+			player:hud_remove(hud_table.hudID)
 			s_protect.player_huds[player_name] = nil
 		end
 
-		if changed and current_owner ~= "" then
+		if current_owner ~= "" and changed then
 			generate_hud(player, current_owner, has_access)
 		end
 	end

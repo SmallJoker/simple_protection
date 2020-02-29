@@ -1,4 +1,4 @@
-local S = s_protect.translator
+local S = s_protect.gettext
 
 local commands = {}
 
@@ -19,23 +19,23 @@ minetest.register_chatcommand("area", {
 	func = function(name, param)
 		if param == "" or param == "help" then
 			local function chat_send(desc, cmd)
-				minetest.chat_send_player(name, S(desc) .. ": "
+				minetest.chat_send_player(name, desc .. ": "
 					.. minetest.colorize("#0FF", cmd))
 			end
 			local privs = minetest.get_player_privs(name)
 			minetest.chat_send_player(name, minetest.colorize("#0F0",
 				"=> " .. S("Available area commands")))
 
-			chat_send("Information about this area", "/area show")
-			chat_send("View of surrounding areas", "/area radar")
-			chat_send("(Un)share one area", "/area (un)share <name>")
-			chat_send("(Un)share all areas", "/area (un)shareall <name>")
+			chat_send(S("Information about this area"), "/area show")
+			chat_send(S("View of surrounding areas"), "/area radar")
+			chat_send(S("(Un)share one area"), "/area (un)share <name>")
+			chat_send(S("(Un)share all areas"), "/area (un)shareall <name>")
 			if s_protect.area_list or privs.simple_protection then
-				chat_send("List claimed areas", "/area list [<name>]")
+				chat_send(S("List claimed areas"), "/area list [<name>]")
 			end
-			chat_send("Unclaim this area", "/area unclaim")
+			chat_send(S("Unclaim this area"), "/area unclaim")
 			if privs.server then
-				chat_send("Delete all areas of a player", "/area delete <name>")
+				chat_send(S("Delete all areas of a player"), "/area delete <name>")
 			end
 			return
 		end
@@ -51,13 +51,14 @@ minetest.register_chatcommand("area", {
 })
 
 s_protect.register_subcommand("show", function(name, param)
+print(param)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = player:get_pos()
 	local data = s_protect.get_claim(player_pos)
 
 	minetest.add_entity(s_protect.get_center(player_pos), "simple_protection:marker")
 	local minp, maxp = s_protect.get_area_bounds(player_pos)
-	minetest.chat_send_player(name, S("Vertical from Y @1 to @2",
+	minetest.chat_send_player(name, S("Vertical area limit from Y @1 to @2",
 			tostring(minp.y), tostring(maxp.y)))
 
 	if not data then
@@ -97,20 +98,6 @@ local function check_ownership(name)
 	return true, data, index
 end
 
-local function table_erase(t, e)
-	if not t or not e then
-		return false
-	end
-	local removed = false
-	for i, v in ipairs(t) do
-		if v == e then
-			table.remove(t, i)
-			removed = true
-		end
-	end
-	return removed
-end
-
 s_protect.register_subcommand("share", function(name, param)
 	if not param or name == param then
 		return false, S("No player name given.")
@@ -122,12 +109,12 @@ s_protect.register_subcommand("share", function(name, param)
 	if not success then
 		return success, data
 	end
-
-	if s_protect.is_shared(name, param) then
+	local shared = s_protect.share[name]
+	if shared and shared[param] then
 		return true, S("@1 already has access to all your areas.", param)
 	end
 
-	if s_protect.is_shared(data, param) then
+	if table_contains(data.shared, param) then
 		return true, S("@1 already has access to this area.", param)
 	end
 	table.insert(data.shared, param)
@@ -147,7 +134,7 @@ s_protect.register_subcommand("unshare", function(name, param)
 	if not success then
 		return success, data
 	end
-	if not s_protect.is_shared(data, param) then
+	if not table_contains(data.shared, param) then
 		return true, S("That player has no access to this area.")
 	end
 	table_erase(data.shared, param)
@@ -170,7 +157,8 @@ s_protect.register_subcommand("shareall", function(name, param)
 		return false, S("Unknown player.")
 	end
 
-	if s_protect.is_shared(name, param) then
+	local shared = s_protect.share[name]
+	if table_contains(shared, param) then
 		return true, S("@1 already has now access to all your areas.", param)
 	end
 	if not shared then
