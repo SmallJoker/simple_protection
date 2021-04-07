@@ -28,19 +28,6 @@ minetest.is_protected = function(pos, player_name)
 	return true
 end
 
-local old_item_place = minetest.item_place
-minetest.item_place = function(itemstack, placer, pointed_thing)
-	local player_name = placer and placer:get_player_name() or ""
-
-	if s_protect.can_access(pointed_thing.above, player_name)
-			or not minetest.registered_nodes[itemstack:get_name()] then
-		return old_item_place(itemstack, placer, pointed_thing)
-	end
-
-	notify_player(pointed_thing.above, player_name)
-	return itemstack
-end
-
 minetest.register_on_protection_violation(notify_player)
 
 
