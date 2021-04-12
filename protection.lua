@@ -119,7 +119,7 @@ minetest.register_node("simple_protection:mark", {
 	tiles = {"simple_protection_marker.png"},
 	groups = {dig_immediate=3, not_in_creative_inventory=1},
 	drop = "",
-	use_texture_alpha = true,
+	use_texture_alpha = minetest.features.use_texture_alpha_string_modes and "clip" or true,
 	walkable = false,
 	drawtype = "nodebox",
 	node_box = {
