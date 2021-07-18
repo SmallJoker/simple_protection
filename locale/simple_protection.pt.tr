@@ -1,31 +1,21 @@
 # textdomain: simple_protection
-# Translated by: BrunoMine
-
-
-# Privilege description
-Allows to modify and delete protected areas=Permitir modificar e deletar areas protegidas
-
-#### AREA COMMAND ####
-
+Shared Chest=
+(by protection)=
 # Command description
 Manages all of your areas.=Gerencia todas as suas areas.
-
 # /area
 Available area commands=Comandos disponiveis
 Information about this area=Dados sobre essa area
+View of surrounding areas=
 (Un)share one area=(Des)compartilha uma area
 (Un)share all areas=(Des)compartilha todas areas
+List claimed areas=
 #List claimed areas =
 #Delete all areas of a player =
 Unclaim this area=Desfazer-se dessa area
-
+Delete all areas of a player=
 # Errors of /area
 Unknown command parameter: @1. Check '/area' for correct usage.=Parametro de comando desconhecido: @1. Use '/area' para o uso correto.
-No player name given.=Nenhum nome de jogador dado.
-Unknown player.=Jogador desconhecido.
-This area is not claimed yet.=Essa area nao foi reivindicada ainda.
-You do not own this area.=Voce nao pode possuir essa area.
-
 # /area show
 Vertical from Y @1 to @2=Vertical em Y @1 a @2
 Area status: @1=Status da area: @1
@@ -33,7 +23,10 @@ Not claimable=Nao reivindicada
 Unowned (!)=Sem dono (!)
 Owned by @1=Reivindicada por @1
 Players with access: @1=Jogadores com acesso: @1
-
+This area is not claimed yet.=Essa area nao foi reivindicada ainda.
+You do not own this area.=Voce nao pode possuir essa area.
+No player name given.=Nenhum nome de jogador dado.
+Unknown player.=Jogador desconhecido.
 # /area radar
 #North @1 =
 #East @1 =
@@ -43,63 +36,63 @@ Players with access: @1=Jogadores com acesso: @1
 #Your area =
 #Area claimed\nNo access for you =
 #Access for everybody =
-
 # /area share <name>
 @1 already has access to all your areas.=@1 ja possui acesso a todas suas areas.
 @1 already has access to this area.=@1 ja possui acesso a essa area.
 @1 shared an area with you.=@1 compartilhou uma area contigo.
 @1 has now access to this area.=@1 agora tem acesso nessa area.
-
 # /area unshare <name>
 That player has no access to this area.=Esse jogador nao tem acesso a essa area.
 @1 unshared an area with you.=@1 descompartilhou uma area contigo.
 @1 has no longer access to this area.=@1 deixou de ter acesso a essa area.
-
 # /area shareall <name>
 You can not share all your areas with everybody.=Nao podes compartilhar todas as suas areas com todos.
 @1 already has now access to all your areas.=@1 ja possui agora acesso a todas suas areas.
 @1 shared all areas with you.=@1 compartilhou todas as areas contigo.
 @1 has now access to all your areas.=@1 agora tem acesso a todas suas areas.
-
 # /area unshareall <name>
 @1 does not have access to any of your areas.=@1 nao tem acesso a nenhuma de suas areas.
 @1 unshared all areas with you.=@1 descompartilhou todas areas contigo.
 @1 has no longer access to your areas.=@1 deixou de ter acesso a todas suas areas.
-
 # /area unclaim
 This area is unowned now.=Essa area deixou de ser reivindicada agora.
-
 # /area delete <name>
 Missing privilege: @1=Perderam o privilegio: @1
-Removed=Removido
 Globally shared areas=Areas compartilhadas globalmente
 @1 claimed area(s)=@1 area(s) reivindicada(s)
 @1 does not own any claimed areas.=@1 nao possui nenhuma area reivindicada.
-
-# /area list [name]
-#This command is not available. =
-#Listing all areas of @1. Amount: @2 =
-
-
-#### Protection ####
-
-# Item place information
-Area owned by: @1=Area possuida por: @1
+Removed=Removido
+This command is not available.=
+Listing all areas of @1. Amount: @2=
+Share this area=
+Remove an area share=
+Share all areas=
+Remove all area shares=
+Also removes individual area shares=
+Requires the '@1' privilege=
+List all areas=
 # Hud text
 Area owner: @1=Area de: @1
-
+Allows to modify and delete protected areas=Permitir modificar e deletar areas protegidas
+Please claim this area to modify it.=
+# Item place information
+Area owned by: @1=Area possuida por: @1
 # Item: Claim stick
 Claim Stick=Graveto Reivindicador
+(click to protect)=
 #(click to protect) =
 This area is already protected by an other protection mod.=Essa area ja foi protegida por um outro mod protetor.
 You can not claim areas below @1.=Nao podes reivindicar areas abaixo @1.
 This area is already owned by: @1=Essa area ja foi reivindicada por: @1.
+You can not claim any further areas: Limit (@1) reached.=
 Congratulations! You now own this area.=Parabens! Agora reivindicaste essa area.
-#You can not claim any further areas: Limit (@1) reached. =
-#Please claim this area to modify it. =
-
-
-#### Shared Chest ####
-
-#Shared Chest =
-#(by protection) =
+North @1=
+West @1=
+South @1=
+East @1=
+square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=
+Your position=
+Your area=
+Area claimed@nNo access for you=
+Access for everybody=
+One area unit (@1m) up/down@n-> no claims on this Y level=

@@ -1,15 +1,8 @@
 # textdomain: simple_protection
-# Translated by: YOURNAME
-
-
-# Privilege description
-Allows to modify and delete protected areas=
-
-#### AREA COMMAND ####
-
+Shared Chest=
+(by protection)=
 # Command description
 Manages all of your areas.=
-
 # /area
 Available area commands=
 Information about this area=
@@ -17,16 +10,10 @@ View of surrounding areas=
 (Un)share one area=
 (Un)share all areas=
 List claimed areas=
-Delete all areas of a player=
 Unclaim this area=
-
+Delete all areas of a player=
 # Errors of /area
 Unknown command parameter: @1. Check '/area' for correct usage.=
-No player name given.=
-Unknown player.=
-This area is not claimed yet.=
-You do not own this area.=
-
 # /area show
 Vertical from Y @1 to @2=
 Area status: @1=
@@ -34,75 +21,73 @@ Not claimable=
 Unowned (!)=
 Owned by @1=
 Players with access: @1=
-
-# /area radar
-North @1=
-East @1=
-South @1=
-West @1=
-Your position=
-Your area=
-Area claimed\nNo access for you=
-Access for everybody=
-One area unit (@1m) up/down\n-> no claims on this Y level=
-square \= 1 area \= @1x@2x@3 nodes (X,Y,Z)=
-
+This area is not claimed yet.=
+You do not own this area.=
+No player name given.=
+Unknown player.=
 # /area share <name>
 @1 already has access to all your areas.=
 @1 already has access to this area.=
 @1 shared an area with you.=
 @1 has now access to this area.=
-
 # /area unshare <name>
 That player has no access to this area.=
 @1 unshared an area with you.=
 @1 has no longer access to this area.=
-
 # /area shareall <name>
 You can not share all your areas with everybody.=
 @1 already has now access to all your areas.=
 @1 shared all areas with you.=
 @1 has now access to all your areas.=
-
 # /area unshareall <name>
 @1 does not have access to any of your areas.=
 @1 unshared all areas with you.=
 @1 has no longer access to your areas.=
-
 # /area unclaim
 This area is unowned now.=
-
 # /area delete <name>
 Missing privilege: @1=
-Removed=
 Globally shared areas=
 @1 claimed area(s)=
 @1 does not own any claimed areas.=
-
+Removed=
 # /area list [name]
 This command is not available.=
 Listing all areas of @1. Amount: @2=
-
-
-#### Protection ####
-
-# Item place information
-Area owned by: @1=
+Share this area=
+Remove an area share=
+Share all areas=
+Remove all area shares=
+Also removes individual area shares=
+Requires the '@1' privilege=
+List all areas=
 # Hud text
 Area owner: @1=
-
+Allows to modify and delete protected areas=
+Please claim this area to modify it.=
+# Item place information
+Area owned by: @1=
 # Item: Claim stick
 Claim Stick=
 (click to protect)=
 This area is already protected by an other protection mod.=
 You can not claim areas below @1.=
 This area is already owned by: @1=
-Congratulations! You now own this area.=
 You can not claim any further areas: Limit (@1) reached.=
-Please claim this area to modify it.=
+Congratulations! You now own this area.=
+# /area radar
+North @1=
+West @1=
+South @1=
+East @1=
+square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=
+Your position=
+Your area=
+Area claimed@nNo access for you=
+Access for everybody=
+One area unit (@1m) up/down@n-> no claims on this Y level=
 
 
-#### Shared Chest ####
+##### not used anymore #####
 
-Shared Chest=
-(by protection)=
+square \= 1 area \= @1x@2x@3 nodes (X,Y,Z)=
