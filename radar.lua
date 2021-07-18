@@ -1,5 +1,6 @@
 -- /area radar
-local S = s_protect.translator
+local sp = simple_protection
+local S = sp.translator
 local data_cache
 
 local function colorize_area(name, force)
@@ -12,7 +13,7 @@ local function colorize_area(name, force)
 			data_cache.owner == name then
 		return "[colorize:#0F0:180"
 	end
-	local is_shared = s_protect.is_shared
+	local is_shared = sp.is_shared
 	if force == "shared" or not force and (
 			   is_shared(data_cache, name)
 			or is_shared(data_cache.owner, name)) then
@@ -30,15 +31,15 @@ local function combine_escape(str)
 	return str:gsub("%^%[", "\\%^\\%["):gsub(":", "\\:")
 end
 
-s_protect.register_subcommand("radar", function(name)
+sp.register_subcommand("radar", function(name)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = player:get_pos()
-	local pos = s_protect.get_location(player_pos)
+	local pos = sp.get_location(player_pos)
 	local map_w = 15 - 1
 	local map_wh = map_w / 2
 	local img_w = 20
 
-	local get_single = s_protect.get_claim
+	local get_single = sp.get_claim
 	local function getter(x, ymod, z)
 		data_cache = get_single(x .."," .. (pos.y + ymod) .. "," .. z, true)
 		return data_cache
@@ -69,8 +70,8 @@ s_protect.register_subcommand("radar", function(name)
 	end
 
 	-- Player's position marker (8x8 px)
-	local pp_x = player_pos.x / s_protect.claim_size
-	local pp_z = player_pos.z / s_protect.claim_size
+	local pp_x = player_pos.x / sp.claim_size
+	local pp_z = player_pos.z / sp.claim_size
 	-- Get relative position to the map, add map center offset, center image
 	pp_x = math.floor((pp_x - pos.x + map_wh) * img_w + 0.5) - 4
 	pp_z = math.floor((pos.z - pp_z + map_wh + 1) * img_w + 0.5) - 4
@@ -106,9 +107,9 @@ s_protect.register_subcommand("radar", function(name)
 				.. parts .. marker_str)
 				.. dir_mod .. "]" ..
 		"label[0,6.8;1 " .. S("square = 1 area = @1x@2x@3 nodes (X,Y,Z)",
-			s_protect.claim_size,
-			s_protect.claim_height,
-			s_protect.claim_size) .. "]" ..
+			sp.claim_size,
+			sp.claim_height,
+			sp.claim_size) .. "]" ..
 		"image[6.25,1.25;0.5,0.5;object_marker_red.png]" ..
 		"label[7,1.25;" .. S("Your position") .. "]" ..
 		"image[6,2;1,1;simple_protection_radar.png^"
@@ -123,6 +124,6 @@ s_protect.register_subcommand("radar", function(name)
 		"image[6,5;1,1;simple_protection_radar_down.png]" ..
 		"image[7,5;1,1;simple_protection_radar_up.png]" ..
 		"label[6,6;" .. S("One area unit (@1m) up/down\n-> no claims on this Y level",
-			s_protect.claim_height) .. "]"
+			sp.claim_height) .. "]"
 	)
 end)

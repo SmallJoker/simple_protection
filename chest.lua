@@ -1,4 +1,5 @@
-local S = s_protect.translator
+local sp = simple_protection
+local S = sp.translator
 
 -- A shared chest for simple_protection but works with other protection mods too
 

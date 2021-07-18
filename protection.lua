@@ -6,11 +6,12 @@ Node placement checks
 Claim Stick item definition
 ]]
 
-local S = s_protect.translator
+local sp = simple_protection
+local S = sp.translator
 
 local function notify_player(pos, player_name)
-	local data = s_protect.get_claim(pos)
-	if not data and s_protect.claim_to_dig then
+	local data = sp.get_claim(pos)
+	if not data and sp.claim_to_dig then
 		minetest.chat_send_player(player_name, S("Please claim this area to modify it."))
 	elseif not data then
 		-- Access restricted by another protection mod. Not my job.
@@ -20,10 +21,10 @@ local function notify_player(pos, player_name)
 	end
 end
 
-s_protect.old_is_protected = minetest.is_protected
+sp.old_is_protected = minetest.is_protected
 minetest.is_protected = function(pos, player_name)
-	if s_protect.can_access(pos, player_name) then
-		return s_protect.old_is_protected(pos, player_name)
+	if sp.can_access(pos, player_name) then
+		return sp.old_is_protected(pos, player_name)
 	end
 	return true
 end
@@ -41,34 +42,34 @@ minetest.register_craftitem("simple_protection:claim", {
 		end
 		local player_name = user:get_player_name()
 		local pos = pointed_thing.under
-		if s_protect.old_is_protected(pos, player_name) then
+		if sp.old_is_protected(pos, player_name) then
 			minetest.chat_send_player(player_name,
 					S("This area is already protected by an other protection mod."))
 			return
 		end
-		if s_protect.underground_limit then
-			local minp, maxp = s_protect.get_area_bounds(pos)
-			if minp.y < s_protect.underground_limit then
+		if sp.underground_limit then
+			local minp, maxp = sp.get_area_bounds(pos)
+			if minp.y < sp.underground_limit then
 				minetest.chat_send_player(player_name,
 					S("You can not claim areas below @1.",
-					s_protect.underground_limit .. "m"))
+					sp.underground_limit .. "m"))
 				return
 			end
 		end
-		local data, index = s_protect.get_claim(pos)
+		local data, index = sp.get_claim(pos)
 		if data then
 			minetest.chat_send_player(player_name,
 					S("This area is already owned by: @1", data.owner))
 			return
 		end
 		-- Count number of claims for this user
-		local claims_max = s_protect.max_claims
+		local claims_max = sp.max_claims
 
 		if minetest.check_player_privs(player_name, {simple_protection=true}) then
 			claims_max = claims_max * 2
 		end
 
-		local claims, count = s_protect.get_player_claims(player_name)
+		local claims, count = sp.get_player_claims(player_name)
 		if count >= claims_max then
 			minetest.chat_send_player(player_name,
 				S("You can not claim any further areas: Limit (@1) reached.",
@@ -77,11 +78,11 @@ minetest.register_craftitem("simple_protection:claim", {
 		end
 
 		itemstack:take_item(1)
-		s_protect.update_claims({
+		sp.update_claims({
 			[index] = {owner=player_name, shared={}}
 		})
 
-		minetest.add_entity(s_protect.get_center(pos), "simple_protection:marker")
+		minetest.add_entity(sp.get_center(pos), "simple_protection:marker")
 		minetest.chat_send_player(player_name, S("Congratulations! You now own this area."))
 		return itemstack
 	end,
@@ -114,7 +115,7 @@ minetest.register_entity("simple_protection:marker",{
 })
 
 -- hacky - I'm not a regular node!
-local size = s_protect.claim_size / 2
+local size = sp.claim_size / 2
 minetest.register_node("simple_protection:mark", {
 	tiles = {"simple_protection_marker.png"},
 	groups = {dig_immediate=3, not_in_creative_inventory=1},

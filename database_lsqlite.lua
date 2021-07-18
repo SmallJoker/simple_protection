@@ -10,6 +10,8 @@ lSQLite database functions:
 	update_claims(claims table)
 ]]
 
+error("lSqlite backend is incomplete")
+
 local worldpath = minetest.get_worldpath()
 
 local ie = minetest.request_insecure_environment()

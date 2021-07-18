@@ -11,14 +11,13 @@ Raw text format database functions:
 ]]
 
 local claim_data = {}
-local claim_db = { time = os.time(), dirty = false }
-local share_db = { time = os.time(), dirty = false }
+local sp = simple_protection
 
-function s_protect.load_db()
+function sp.load_db()
 	-- Don't forget the "parties"
-	s_protect.load_shareall()
+	sp.load_shareall()
 
-	local file = io.open(s_protect.file, "r")
+	local file = io.open(sp.file, "r")
 	if not file then
 		return
 	end
@@ -39,8 +38,8 @@ function s_protect.load_db()
 	minetest.log("action", "[simple_protection] Loaded claim data")
 end
 
-function s_protect.load_shareall()
-	local file = io.open(s_protect.sharefile, "r")
+function sp.load_shareall()
+	local file = io.open(sp.sharefile, "r")
 	if not file then
 		return
 	end
@@ -55,13 +54,16 @@ function s_protect.load_shareall()
 						table.insert(_shared, data[index])
 					end
 				end
-				s_protect.share[data[1]] = _shared
+				sp.share[data[1]] = _shared
 			end
 		end
 	end
 	io.close(file)
 	minetest.log("action", "[simple_protection] Loaded shared claims")
 end
+
+local claim_db = { time = os.time(), dirty = false }
+local share_db = { time = os.time(), dirty = false }
 
 local function delay(db_info, func)
 	local dtime = os.time() - db_info.time
@@ -90,28 +92,28 @@ local function save_claims()
 				table.concat(data.shared, " ")
 		end
 	end
-	minetest.safe_file_write(s_protect.file, table.concat(contents, "\n"))
+	minetest.safe_file_write(sp.file, table.concat(contents, "\n"))
 end
 
-function s_protect.save_share_db()
-	if delay(share_db, s_protect.save_share_db) then
+function sp.save_share_db()
+	if delay(share_db, sp.save_share_db) then
 		return
 	end
 
 	-- Save globally shared areas
 	local contents = {}
-	for name, players in pairs(s_protect.share) do
+	for name, players in pairs(sp.share) do
 		if #players > 0 then
 			contents[#contents + 1] = name .. " " ..
 				table.concat(players, " ")
 		end
 	end
-	minetest.safe_file_write(s_protect.sharefile, table.concat(contents, "\n"))
+	minetest.safe_file_write(sp.sharefile, table.concat(contents, "\n"))
 end
 
 -- Speed up the function access
-local get_location = s_protect.get_location
-function s_protect.get_claim(pos, direct_access)
+local get_location = sp.get_location
+function sp.get_claim(pos, direct_access)
 	if direct_access then
 		return claim_data[pos], pos
 	end
@@ -120,12 +122,12 @@ function s_protect.get_claim(pos, direct_access)
 	return claim_data[index], index
 end
 
-function s_protect.set_claim(data, index)
+function sp.set_claim(data, index)
 	claim_data[index] = data
 	save_claims()
 end
 
-function s_protect.get_player_claims(owner)
+function sp.get_player_claims(owner)
 	local count = 0
 	local claims = {}
 	for index, data in pairs(claim_data) do
@@ -137,7 +139,7 @@ function s_protect.get_player_claims(owner)
 	return claims, count
 end
 
-function s_protect.update_claims(updated)
+function sp.update_claims(updated)
 	for index, data in pairs(updated) do
 		if not data then
 			claim_data[index] = nil
@@ -156,12 +158,12 @@ local function table_contains(t, to_find)
 	end
 	return false
 end
-function s_protect.is_shared(id, player_name)
+function sp.is_shared(id, player_name)
 	if type(id) == "table" and id.shared then
 		-- by area
 		return table_contains(id.shared, player_name)
 	end
 	assert(type(id) == "string", "is_shared(): Either ClaimData or string expected")
 	-- by owner
-	return table_contains(s_protect.share[id] or {}, player_name)
+	return table_contains(sp.share[id] or {}, player_name)
 end

@@ -6,16 +6,19 @@ HUD display and refreshing
 ]]
 
 
-local S = s_protect.translator
+local sp = simple_protection
+local S = sp.translator
 
-s_protect.player_huds = {}
+sp.player_huds = {}
 
-local hud_time = 0
+local hud_timer = 0
+-- Text to put in front of the HUD element
 local prefix = ""
+-- HUD default position
 local align_x = 1
 local pos_x = 0.02
 
--- If areas is installed: Move the HUD to th opposite side
+-- If areas is installed: Move the HUD to the opposite side
 if minetest.get_modpath("areas") then
 	prefix = "Simple Protection:\n"
 	align_x = -1
@@ -28,7 +31,7 @@ local function generate_hud(player, current_owner, has_access)
 	if has_access then
 		color = 0x00CC00
 	end
-	s_protect.player_huds[player:get_player_name()] = {
+	sp.player_huds[player:get_player_name()] = {
 		hud_id = player:hud_add({
 			hud_elem_type = "text",
 			name          = "area_hud",
@@ -45,18 +48,18 @@ local function generate_hud(player, current_owner, has_access)
 end
 
 minetest.register_globalstep(function(dtime)
-	hud_time = hud_time + dtime
-	if hud_time < 2.9 then
+	hud_timer = hud_timer + dtime
+	if hud_timer < 2.9 then
 		return
 	end
-	hud_time = 0
+	hud_timer = 0
 
-	local is_shared = s_protect.is_shared
+	local is_shared = sp.is_shared
 	for _, player in ipairs(minetest.get_connected_players()) do
 		local player_name = player:get_player_name()
 
 		local current_owner = ""
-		local data = s_protect.get_claim(player:get_pos())
+		local data = sp.get_claim(player:get_pos())
 		if data then
 			current_owner = data.owner
 		end
@@ -72,7 +75,7 @@ minetest.register_globalstep(function(dtime)
 		end
 		local changed = true
 
-		local hud_table = s_protect.player_huds[player_name]
+		local hud_table = sp.player_huds[player_name]
 		if hud_table and hud_table.owner == current_owner
 				and hud_table.had_access == has_access then
 			-- still the same hud
@@ -81,7 +84,7 @@ minetest.register_globalstep(function(dtime)
 
 		if changed and hud_table then
 			player:hud_remove(hud_table.hud_id)
-			s_protect.player_huds[player_name] = nil
+			sp.player_huds[player_name] = nil
 		end
 
 		if changed and current_owner ~= "" then

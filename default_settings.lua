@@ -12,42 +12,43 @@ simple_protection/default_settings.lua
 	unwanted side effects when claims were made.
 ]]
 
+local sp = simple_protection
 
 -- Width and length of claims in nodes
 -- !! Distorts the claim locations along the X and Z axis !!
 -- Type: Integer, positive, even number
-s_protect.claim_size = 16
+sp.claim_size = 16
 
 -- Height of claims in nodes
 -- !! Distorts the claim locations along the Y axis !!
 -- Type: Integer, positive
-s_protect.claim_height = 150
+sp.claim_height = 150
 
 -- Defines the Y offset where the 0th claim should start in the underground
 -- Example of claim (0,0,0): Ymin = -(50) = -50, Ymax = 150 - (50) - 1 = 99
 -- Type: Integer
-s_protect.start_underground = 50
+sp.start_underground = 50
 
 -- Only allows claiming above this Y value
 -- To disable this limit, set the value to 'nil'
 -- Type: Integer or nil
-s_protect.underground_limit = -300
+sp.underground_limit = -300
 
 -- Returns the claim stick when unclaiming the area
 -- Type: Boolean
-s_protect.claim_return = true
+sp.claim_return = true
 
 -- Players will need to claim the area (or have access to it) to dig
 -- Digging will be still allowed in the underground,
---   as defined by the setting 's_protect.underground_limit'
+--   as defined by the setting 'simple_protection.underground_limit'
 -- Type: Boolean
-s_protect.claim_to_dig = false
+sp.claim_to_dig = false
 
 -- Allows players to list their areas using '/area list'
 -- Type: Boolean
-s_protect.area_list = true
+sp.area_list = true
 
 -- Limits the amount of claims per player
 -- Doubled limit for players with the 'simple_protection' privilege
 -- Type: Integer
-s_protect.max_claims = 200
+sp.max_claims = 200
