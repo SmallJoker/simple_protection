@@ -82,12 +82,11 @@ sp.register_subcommand("radar", function(name)
 	for x = -map_wh, map_wh do
 		local ax = pos.x + x
 		local az = pos.z + z
-		local img
+		local img = "simple_protection_radar.png"
 
 		-- Note: this also updates data_cache on the first hit
 		if     getter(ax,  0, az) then
 			-- Using default "img" value
-			img = "simple_protection_radar.png"
 		elseif getter(ax, -1, az) then
 			-- Check for claim below first
 			img = "simple_protection_radar_down.png"

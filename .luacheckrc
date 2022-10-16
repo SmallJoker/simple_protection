@@ -4,6 +4,10 @@ max_line_length = 120
 -- Allow shadowed variables
 redefined = false
 
+ignore = {
+	"542" -- empty if branches
+}
+
 globals = {
 	"simple_protection",
 	"s_protect",
