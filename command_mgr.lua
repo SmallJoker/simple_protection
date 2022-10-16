@@ -116,7 +116,7 @@ sp.register_subcommand("share", function(name, param)
 	if not param or name == param then
 		return false, S("No player name given.")
 	end
-	if not minetest.builtin_auth_handler.get_auth(param) and param ~= "*all" then
+	if not minetest.get_auth_handler().get_auth(param) and param ~= "*all" then
 		return false, S("Unknown player.")
 	end
 	local success, data, index = check_ownership(name)
@@ -164,7 +164,7 @@ sp.register_subcommand("shareall", function(name, param)
 	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
-	if not minetest.builtin_auth_handler.get_auth(param) then
+	if not minetest.get_auth_handler().get_auth(param) then
 		if param == "*all" then
 			return false, S("You can not share all your areas with everybody.")
 		end
@@ -174,7 +174,7 @@ sp.register_subcommand("shareall", function(name, param)
 	if sp.is_shared(name, param) then
 		return true, S("@1 already has now access to all your areas.", param)
 	end
-	if not shared then
+	if not sp.share[name] then
 		sp.share[name] = {}
 	end
 	table.insert(sp.share[name], param)

@@ -12,17 +12,23 @@ local sp = simple_protection
 -- Backwards compat
 s_protect = sp
 
-sp.translator = minetest.get_translator("simple_protection")
 sp.share = {}
 sp.mod_path  = minetest.get_modpath("simple_protection")
 sp.conf      = world_path.."/s_protect.conf"
 sp.file      = world_path.."/s_protect.data"
 sp.sharefile = world_path.."/s_protect_share.data"
 
-local S = sp.translator
+
+-- Translation functions
+sp.S = minetest.get_translator("simple_protection")
+sp.FS = function(...)
+	return minetest.formspec_escape(sp.S(...))
+end
+sp.translator = sp.S -- TODO: Remove
+
 
 minetest.register_privilege("simple_protection",
-	S("Allows to modify and delete protected areas"))
+	sp.S("Allows to modify and delete protected areas"))
 
 -- Load helper functions and configuration
 dofile(sp.mod_path.."/misc_functions.lua")

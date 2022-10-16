@@ -1,6 +1,6 @@
 -- /area radar
 local sp = simple_protection
-local S = sp.translator
+local FS = sp.FS
 local data_cache
 
 local function colorize_area(name, force)
@@ -28,6 +28,8 @@ local function colorize_area(name, force)
 end
 
 local function combine_escape(str)
+	-- Somewhat dirty hack for [combine. Escape everything
+	-- to get the whole text passed into TextureSource::generateImage()
 	return str:gsub("%^%[", "\\%^\\%["):gsub(":", "\\:")
 end
 
@@ -35,25 +37,57 @@ sp.register_subcommand("radar", function(name)
 	local player = minetest.get_player_by_name(name)
 	local player_pos = player:get_pos()
 	local pos = sp.get_location(player_pos)
-	local map_w = 15 - 1
-	local map_wh = map_w / 2
-	local img_w = 20
+	local map_wh = 7 -- centered scanning in x/z
+	local map_wt = 2 * (map_wh + 1)   -- tile count of the image (square)
+	local img_px = 20 -- size of each tile in pixels (square)
+	local map_fs_x, map_fs_y, map_fs_w = 0.3, 0.75, 7 -- formspec x/y offset and side lendth
 
+
+	-- Rotation calculation
+	local look_angle = player:get_look_horizontal() * 180 / math.pi
+	local dir_label, rot_T
+	if     look_angle >=  45 and look_angle < 135 then
+		dir_label = FS("West @1", "(X-)")
+		rot_T = { 0, 1, 1, 0 }
+	elseif look_angle >= 135 and look_angle < 225 then
+		dir_label = FS("South @1", "(Z-)")
+		rot_T = { -1, 0, 0, 1 }
+	elseif look_angle >= 225 and look_angle < 315 then
+		dir_label = FS("East @1", "(X+)")
+		rot_T = { 0, -1, -1, 0 }
+	else
+		dir_label = FS("North @1", "(Z+)")
+		rot_T = { 1, 0, 0, -1 }
+	end
+
+	-- Transforms a position in [-map_wh, map_wh] to an image offset
+	local function transform_center_to_img(x, z)
+		return rot_T[1] * x + rot_T[2] * z + map_wh,
+			rot_T[3] * x + rot_T[4] * z + map_wh
+	end
+
+	-- Map scanning
 	local get_single = sp.get_claim
 	local function getter(x, ymod, z)
 		data_cache = get_single(x .."," .. (pos.y + ymod) .. "," .. z, true)
 		return data_cache
 	end
 
-	local parts = ""
-	for z = 0, map_w do
-	for x = 0, map_w do
-		local ax = pos.x + x - map_wh
-		local az = pos.z + z - map_wh
-		local img = "simple_protection_radar.png"
+	local total_px_w = img_px * map_wt
+	local textures = {
+		("[combine:%ix%i"):format(total_px_w, total_px_w)
+	}
+	local tooltips = {}
+	for z = -map_wh, map_wh do
+	for x = -map_wh, map_wh do
+		local ax = pos.x + x
+		local az = pos.z + z
+		local img
 
+		-- Note: this also updates data_cache on the first hit
 		if     getter(ax,  0, az) then
 			-- Using default "img" value
+			img = "simple_protection_radar.png"
 		elseif getter(ax, -1, az) then
 			-- Check for claim below first
 			img = "simple_protection_radar_down.png"
@@ -61,69 +95,64 @@ sp.register_subcommand("radar", function(name)
 			-- Last, check upper area
 			img = "simple_protection_radar_up.png"
 		end
-		parts = parts .. string.format(":%i,%i=%s",
-			x * img_w, (map_w - z) * img_w,
-			combine_escape(img .. "^" .. colorize_area(name)))
-		-- Somewhat dirty hack for [combine. Escape everything
-		-- to get the whole text passed into TextureSource::generateImage()
+
+		local ix, iy = transform_center_to_img(x, z)
+		textures[#textures + 1] = string.format(":%i,%i=%s",
+			ix * img_px, iy * img_px, combine_escape(img .. "^" .. colorize_area(name)))
+
+		if data_cache then -- and data_cache.owner ~= name then
+			tooltips[#tooltips + 1] = ("tooltip[%g,%g;%g,%g;%s]"):format(
+				map_fs_x + ix / map_wt * map_fs_w,
+				map_fs_y + iy / map_wt * map_fs_w,
+				map_fs_w / (map_wt - 1), map_fs_w / (map_wt - 1),
+				minetest.formspec_escape(data_cache.owner)
+			)
+		end
 	end
 	end
+
 
 	-- Player's position marker (8x8 px)
-	local pp_x = player_pos.x / sp.claim_size
-	local pp_z = player_pos.z / sp.claim_size
-	-- Get relative position to the map, add map center offset, center image
-	pp_x = math.floor((pp_x - pos.x + map_wh) * img_w + 0.5) - 4
-	pp_z = math.floor((pos.z - pp_z + map_wh + 1) * img_w + 0.5) - 4
-	local marker_str = string.format(":%i,%i=%s", pp_x, pp_z,
+	local p_ix, p_iy = transform_center_to_img(
+		-- Use decimal precision -> stretch to acceptad map range
+		(player_pos.x / sp.claim_size - pos.x - 0.5) * map_wt,
+		(player_pos.z / sp.claim_size - pos.z - 0.5) * map_wt
+	)
+
+	p_ix = (map_wh + p_ix / map_wt) * img_px - 4
+	p_iy = (map_wh + p_iy / map_wt) * img_px - 4
+	textures[#textures + 1] = string.format(":%i,%i=%s", p_ix, p_iy,
 		combine_escape("object_marker_red.png^[resize:8x8"))
 
-	-- Rotation calculation
-	local dir_label = S("North @1", "(Z+)")
-	local dir_mod = ""
-	local look_angle = player.get_look_horizontal and player:get_look_horizontal()
-	if not look_angle then
-		look_angle = player:get_look_yaw() - math.pi / 2
-	end
-	look_angle = look_angle * 180 / math.pi
 
-	if     look_angle >=  45 and look_angle < 135 then
-		dir_label = S("West @1", "(X-)")
-		dir_mod = "^[transformR270"
-	elseif look_angle >= 135 and look_angle < 225 then
-		dir_label = S("South @1", "(Z-)")
-		dir_mod = "^[transformR180"
-	elseif look_angle >= 225 and look_angle < 315 then
-		dir_label = S("East @1", "(X+)")
-		dir_mod = "^[transformR90"
-	end
-
-	minetest.show_formspec(name, "covfefe",
-		"size[10.5,7]" ..
-		"button_exit[9.5,0;1,1;exit;X]" ..
-		"label[2,0;"..dir_label.."]" ..
-		"image[0,0.5;7,7;" ..
-			minetest.formspec_escape("[combine:300x300"
-				.. parts .. marker_str)
-				.. dir_mod .. "]" ..
-		"label[0,6.8;1 " .. S("square = 1 area = @1x@2x@3 nodes (X,Y,Z)",
+	-- Display
+	minetest.show_formspec(name, "covfefe", table.concat({
+		"formspec_version[3]",
+		"size[12,8]",
+		"button_exit[10.8,0.1;1.1,0.8;exit;X]",
+		"label[3,0.3;"..dir_label.."]",
+		("image[%g,%g;%g,%g;"):format(map_fs_x, map_fs_y, map_fs_w, map_fs_w),
+			minetest.formspec_escape(table.concat(textures)),
+			"]",
+		table.concat(tooltips),
+		"image[7.2,1.1;0.4,0.4;object_marker_red.png]",
+		"label[8,1.3;" .. FS("Your position") .. "]",
+		"image[7,2;0.7,0.7;simple_protection_radar.png^"
+			.. colorize_area(nil, "owner") .. "]",
+		"label[8,2.3;" .. FS("Your area") .. "]",
+		"image[7,3;0.7,0.7;simple_protection_radar.png^"
+			.. colorize_area(nil, "other") .. "]",
+		"label[8,3;" .. FS("Area claimed\nNo access for you") .. "]",
+		"image[7,4;0.7,0.7;simple_protection_radar.png^"
+			.. colorize_area(nil, "*all") .. "]",
+		"label[8,4.3;" .. FS("Access for everybody") .. "]",
+		"image[7,5;0.7,0.7;simple_protection_radar_down.png]",
+		"image[8,5;0.7,0.7;simple_protection_radar_up.png]",
+		"label[7,6;" .. FS("One area unit (@1m) up/down\n-> no claims on this Y level",
+			sp.claim_height) .. "]",
+		"label[1,7.6;" .. FS("1 square = 1 area = @1x@2x@3 nodes (X,Y,Z)",
 			sp.claim_size,
 			sp.claim_height,
-			sp.claim_size) .. "]" ..
-		"image[6.25,1.25;0.5,0.5;object_marker_red.png]" ..
-		"label[7,1.25;" .. S("Your position") .. "]" ..
-		"image[6,2;1,1;simple_protection_radar.png^"
-			.. colorize_area(nil, "owner") .. "]" ..
-		"label[7,2.25;" .. S("Your area") .. "]" ..
-		"image[6,3;1,1;simple_protection_radar.png^"
-			.. colorize_area(nil, "other") .. "]" ..
-		"label[7,3;" .. S("Area claimed\nNo access for you") .. "]" ..
-		"image[6,4;1,1;simple_protection_radar.png^"
-			.. colorize_area(nil, "*all") .. "]" ..
-		"label[7,4.25;" .. S("Access for everybody") .. "]" ..
-		"image[6,5;1,1;simple_protection_radar_down.png]" ..
-		"image[7,5;1,1;simple_protection_radar_up.png]" ..
-		"label[6,6;" .. S("One area unit (@1m) up/down\n-> no claims on this Y level",
-			sp.claim_height) .. "]"
-	)
+			sp.claim_size) .. "]"
+	}))
 end)

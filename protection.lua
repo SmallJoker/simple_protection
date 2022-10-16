@@ -48,7 +48,7 @@ minetest.register_craftitem("simple_protection:claim", {
 			return
 		end
 		if sp.underground_limit then
-			local minp, maxp = sp.get_area_bounds(pos)
+			local minp, _ = sp.get_area_bounds(pos)
 			if minp.y < sp.underground_limit then
 				minetest.chat_send_player(player_name,
 					S("You can not claim areas below @1.",
@@ -69,7 +69,7 @@ minetest.register_craftitem("simple_protection:claim", {
 			claims_max = claims_max * 2
 		end
 
-		local claims, count = sp.get_player_claims(player_name)
+		local _, count = sp.get_player_claims(player_name)
 		if count >= claims_max then
 			minetest.chat_send_player(player_name,
 				S("You can not claim any further areas: Limit (@1) reached.",
