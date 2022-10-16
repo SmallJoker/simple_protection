@@ -11,6 +11,7 @@ Raw text format database functions:
 ]]
 
 local claim_data = {}
+local share_data = {}
 local sp = simple_protection
 
 function sp.load_db()
@@ -35,7 +36,7 @@ function sp.load_db()
 		end
 	end
 	io.close(file)
-	minetest.log("action", "[simple_protection] Loaded claim data")
+	minetest.log("action", "[simple_protection] Loaded claim data (raw)")
 end
 
 function sp.load_shareall()
@@ -54,12 +55,12 @@ function sp.load_shareall()
 						table.insert(_shared, data[index])
 					end
 				end
-				sp.share[data[1]] = _shared
+				share_data[data[1]] = _shared
 			end
 		end
 	end
 	io.close(file)
-	minetest.log("action", "[simple_protection] Loaded shared claims")
+	minetest.log("action", "[simple_protection] Loaded shared claims (raw)")
 end
 
 local claim_db = { time = os.time(), dirty = false }
@@ -95,14 +96,14 @@ local function save_claims()
 	minetest.safe_file_write(sp.file, table.concat(contents, "\n"))
 end
 
-function sp.save_share_db()
-	if delay(share_db, sp.save_share_db) then
+local function save_share_db()
+	if delay(share_db, save_share_db) then
 		return
 	end
 
 	-- Save globally shared areas
 	local contents = {}
-	for name, players in pairs(sp.share) do
+	for name, players in pairs(share_data) do
 		if #players > 0 then
 			contents[#contents + 1] = name .. " " ..
 				table.concat(players, " ")
@@ -111,20 +112,54 @@ function sp.save_share_db()
 	minetest.safe_file_write(sp.sharefile, table.concat(contents, "\n"))
 end
 
+--===================-- Player data --===================--
+
+function sp.get_player_data(player_name)
+	return {
+		shared = share_data[player_name] or {}
+	}
+end
+
+function sp.set_player_data(player_name, pdata)
+	-- Other fields are not supported
+	if next(pdata and pdata.shared or {}) then
+		share_data[player_name] = pdata.shared
+	else
+		share_data[player_name] = nil
+	end
+	save_share_db()
+end
+
+--===================-- Claim management --===================--
+
 -- Speed up the function access
 local get_location = sp.get_location
-function sp.get_claim(pos, direct_access)
-	if direct_access then
-		return claim_data[pos], pos
+function sp.get_claim(pos, direct, z)
+	if not direct then
+		-- Get current grind position
+		pos = get_location(pos)
+		-- Convert position vector to database key
+		pos = pos.x..","..pos.y..","..pos.z
+	elseif z then
+		pos = pos..","..direct.. ","..z
 	end
-	local pos = get_location(pos)
-	local index = pos.x..","..pos.y..","..pos.z
-	return claim_data[index], index
+
+	return claim_data[pos], pos
 end
 
 function sp.set_claim(data, index)
 	claim_data[index] = data
 	save_claims()
+end
+
+-- Internal function
+function sp.claim_index_to_gridpos(index)
+	local x, y, z = index:match("^([%d-]+),([%d-]+),([%d-]+)$")
+	return vector.new(
+		tonumber(x),
+		tonumber(y),
+		tonumber(z)
+	)
 end
 
 function sp.get_player_claims(owner)
@@ -142,6 +177,7 @@ end
 function sp.update_claims(updated)
 	for index, data in pairs(updated) do
 		if not data then
+			-- false --> remove
 			claim_data[index] = nil
 		else
 			claim_data[index] = data
@@ -150,20 +186,45 @@ function sp.update_claims(updated)
 	save_claims()
 end
 
-local function table_contains(t, to_find)
-	for i, v in pairs(t) do
-		if v == to_find then
-			return true
-		end
-	end
-	return false
-end
+--===================-- Sharing system --===================--
+
 function sp.is_shared(id, player_name)
 	if type(id) == "table" and id.shared then
-		-- by area
-		return table_contains(id.shared, player_name)
+		-- Find shared information in ClaimData
+		return table.indexof(id.shared, player_name) > 0
 	end
+
+	-- Provided owner name -> find in globally shared data
 	assert(type(id) == "string", "is_shared(): Either ClaimData or string expected")
-	-- by owner
-	return table_contains(sp.share[id] or {}, player_name)
+	return table.indexof(share_data[id] or {}, player_name) > 0
+end
+
+function sp.update_share_all(owner, modify)
+	local updated = 0
+	local pdata = sp.get_player_data(owner)
+	local list = pdata.shared -- by table reference
+
+	if modify == "erase" then
+		updated = #list
+		list = {}
+		modify = {}
+	end
+
+	for name, status in pairs(modify) do
+		local index = table.indexof(list, name)
+		if (index > 0) ~= status then
+			-- Mismatch -> update list
+			if status then
+				table.insert(list, name)
+			else
+				table.remove(list, index)
+			end
+			updated = updated + 1
+		end
+	end
+
+	if updated > 0 then
+		sp.set_player_data(owner, pdata)
+	end
+	return updated
 end

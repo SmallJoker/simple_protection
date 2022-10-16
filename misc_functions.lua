@@ -99,16 +99,22 @@ sp.get_location = function(pos_)
 	})
 end
 
-sp.get_area_bounds = function(pos_)
+sp.get_area_bounds = function(pos, direct_access)
 	local cs = sp.claim_size
 	local cy = sp.claim_height
 
-	local p = sp.get_location(pos_)
+	if direct_access then
+		-- by ClaimIndex
+		pos = sp.claim_index_to_gridpos(pos)
+	else
+		-- by 3D vector
+		pos = sp.get_location(pos)
+	end
 
 	local minp = {
-		x = p.x * cs,
-		y = p.y * cy - sp.start_underground,
-		z = p.z * cs
+		x = pos.x * cs,
+		y = pos.y * cy - sp.start_underground,
+		z = pos.z * cs
 	}
 	local maxp = {
 		x = minp.x + cs - 1,

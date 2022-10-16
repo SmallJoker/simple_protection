@@ -69,7 +69,7 @@ sp.register_subcommand("radar", function(name)
 	-- Map scanning
 	local get_single = sp.get_claim
 	local function getter(x, ymod, z)
-		data_cache = get_single(x .."," .. (pos.y + ymod) .. "," .. z, true)
+		data_cache = get_single(x, pos.y + ymod, z)
 		return data_cache
 	end
 

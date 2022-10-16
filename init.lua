@@ -9,12 +9,12 @@ simple_protection = {}
 
 local world_path = minetest.get_worldpath()
 local sp = simple_protection
--- Backwards compat
-s_protect = sp
+s_protect = sp -- Backwards compat
 
-sp.share = {}
 sp.mod_path  = minetest.get_modpath("simple_protection")
 sp.conf      = world_path.."/s_protect.conf"
+
+-- Raw backend paths
 sp.file      = world_path.."/s_protect.data"
 sp.sharefile = world_path.."/s_protect_share.data"
 
@@ -36,7 +36,13 @@ sp.load_config()
 
 -- Load database functions
 dofile(sp.mod_path.."/command_mgr.lua")
-dofile(sp.mod_path.."/database_raw.lua")
+
+if sp.backend == "storage" then
+	dofile(sp.mod_path.."/database_storage.lua")
+else
+	dofile(sp.mod_path.."/database_raw.lua")
+end
+
 -- Spread the load a bit
 minetest.after(0.5, sp.load_db)
 

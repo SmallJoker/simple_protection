@@ -14,6 +14,12 @@ simple_protection/default_settings.lua
 
 local sp = simple_protection
 
+-- Back-end for data saving
+-- Possible values:
+--   "raw"     : Data is serialized to files using a custom format
+--   "storage" : Generic implementation using Minetest API
+sp.backend = "raw"
+
 -- Width and length of claims in nodes
 -- !! Distorts the claim locations along the X and Z axis !!
 -- Type: Integer, positive, even number

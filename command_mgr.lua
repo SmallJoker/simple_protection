@@ -1,5 +1,5 @@
 local sp = simple_protection
-local S = sp.translator
+local S = sp.S
 
 local commands = {}
 
@@ -69,19 +69,19 @@ sp.register_subcommand("show", function(name, param)
 	end
 
 	minetest.chat_send_player(name, S("Area status: @1", S("Owned by @1", data.owner)))
-	local text = ""
-	for i, player in ipairs(data.shared) do
-		text = text..player..", "
-	end
-	local shared = sp.share[data.owner]
-	if shared then
-		for i, player in ipairs(shared) do
-			text = text..player.."*, "
-		end
+
+	local v = {}
+	for _, player in ipairs(data.shared) do
+		v[#v + 1] = player
 	end
 
-	if text ~= "" then
-		return true, S("Players with access: @1", text)
+	local pdata = sp.get_player_data(data.owner)
+	for _, player in ipairs(pdata.shared) do
+		v[#v + 1] = player .. "*"
+	end
+
+	if #v > 0 then
+		return true, S("Players with access: @1", table.concat(v, ", "))
 	end
 end)
 
@@ -174,11 +174,7 @@ sp.register_subcommand("shareall", function(name, param)
 	if sp.is_shared(name, param) then
 		return true, S("@1 already has now access to all your areas.", param)
 	end
-	if not sp.share[name] then
-		sp.share[name] = {}
-	end
-	table.insert(sp.share[name], param)
-	sp.save_share_db()
+	sp.update_share_all(name, { [param] = true })
 
 	if minetest.get_player_by_name(param) then
 		minetest.chat_send_player(param, S("@1 shared all areas with you.", name))
@@ -190,12 +186,8 @@ sp.register_subcommand("unshareall", function(name, param)
 	if not param or name == param or param == "" then
 		return false, S("No player name given.")
 	end
-	local removed = false
-	local shared = sp.share[name]
-	if table_erase(shared, param) then
-		removed = true
-		sp.save_share_db()
-	end
+
+	local removed = sp.update_share_all(name, { [param] = false }) > 0
 
 	-- Unshare each single claim
 	local claims = sp.get_player_claims(name)
@@ -239,10 +231,10 @@ sp.register_subcommand("delete", function(name, param)
 	end
 
 	local removed = {}
-	if sp.share[param] then
-		sp.share[param] = nil
+
+	-- Remove globally shared areas
+	if sp.update_share_all(param, "erase") > 0 then
 		table.insert(removed, S("Globally shared areas"))
-		sp.save_share_db()
 	end
 
 	-- Delete all claims
@@ -274,21 +266,20 @@ sp.register_subcommand("list", function(name, param)
 		return false, S("Missing privilege: @1", "simple_protection")
 	end
 
-	local list = {}
-	local width = sp.claim_size
-	local height = sp.claim_height
-
+	local list = {
+		"" -- Header placeholder
+	}
 	local claims = sp.get_player_claims(param)
-	for index in pairs(claims) do
-		-- TODO: Add database-specific function to convert the index to a position
-		local abs_pos = minetest.string_to_pos(index)
-		table.insert(list, string.format("%5i,%5i,%5i",
-			abs_pos.x * width + (width / 2),
-			abs_pos.y * height - sp.start_underground + (height / 2),
-			abs_pos.z * width + (width / 2)
+	for index, cdata in pairs(claims) do
+		local minp, maxp = sp.get_area_bounds(index, true)
+		table.insert(list, string.format("%5i,%5i,%5i | %s",
+			math.floor((minp.x + maxp.x) / 2),
+			math.floor((minp.y + maxp.y) / 2),
+			math.floor((minp.z + maxp.z) / 2),
+			table.concat(cdata.shared or {}, ", ")
 		))
 	end
 
-	local text = S("Listing all areas of @1. Amount: @2", param, tostring(#list))
-	return true, text.."\n"..table.concat(list, "\n")
+	list[1] = S("Listing all areas of @1. Amount: @2", param, tostring(#list))
+	return true, table.concat(list, "\n")
 end)

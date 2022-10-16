@@ -20,6 +20,7 @@ read_globals = {
 
 	"vector",
 	"ItemStack",
+	"Settings",
 	"default",
 }
 
