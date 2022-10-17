@@ -25,11 +25,13 @@ if minetest.get_modpath("areas") then
 	pos_x = 0.95
 end
 
-local function generate_hud(player, current_owner, has_access)
-	-- green if access
-	local color = 0xFFFFFF
-	if has_access then
+local function generate_hud(player, current_owner, has_access, claimed)
+	-- green if access, red if no access but claimed, grey for unclaimed
+	local color = 0xCCCCCC
+	if has_access and claimed then
 		color = 0x00CC00
+	elseif not has_access and claimed then
+		color = 0xCC0000
 	end
 	sp.player_huds[player:get_player_name()] = {
 		hud_id = player:hud_add({
@@ -43,7 +45,8 @@ local function generate_hud(player, current_owner, has_access)
 			alignment     = {x=align_x, y=-1},
 		}),
 		owner = current_owner,
-		had_access = has_access
+		had_access = has_access,
+		claimed = claimed
 	}
 end
 
@@ -60,8 +63,10 @@ minetest.register_globalstep(function(dtime)
 
 		local current_owner = ""
 		local data = sp.get_claim(player:get_pos())
+		local claimed = false
 		if data then
 			current_owner = data.owner
+			claimed = true
 		end
 
 		local has_access = (current_owner == player_name)
@@ -77,7 +82,7 @@ minetest.register_globalstep(function(dtime)
 
 		local hud_table = sp.player_huds[player_name]
 		if hud_table and hud_table.owner == current_owner
-				and hud_table.had_access == has_access then
+				and hud_table.had_access == has_access and hud_table.claimed == claimed then
 			-- still the same hud
 			changed = false
 		end
@@ -88,7 +93,7 @@ minetest.register_globalstep(function(dtime)
 		end
 
 		if changed and current_owner ~= "" then
-			generate_hud(player, current_owner, has_access)
+			generate_hud(player, current_owner, has_access, claimed)
 		end
 	end
 end)

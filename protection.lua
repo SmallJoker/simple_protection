@@ -90,14 +90,39 @@ minetest.register_craftitem("simple_protection:claim", {
 minetest.register_alias("simple_protection:claim_stick", "simple_protection:claim")
 minetest.register_alias("claim_stick", "simple_protection:claim")
 
-minetest.register_craft({
-	output = "simple_protection:claim",
-	recipe = {
-		{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
-		{"default:steel_ingot", "default:stonebrick", "default:steel_ingot"},
-		{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
-	}
-})
+-- If neither one of these occurs then the claim stick isn't craftable
+if minetest.registered_items["default:dirt"] then
+	minetest.register_craft({
+		output = "simple_protection:claim",
+		recipe = {
+			{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
+			{"default:steel_ingot", "default:stonebrick", "default:steel_ingot"},
+			{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
+		}
+	})
+elseif minetest.registered_items["mcl_core:dirt"] then
+	if minetest.registered_items["mcl_copper:stone_with_copper"] then
+		-- By default mcl_copper is in MineClone5, but is a standalone mod for MineClone2
+		minetest.register_craft({
+			output = "simple_protection:claim",
+			recipe = {
+				{"mcl_copper:copper_ingot", "mcl_core:iron_ingot", "mcl_copper:copper_ingot"},
+				{"mcl_core:iron_ingot", "mcl_core:stonebrick", "mcl_core:iron_ingot"},
+				{"mcl_copper:copper_ingot", "mcl_core:iron_ingot", "mcl_copper:copper_ingot"},
+			}
+		})
+	else
+		-- No copper, let's use gold instead
+		minetest.register_craft({
+			output = "simple_protection:claim",
+			recipe = {
+				{"mcl_core:gold_ingot", "mcl_core:iron_ingot", "mcl_core:gold_ingot"},
+				{"mcl_core:iron_ingot", "mcl_core:stonebrick", "mcl_core:iron_ingot"},
+				{"mcl_core:gold_ingot", "mcl_core:iron_ingot", "mcl_core:gold_ingot"},
+			}
+		})
+	end
+end
 
 minetest.register_entity("simple_protection:marker",{
 	initial_properties = {
