@@ -54,13 +54,6 @@ Removed=Supprimé
 # /area list [name]
 This command is not available.=Cette commande n'est pas disponible.
 Listing all areas of @1. Amount: @2=Liste de tous les zones de @1. Total : @2
-Share this area=
-Remove an area share=
-Share all areas=
-Remove all area shares=
-Also removes individual area shares=
-Requires the '@1' privilege=
-List all areas=
 # Hud text
 Area owner: @1=Propriétaire de la zone : @1
 Allows to modify and delete protected areas=Permet de modifier et supprimer des zones protégées
@@ -75,21 +68,14 @@ You can not claim areas below @1.=Vous ne pouvez pas revendiquer les zones ci-de
 This area is already owned by: @1=Cette zone est déjà détenue par : @1.
 You can not claim any further areas: Limit (@1) reached.=Vous ne pouvez pas revendiquer d'autres zones : La limite de @1 a été atteinte.
 Congratulations! You now own this area.=Félicitations ! Vous possédez maintenant cette zone.
-# /area radar
-North @1=Nord @1
 West @1=Ouest @1
 South @1=Sud  @1
 East @1=Est @1
-square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=
+# /area radar
+North @1=Nord @1
 Your position=Votre position
 Your area=Votre zone
 Area claimed@nNo access for you=
 Access for everybody=Accès pour tout le monde
 One area unit (@1m) up/down@n-> no claims on this Y level=
-
-
-##### not used anymore #####
-
-Area claimed\nNo access for you=Zone revendiquée\nNon accessible pour vous
-One area unit (@1m) up/down\n-> no claims on this Y level=Une unité de zone (@1m) haut/bas\n-> Rien de revendiqué à ce niveau Y
-square \= 1 area \= @1x@2x@3 nodes (X,Y,Z)=carré \= 1 zone \= @1x@2x@3 blocs (X,Y,Z)
+1 square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=1 carré \= 1 zone \= @1x@2x@3 blocs (X,Y,Z)

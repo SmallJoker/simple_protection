@@ -64,13 +64,6 @@ Globally shared areas=Areas compartilhadas globalmente
 Removed=Removido
 This command is not available.=
 Listing all areas of @1. Amount: @2=
-Share this area=
-Remove an area share=
-Share all areas=
-Remove all area shares=
-Also removes individual area shares=
-Requires the '@1' privilege=
-List all areas=
 # Hud text
 Area owner: @1=Area de: @1
 Allows to modify and delete protected areas=Permitir modificar e deletar areas protegidas
@@ -86,13 +79,13 @@ You can not claim areas below @1.=Nao podes reivindicar areas abaixo @1.
 This area is already owned by: @1=Essa area ja foi reivindicada por: @1.
 You can not claim any further areas: Limit (@1) reached.=
 Congratulations! You now own this area.=Parabens! Agora reivindicaste essa area.
-North @1=
 West @1=
 South @1=
 East @1=
-square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=
+North @1=
 Your position=
 Your area=
 Area claimed@nNo access for you=
 Access for everybody=
 One area unit (@1m) up/down@n-> no claims on this Y level=
+1 square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=

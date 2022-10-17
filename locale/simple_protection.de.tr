@@ -54,13 +54,6 @@ Removed=Entfernt
 # /area list [name]
 This command is not available.=Dieser Befehl ist nicht verfügbar.
 Listing all areas of @1. Amount: @2=Auslistung der Gebiete von @1. Anzahl: @2
-Share this area=
-Remove an area share=
-Share all areas=
-Remove all area shares=
-Also removes individual area shares=
-Requires the '@1' privilege=
-List all areas=
 # Hud text
 Area owner: @1=Gebiets-Besitzer: @1
 Allows to modify and delete protected areas=Erlaubt das Abändern und Entfernen von geschützten Gebieten
@@ -69,21 +62,20 @@ Please claim this area to modify it.=Bitte schütze das Gebiet um dieses abände
 Area owned by: @1=Gebiet geschützt durch: @1
 # Item: Claim stick
 Claim Stick=Gebietsschutz
-(click to protect)=
-#(click to protect)=(kicken zum schützen)
+(click to protect)=(klicken zum Schützen)
 This area is already protected by an other protection mod.=Dieses Gebiet ist bereits durch eine andere Mod geschützt.
 You can not claim areas below @1.=Du kannst keine Gebiete unterhalb von @1 schützen.
 This area is already owned by: @1=@1 besitzt dieses Gebiet bereits.
 You can not claim any further areas: Limit (@1) reached.=Du kannst keine weiteren Gebiete schützen lassen: Limit (@1) erreicht.
 Congratulations! You now own this area.=Glückwunsch! Du besitzt dieses Gebiet jetzt.
-# /area radar
-North @1=Nord @1
 West @1=West @1
 South @1=Süd @1
 East @1=Ost @1
-square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=1 Quadrat @= 1 Gebiet @= @1x@2x@3 Blöcke (X,Y,Z)
+# /area radar
+North @1=Nord @1
 Your position=Deine Position
 Your area=Dein Gebiet
 Area claimed@nNo access for you=Gebiet geschützt@nKeine Berechtigung
 Access for everybody=Zugriff für jeden
 One area unit (@1m) up/down@n-> no claims on this Y level=Ein Gebiet (@1m) ober-/unterhalb@n-> kein Gebiet auf dieser Höhe
+1 Quadrat @= 1 Gebiet @= @1x@2x@3 Blöcke (X,Y,Z)
