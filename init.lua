@@ -34,6 +34,30 @@ minetest.register_privilege("simple_protection",
 dofile(sp.mod_path.."/misc_functions.lua")
 sp.load_config()
 
+-- Unify crafting items
+sp.resource = {
+	copper = "default:copper_ingot",
+	steel = "default:steel_ingot",
+	stonebrick = "default:stonebrick",
+	chest = {
+		regular = "default:chest",
+		locked = "default:chest_locked"
+	},
+}
+if sp.game_mode() == "MCL" then
+	if minetest.get_modpath("mcl_copper") then
+		sp.resource.copper = "mcl_copper:copper_ingot"
+	else
+		-- No copper, fallback to gold
+		sp.resource.copper = "mcl_core:gold_ingot"
+	end
+	sp.resource.steel = "mcl_core:iron_ingot"
+	sp.resource.stonebrick = "mcl_core:stonebrick"
+	sp.resource.chest.regular = "mcl_chests:chest"
+	-- There is no locked chest, fallback to trapped chest
+	sp.resource.chest.locked = "mcl_chests:trapped_chest"
+end
+
 -- Load database functions
 dofile(sp.mod_path.."/command_mgr.lua")
 

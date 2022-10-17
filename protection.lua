@@ -93,9 +93,9 @@ minetest.register_alias("claim_stick", "simple_protection:claim")
 minetest.register_craft({
 	output = "simple_protection:claim",
 	recipe = {
-		{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
-		{"default:steel_ingot", "default:stonebrick", "default:steel_ingot"},
-		{"default:copper_ingot", "default:steel_ingot", "default:copper_ingot"},
+		{sp.resource.copper, sp.resource.steel, sp.resource.copper},
+		{sp.resource.steel, sp.resource.stonebrick, sp.resource.steel},
+		{sp.resource.copper, sp.resource.steel, sp.resource.copper},
 	}
 })
 

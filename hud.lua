@@ -43,7 +43,7 @@ local function generate_hud(player, current_owner, has_access)
 			alignment     = {x=align_x, y=-1},
 		}),
 		owner = current_owner,
-		had_access = has_access
+		had_access = has_access,
 	}
 end
 

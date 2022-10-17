@@ -139,6 +139,16 @@ sp.get_center = function(pos1)
 	return pos
 end
 
+-- Unify checks of what game we are under
+sp.game_mode = function ()
+	if minetest.get_modpath("default") then
+		return "MTG" -- Minetest Game
+	elseif minetest.get_modpath("mcl_core") then
+		return "MCL" -- MineClone (2, 5 or Mineclonia)
+	end
+	return "???"
+end
+
 sp.load_config = function()
 	-- Load defaults
 	dofile(sp.mod_path.."/default_settings.lua")
