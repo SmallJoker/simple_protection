@@ -30,7 +30,14 @@ minetest.register_node("simple_protection:chest", {
 	},
 	paramtype2 = "facedir",
 	sounds = default.node_sound_wood_defaults(),
-	groups = {choppy = 2, oddly_breakable_by_hand = 2},
+	groups = {
+		-- Minetest Game
+		choppy = 2, oddly_breakable_by_hand = 2,
+		-- MineClone
+		handy=1,axey=1, deco_block=1,
+	},
+	_mcl_blast_resistance = 2.5,
+	_mcl_hardness = 2.5,
 
 	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
