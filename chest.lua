@@ -14,24 +14,41 @@ end
 -- Just in case we are under MineClone
 local groups = nil
 local sounds = nil
+local textures = nil
 if sp.game_mode() == "MTG" then
 	groups = {choppy = 2, oddly_breakable_by_hand = 2}
 	sounds = default.node_sound_wood_defaults()
+	textures = {
+		top = "default_chest_top.png",
+		right = "default_chest_side.png",
+		front = "default_chest_lock.png"
+	}
+	textures.bot = textures.top
+	textures.left = textures.right
+	textures.back = textures.right
 elseif sp.game_mode() == "MCL" then
 	groups = {handy=1,axey=1, deco_block=1}
 	sounds = mcl_sounds.node_sound_wood_defaults()
+	textures = {
+		top = "mcl_chests_chest_trapped_top.png",
+		back = "mcl_chests_chest_trapped_back.png",
+		bot = "mcl_chests_chest_trapped_bottom.png",
+		right = "mcl_chests_chest_trapped_right.png",
+		left = "mcl_chests_chest_trapped_left.png",
+		front = "mcl_chests_chest_trapped_front.png",
+	}
 end
 
 local tex_mod = "^[colorize:#FF2:50"
 minetest.register_node("simple_protection:chest", {
 	description = S("Shared Chest") .. " " .. S("(by protection)"),
 	tiles = {
-		"simple_protection_chest_top.png"  .. tex_mod,
-		"simple_protection_chest_top.png"  .. tex_mod,
-		"simple_protection_chest_side.png" .. tex_mod,
-		"simple_protection_chest_side.png" .. tex_mod,
-		"simple_protection_chest_side.png" .. tex_mod,
-		"simple_protection_chest_lock.png" .. tex_mod
+		textures.top  .. tex_mod,
+		textures.bot  .. tex_mod,
+		textures.right .. tex_mod,
+		textures.left .. tex_mod,
+		textures.back .. tex_mod,
+		textures.front .. tex_mod
 	},
 	paramtype2 = "facedir",
 	sounds = sounds,
@@ -42,7 +59,7 @@ minetest.register_node("simple_protection:chest", {
 	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
 		meta:set_string("infotext", S("Shared Chest"))
-		if minetest.registered_items["default:dirt"] then
+		if sp.game_mode() == "MTG" then
 			meta:set_string("formspec",
 				"size[8,9]" ..
 				default.gui_bg ..
@@ -54,10 +71,9 @@ minetest.register_node("simple_protection:chest", {
 			)
 			local inv = meta:get_inventory()
 			inv:set_size("main", 8*4)
-		elseif minetest.registered_items["mcl_core:dirt"] then
+		elseif sp.game_mode() == "MCL" then
 			-- In MineClone they have a separate overlay of images for the inventory,
 			-- This branch should setup the proper dimentions (9x3) instead of Minetest's fairly nice dimentions (8x4)
-			local mcl_formspec = rawget(_G, "mcl_formspec") or nil
 			meta:set_string("formspec",
 				"size[9,8.75]"..
 				"label[0,0;"..minetest.formspec_escape(minetest.colorize("#313131", S("Shared Chest"))).."]"..

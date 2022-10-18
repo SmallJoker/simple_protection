@@ -11,9 +11,6 @@ You can claim areas by punching those with a claim stick.
 
 License: CC0
 
-Texture License:
-- `simple_protection_chest_*.png` CC-BY-SA-3.0 ([minetest_game](https://content.minetest.net/packages/Minetest/minetest_game/))
-
 **Dependencies**
 - Minetest 5.0.0+
 - default: Crafting recipes
