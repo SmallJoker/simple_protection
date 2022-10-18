@@ -12,9 +12,14 @@ local function get_item_count(pos, player, count)
 end
 
 -- Just in case we are under MineClone
-local default = rawget(_G, "default") or nil
-if default == nil then
-	default = rawget(_G, "mcl_sounds")
+local groups = nil
+local sounds = nil
+if sp.game_mode() == "MTG" then
+	groups = {choppy = 2, oddly_breakable_by_hand = 2}
+	sounds = default.node_sound_wood_defaults()
+elseif sp.game_mode() == "MCL" then
+	groups = {handy=1,axey=1, deco_block=1}
+	sounds = mcl_sounds.node_sound_wood_defaults()
 end
 
 local tex_mod = "^[colorize:#FF2:50"
@@ -29,13 +34,8 @@ minetest.register_node("simple_protection:chest", {
 		"simple_protection_chest_lock.png" .. tex_mod
 	},
 	paramtype2 = "facedir",
-	sounds = default.node_sound_wood_defaults(),
-	groups = {
-		-- Minetest Game
-		choppy = 2, oddly_breakable_by_hand = 2,
-		-- MineClone
-		handy=1,axey=1, deco_block=1,
-	},
+	sounds = sounds,
+	groups = groups,
 	_mcl_blast_resistance = 2.5,
 	_mcl_hardness = 2.5,
 
@@ -60,7 +60,7 @@ minetest.register_node("simple_protection:chest", {
 			local mcl_formspec = rawget(_G, "mcl_formspec") or nil
 			meta:set_string("formspec",
 				"size[9,8.75]"..
-				"label[0,0;"..minetest.formspec_escape(minetest.colorize("#313131", "Shared Chest")).."]"..
+				"label[0,0;"..minetest.formspec_escape(minetest.colorize("#313131", S("Shared Chest"))).."]"..
 				"list[context;main;0,0.5;9,3;]"..
 				mcl_formspec.get_itemslot_bg(0,0.5,9,3)..
 				"label[0,4.0;"..minetest.formspec_escape(minetest.colorize("#313131", S("Inventory"))).."]"..
@@ -102,29 +102,14 @@ minetest.register_node("simple_protection:chest", {
 	-- on_metadata_inventory_move logging is redundant: Same chest contents
 })
 
--- If neither of these occur then the shared chest is just uncraftable
-if minetest.registered_items["default:dirt"] then
-	minetest.register_craft({
-		type = "shapeless",
-		output = "simple_protection:chest",
-		recipe = { "simple_protection:claim", "default:chest_locked" }
-	})
+minetest.register_craft({
+	type = "shapeless",
+	output = "simple_protection:chest",
+	recipe = { "simple_protection:claim", sp.resource.chest.regular}
+})
 
-	minetest.register_craft({
-		type = "shapeless",
-		output = "simple_protection:chest",
-		recipe = { "simple_protection:claim", "default:chest" }
-	})
-elseif minetest.registered_items["mcl_core:dirt"] then
-	minetest.register_craft({
-		type = "shapeless",
-		output = "simple_protection:chest",
-		recipe = { "simple_protection:claim", "mcl_chests:trapped_chest" }
-	})
-
-	minetest.register_craft({
-		type = "shapeless",
-		output = "simple_protection:chest",
-		recipe = { "simple_protection:claim", "mcl_chests:chest" }
-	})
-end
+minetest.register_craft({
+	type = "shapeless",
+	output = "simple_protection:chest",
+	recipe = { "simple_protection:claim", sp.resource.chest.locked}
+})
