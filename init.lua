@@ -27,6 +27,16 @@ end
 sp.translator = sp.S -- TODO: Remove
 
 
+-- Unify checks of what game we are under
+if minetest.get_modpath("default") then
+	sp.game_mode = "MTG" -- Minetest Game
+elseif minetest.get_modpath("mcl_core") then
+	sp.game_mode = "MCL" -- MineClone (2, 5 or Mineclonia)
+else
+	sp.game_mode = "???"
+end
+
+
 minetest.register_privilege("simple_protection",
 	sp.S("Allows to modify and delete protected areas"))
 
@@ -40,11 +50,12 @@ sp.resource = {
 	steel = "default:steel_ingot",
 	stonebrick = "default:stonebrick",
 	chest = {
+		-- Used in: chest.lua
 		regular = "default:chest",
 		locked = "default:chest_locked"
 	},
 }
-if sp.game_mode() == "MCL" then
+if sp.game_mode == "MCL" then
 	if minetest.get_modpath("mcl_copper") then
 		sp.resource.copper = "mcl_copper:copper_ingot"
 	else
