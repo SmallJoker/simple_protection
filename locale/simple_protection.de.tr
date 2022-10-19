@@ -67,7 +67,7 @@ This area is already protected by an other protection mod.=Dieses Gebiet ist ber
 You can not claim areas below @1.=Du kannst keine Gebiete unterhalb von @1 schützen.
 This area is already owned by: @1=@1 besitzt dieses Gebiet bereits.
 You can not claim any further areas: Limit (@1) reached.=Du kannst keine weiteren Gebiete schützen lassen: Limit (@1) erreicht.
-Congratulations! You now own this area.=Glückwunsch! Du besitzt dieses Gebiet jetzt.
+Congratulations! You now own this area.=Glückwunsch! Du besitzt nun dieses Gebiet.
 West @1=West @1
 South @1=Süd @1
 East @1=Ost @1
@@ -78,4 +78,4 @@ Your area=Dein Gebiet
 Area claimed@nNo access for you=Gebiet geschützt@nKeine Berechtigung
 Access for everybody=Zugriff für jeden
 One area unit (@1m) up/down@n-> no claims on this Y level=Ein Gebiet (@1m) ober-/unterhalb@n-> kein Gebiet auf dieser Höhe
-1 Quadrat @= 1 Gebiet @= @1x@2x@3 Blöcke (X,Y,Z)
+1 square @= 1 area @= @1x@2x@3 nodes (X,Y,Z)=1 Gebiet @= @1x@2x@3 Blöcke (X,Y,Z)

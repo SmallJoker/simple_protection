@@ -280,6 +280,6 @@ sp.register_subcommand("list", function(name, param)
 		))
 	end
 
-	list[1] = S("Listing all areas of @1. Amount: @2", param, tostring(#list))
+	list[1] = S("Listing all areas of @1. Amount: @2", param, tostring(#list - 1))
 	return true, table.concat(list, "\n")
 end)
