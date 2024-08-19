@@ -13,24 +13,25 @@ License: CC0
 
 **Dependencies**
 - Minetest 5.0.0+
-- default: Crafting recipes
+- `default` mod or `mcl_*`: Crafting recipes
 
 **Optional dependencies**
-- [areas](https://github.com/ShadowNinja/areas): HUD compatibility
+- [areas](https://github.com/minetest-mods/areas): HUD compatibility
 
 
 Features
 --------
 
 - Easy, single-click protection
-- Fixed claim grid: 16x150x16 by default
-	- To configure: see `default_settings.lua` header text
-- Minimap-like radar to see areas nearby
-- Visual area border feedback, as seen in the [protector](https://github.com/tenplus1/protector) mod
+- Minimap-like radar to see areas nearby: `/area radar`
+- Visual area border feedback, as seen in the [protector](https://codeberg.org/tenplus1/protector) mod
 - List of claimed areas
+- World specific settings -> see `default_settings.lua` header text
+	- Customizable fixed claim grid. 16x150x16 by default.
+	- Optional setting to protect unclaimed areas
 - Shared Chest for exchanging items
+- VoxeLibre (= MineClone2) and Minetest Game support
 - Translation support
-- Optional setting to require an area before digging
 
 
 Chat command(s)
@@ -54,10 +55,14 @@ About "/area show"
 ------------------
 
 Area status: Not claimable
+
 - Shown when the area can not be claimed
 - Happens (by default) in the underground
 
-Players with access: foo, bar*, leprechaun, *all
-- foo, leprechaun: Regular single area share
-- bar*: Has access to all areas with the same owner
-- *all: Everybody can build and dig in the area
+Access notation of shared areas:
+
+- `mrturtle`: Single shared area with player `mrturtle`
+- `mrturtle*`: All areas of the same owner are shared with `mrturtle`.
+- `*all`: Wild west area. Everyone has access.
+
+This notation is also valid for the other chat commands, where a `<name>` placeholder is used.
