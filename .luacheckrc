@@ -18,10 +18,12 @@ read_globals = {
 	string = {fields = {"split", "trim"}},
 	table = {fields = {"copy", "getn", "indexof"}},
 
-	"vector",
 	"ItemStack",
 	"Settings",
+	"vector",
 	"default",
+	"mcl_formspec",
+	"mcl_sounds",
 }
 
 exclude_files = {
