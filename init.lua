@@ -31,7 +31,7 @@ sp.translator = sp.S -- TODO: Remove
 if minetest.get_modpath("default") then
 	sp.game_mode = "MTG" -- Minetest Game
 elseif minetest.get_modpath("mcl_core") then
-	sp.game_mode = "MCL" -- MineClone (2, 5 or Mineclonia)
+	sp.game_mode = "MCL" -- VoxeLibre / Mineclonia and any other similar fork
 else
 	sp.game_mode = "???"
 end

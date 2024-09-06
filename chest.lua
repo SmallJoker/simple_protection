@@ -11,18 +11,20 @@ local function get_item_count(pos, player, count)
 	return count
 end
 
--- Just in case we are under MineClone
-local tiles, groups, sounds, setup_formspec
+local def -- NodeDefinition override table (game compat)
+local setup_formspec
 if sp.game_mode == "MTG" then
-	groups = {choppy = 2, oddly_breakable_by_hand = 2}
-	sounds = default.node_sound_wood_defaults()
-	tiles = {
-		"default_chest_top.png",
-		"default_chest_top.png",
-		"default_chest_side.png",
-		"default_chest_side.png",
-		"default_chest_side.png",
-		"default_chest_lock.png"
+	def = {
+		groups = {choppy = 2, oddly_breakable_by_hand = 2},
+		sounds = default.node_sound_wood_defaults(),
+		tiles = {
+			"default_chest_top.png",
+			"default_chest_top.png",
+			"default_chest_side.png",
+			"default_chest_side.png",
+			"default_chest_side.png",
+			"default_chest_lock.png"
+		}
 	}
 	setup_formspec = function(meta)
 		meta:set_string("formspec",
@@ -37,15 +39,16 @@ if sp.game_mode == "MTG" then
 		return 8*4 -- slot count
 	end
 elseif sp.game_mode == "MCL" then
-	groups = {handy=1,axey=1, deco_block=1}
-	sounds = mcl_sounds.node_sound_wood_defaults()
-	tiles = {
-		"mcl_chests_chest_trapped_top.png",
-		"mcl_chests_chest_trapped_bottom.png",
-		"mcl_chests_chest_trapped_right.png",
-		"mcl_chests_chest_trapped_left.png",
-		"mcl_chests_chest_trapped_back.png",
-		"mcl_chests_chest_trapped_front.png",
+	def = {
+		groups = {handy=1,axey=1, deco_block=1},
+		sounds = mcl_sounds.node_sound_wood_defaults(),
+		drawtype = "mesh",
+		mesh = "mcl_chests_chest.b3d",
+		tiles = {
+			"mcl_chests_trapped.png",
+		},
+		_mcl_blast_resistance = 2.5,
+		_mcl_hardness = 2.5,
 	}
 	setup_formspec = function(meta)
 		-- In MineClone they have a separate overlay of images for the inventory,
@@ -71,18 +74,13 @@ else
 end
 
 -- Color shift to yellow
-for i, v in ipairs(tiles) do
-	tiles[i] = v .. "^[colorize:#FF2:50"
+for i, v in ipairs(def.tiles) do
+	def.tiles[i] = v .. "^[colorize:#FF2:50"
 end
 
-minetest.register_node("simple_protection:chest", {
+local def_node = {
 	description = S("Shared Chest") .. " " .. S("(by protection)"),
-	tiles = tiles,
 	paramtype2 = "facedir",
-	sounds = sounds,
-	groups = groups,
-	_mcl_blast_resistance = 2.5,
-	_mcl_hardness = 2.5,
 
 	after_place_node = function(pos, placer)
 		local meta = minetest.get_meta(pos)
@@ -116,7 +114,12 @@ minetest.register_node("simple_protection:chest", {
 			.. minetest.pos_to_string(pos))
 	end,
 	-- on_metadata_inventory_move logging is redundant: Same chest contents
-})
+}
+
+for k, v in pairs(def) do
+	def_node[k] = v
+end
+minetest.register_node("simple_protection:chest", def_node)
 
 minetest.register_craft({
 	type = "shapeless",
